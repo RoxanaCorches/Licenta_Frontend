@@ -2,8 +2,10 @@ import { NavLink } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import { FaWallet, FaBuildingCircleArrowRight } from "react-icons/fa6";
 import "../pages/Navbar.css";
+import { useWallet } from "../hooks/WalletContext";
 
 export default function Navbar() {
+    const { connectWallet} = useWallet();
     return (
         <nav className="navbar">
             <div className="navbar-container">
@@ -38,15 +40,13 @@ export default function Navbar() {
                     </li>
 
                     <li className="navbar-item">
-                        <NavLink 
-                            to="/connect-wallet" 
-                            className={({ isActive }) => 
-                                `navbar-link ${isActive ? 'active' : ''}`
-                            }
-                        >
+                        <button 
+                            onClick={connectWallet} 
+                            className="navbar-button"
+                        >    
                             <FaWallet  className="navbar-icon" />
                             <span>Connect Wallet</span>
-                        </NavLink>
+                        </button>
                     </li>
                 </ul>
             </div>

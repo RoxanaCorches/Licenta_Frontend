@@ -25,18 +25,33 @@ export default function Slideshow() {
     }
 
     return (
-        <div className="slideshow-container">
-            <div className="slideshow-images">
-                <img src={images[currentImage % images.length]} alt="img" className="slideshow-image"/>
-                <img src={images[(currentImage + 1) % images.length]} alt="img" className="slideshow-image"/>
-                <img src={images[(currentImage + 2) % images.length]} alt="img" className="slideshow-image"/>
-                         
-            </div>
-            
-            <div className="buttons">
-                <button onClick={prevImage}><FaChevronLeft /></button>
-                <button onClick={nextImage}><FaChevronRight /></button>
-            </div>
-        </div>
-    );
+  <div className="slideshow-container">
+    <div className="slideshow-images">
+      {[0, 1, 2].map((index) => {
+        const currentIndexImage =
+          (currentImage + index) % images.length;
+
+        return (
+          <img
+            key={`${currentIndexImage}-${index}`}
+            src={images[currentIndexImage]}
+            alt="img"
+            className={`slideshow-image ${
+              index === 0 ? "active" : ""
+            }`}
+          />
+        );
+      })}
+    </div>
+
+    <div className="buttons">
+      <button onClick={prevImage}>
+        <FaChevronLeft />
+      </button>
+      <button onClick={nextImage}>
+        <FaChevronRight />
+      </button>
+    </div>
+  </div>
+);
 }
