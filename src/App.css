@@ -102,8 +102,6 @@ body{
   overflow-x: hidden;
 }
 
-
-
 .properties-content {
   max-width: 1400px;
   margin: 0 auto;
@@ -143,8 +141,9 @@ body{
 }
 
 .search-field {
-  flex: 1;
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 0.8rem;
 }
@@ -161,15 +160,26 @@ body{
   transform: scale(1.2);
 }
 
+
+.search-panel {
+  position: absolute;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  border: 2px solid #b89d7e;
+  height: 200px;
+  width: 100%;
+  margin-top: 5px;
+}
+
 .container {
   background-color: #f8f9fa;
   border: 2px solid #e9ecef;
   border-radius: 13px;
   padding: 0.8rem 1.1rem;
-  min-height: 55px;
   width: 100%;
+  height: 30px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-direction: row;
   cursor: pointer;
@@ -193,25 +203,38 @@ body{
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 */
-.container select {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font-size: 1rem;
-  color: #4e5052;
-  font-weight: 500;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
+
+
+.option {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin:5%;
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
-.container select option{
-  padding: 0.5rem;
-  background-color: white;
+.option .info p {
+  margin: 0;
+  color: #757a7e;
+  font-size: 0.8rem;
+}
+
+.option button {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.search-icon-plus-minus {
+  color: #494a4b;
+  opacity: 0.8;
+  transition: all 0.3s ease;
 }
 
 .button-search {
-  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);;
+  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);
   border: none;
   border-radius: 12px;
   padding: 0.9rem 2.5rem;

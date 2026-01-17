@@ -3,7 +3,7 @@ import { WalletContext } from "../hooks/WalletContext";
 
 export function ConnectWallet({children}){
     const [account, setAccount] = useState(null);
-    const [setError] = useState("");
+    const [error, setError] = useState("");
 
     const connectWallet = async () => {
         if(!window.ethereum){
@@ -14,16 +14,18 @@ export function ConnectWallet({children}){
         try{
          const accounts = await window.ethereum.request({
             method: "eth_requestAccounts", });  
+            console.log("Accounts:", accounts);
             setAccount(accounts[0]);
+            console.log(account[0]);
             setError(""); 
         
         }catch(err){
-            setError(err);
+            setError(err.message);
         }
     }
 
     return (
-        <WalletContext.Provider value={{account, connectWallet}}>
+        <WalletContext.Provider value={{account, connectWallet, error}}>
             {children}
         </WalletContext.Provider>
   );

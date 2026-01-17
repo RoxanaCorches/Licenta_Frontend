@@ -29,8 +29,9 @@
 }
 
 .navbar-brand:hover {
-  color: #918d8d;
-  background: rgba(19, 29, 207, 0.1);
+  color: rgb(255, 255, 255);
+  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);
+  border-radius: 5px;
   transform: translateY(-3px);
 }
 
@@ -71,8 +72,9 @@
 }
 */
 .navbar-link:hover {
-  color: #918d8d;
-  background: rgba(19, 29, 207, 0.1);
+  color: rgb(255, 255, 255);
+  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);
+  border-radius: 5px;
   transform: translateY(-3px);
 }
 
@@ -128,11 +130,9 @@
 }
 
 .navbar-button:hover {
-  color: #918d8d;
-  background: rgba(19, 29, 207, 0.1);
+  color: rgb(255, 255, 255);
+  background: linear-gradient(135deg, #ffd8af 0%, #b89d7e 100%);
+  border-radius: 5px;
   transform: translateY(-3px);
 }
-
-
-
 

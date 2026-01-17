@@ -7,7 +7,7 @@ export default function PropertiesPage() {
         <div className="properties-container">
             <Navbar />
             <div className="properties-content">
-                    <h1 className="properties-title">Property Listings</h1>
+                    { /*<h1 className="properties-title">Property Listings</h1> */}
                 <SearchProperty /> 
                 <PropertiesImages />
             </div>
