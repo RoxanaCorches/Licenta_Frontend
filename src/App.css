@@ -166,7 +166,7 @@ body{
   background-color: #f8f9fa;
   border-radius: 20px;
   border: 2px solid #b89d7e;
-  height: 200px;
+  height: auto;
   width: 100%;
   margin-top: 5px;
 }
@@ -203,6 +203,7 @@ body{
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 */
+
 
 
 .option {

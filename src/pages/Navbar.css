@@ -136,3 +136,46 @@
   transform: translateY(-3px);
 }
 
+.container-wrapper-info {
+  position: relative;
+}
+
+.search-panel-info {
+  position: absolute;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  border: 2px solid #b89d7e;
+  height: auto;
+  width: 100%;
+  margin-top: 5px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.navbar-link-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 8px;
+  width: 100%;
+  
+}
+
+.navbar-link-option:hover {
+  color: #495057;
+  background-color: #efeeed;
+}
+
+/*
+.search-panel-info {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: red;
+  width: 200px;
+  padding: 10px;
+  z-index: 1000;
+}
