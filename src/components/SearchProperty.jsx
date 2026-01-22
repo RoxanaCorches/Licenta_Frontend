@@ -104,7 +104,7 @@ export default function SearchProperty (){
                             <div className="info">
                                 <span>Rooms</span>
                                 <p> Minimum 1</p>
-                                </div>
+                            </div>
                             <button type="button" onClick = {() => (setRooms(rooms - 1))} disabled = {rooms <= 1}> <FaMinus className="search-icon-plus-minus "/> </button>
                             <span>{rooms}</span>
                             <button type="button" onClick={() => (setRooms(rooms + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
