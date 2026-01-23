@@ -308,7 +308,7 @@ export default function Facilities(){
                             />
                             <span className="form-type-facility-content">
                                 <FaUmbrellaBeach  className="form-type-facility-icon"/>
-                                <span>beach Access</span>
+                                <span>Beach Access</span>
                             </span>
                         </label>
                     </div>

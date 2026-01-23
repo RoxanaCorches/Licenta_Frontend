@@ -4,11 +4,23 @@ import Location from "../components/listProperty/Location";
 import PropertyDetails from "../components/listProperty/PropertyDetails";
 import Facilities from "../components/listProperty/Facilities";
 import HouseRules from "../components/listProperty/HouseRules";
+import UploadImages from "../components/listProperty/UploadImages";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
+    const totalSteps = 5;
+    const progress = (step / totalSteps) * 100; 
+
     return(
         <form> 
+
+         <div className="progress-bar">
+            <div className="progress"
+                style={{ width: `${progress}%` }}
+             >   
+            </div>     
+        </div>
+
         {step === 1 && ( 
             <div className="form-container">
                 <div className="form-step active">
@@ -68,6 +80,19 @@ export default function ListYourPropertyPage() {
                     <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={() => setStep(4)}>Previous</button>
                         <button type="button" className="form-next-button" onClick={() => setStep(6)}>Next</button>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {step === 6 && ( 
+            <div className="form-container">
+                <div className="form-step active">
+                    <h1 className="form-step-title">Step 6: Upload Images</h1>
+                    <UploadImages />
+                    <div className="form-buttons">
+                        <button type="button" className="form-prev-button" onClick={() => setStep(5)}>Previous</button>
+                        <button type="button" className="form-next-button" onClick={() => setStep(7)}>Next</button>
                     </div>
                 </div>
             </div>

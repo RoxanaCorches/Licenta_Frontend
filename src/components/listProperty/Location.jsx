@@ -2,6 +2,8 @@ import { useState } from "react";
 import { MdApartment } from "react-icons/md";
 import { FaHome } from "react-icons/fa";
 
+import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+
 export default function Location(){
         const [data, setData] =useState({
                 country: '',
@@ -11,6 +13,8 @@ export default function Location(){
                 zipCode:'',
                 mapLocation:''
             });
+
+            const [location, setLocation] = useState(null);
         
             const [loading] = useState(false);
             //const [error, setError] = useState('');
@@ -100,17 +104,20 @@ export default function Location(){
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Map location</label>
-                        <input
-                            className="from-input" 
-                            type="text"
-                            id="mapLocation"
-                            name="mapLocation"
-                            required
-                            value={data.mapLocation}
-                            onChange={handleChange}
-                            disabled={loading}
-                            placeholder="Map location"
-                        />
+                        <LoadScript googleMapsApiKey="AIzaSyBt1WeQk6szrvRyZAYnzXpTFsyS60EInOs" >
+                        <GoogleMap
+                            mapContainerStyle={{width: "100%", height: "400px"}}
+                            center={{lat: 46.7833561, lng: 23.5341118}}
+                            zoom={10}
+                            onClick={(e) => {
+                                setLocation({lat: e.latLng.lat(),
+                                            lng: e.latLng.lng()});
+                            }}
+                        >
+                            {location && <Marker position={location}/>}
+                        </GoogleMap>
+                        </LoadScript>
+                        
                     </div>
                 </div>
         );

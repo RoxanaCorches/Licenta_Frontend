@@ -6,6 +6,8 @@ export default function HouseRules(){
                 smoking: '',
                 occupants: '',
             });
+
+    const [members, setMembers] = useState(1);
         
             //const [loading] = useState(false);
             //const [error, setError] = useState('');
@@ -21,19 +23,22 @@ export default function HouseRules(){
         
     return(
         <div className="form-section"> 
-                    <div className="form-rules"> 
-                        <label className="form-label">Pets allowed?</label>
-                        <div> 
-                            <input 
+                    <div className="form-section-options"> 
+                        <p className="form-label">Pets allowed?</p>
+                        <div className="option-yes-no">
+                            <label className="ratio-custom">
+                                <input 
                                 type="radio" 
                                 name="pet"
                                 value="petYes"
                                 checked={data.pet === "petYes"}
                                 onChange={handleChangePet}
-                             />
-                            <span className="form-label">YES</span>
-
-                            <input 
+                                />
+                                <span className="form-label">YES</span>
+                            </label>
+                            
+                            <label className="ratio-custom">
+                                <input 
                                 type="radio" 
                                 name="pet"
                                 value="petNo"
@@ -41,12 +46,14 @@ export default function HouseRules(){
                                 onChange={handleChangePet}
                             />
                             <span className="form-label">NO</span>
+                            </label> 
                         </div>
                     </div>
 
-                     <div className="form-rules"> 
-                        <label className="form-label" >Smoking allowed?</label>
-                        <div className="form-select-rule"> 
+
+                    <div className="form-section-options"> 
+                        <p className="form-label">Smoking allowed?</p>
+                        <div className="option-yes-no">
                             <label className="ratio-custom">
                                 <input 
                                     type="radio" 
@@ -57,7 +64,7 @@ export default function HouseRules(){
                                 />
                                 <span className="form-label">YES</span>
                             </label>
-
+                            
                             <label className="ratio-custom"> 
                                 <input 
                                     type="radio" 
@@ -71,10 +78,12 @@ export default function HouseRules(){
                         </div>
                     </div>
 
-                     <div className="form-rules"> 
-                        <label className="form-label" htmlFor="listingTitle">Maximum number of occupants</label>
-                        <div> 
-                            
+                    <div className="form-section-options"> 
+                        <p className="form-label">Maximum members</p>
+                        <div className="buttons-plus-minus">
+                            <button type="button" onClick = {() => (setMembers(members - 1))} disabled = {members <= 1}> - </button>
+                            <span>{members}</span>
+                            <button type="button" onClick={() => (setMembers(members + 1))} > + </button> 
                         </div>
                     </div>
                 </div>
