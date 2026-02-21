@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 
 export default function HouseRules(){
     const [data, setData] = useState({
@@ -8,6 +9,40 @@ export default function HouseRules(){
             });
 
     const [members, setMembers] = useState(1);
+    //hours
+    const [hourCheckInFrom, setHourCheckInFrom] = useState("15:00");
+    const [hourCheckInUntil, setHourCheckInUntil] = useState("18:00");
+
+    const [hourCheckOutFrom, setHourCheckOutFrom] = useState("15:00");
+    const [hourCheckOutUntil, setHourCheckOutUntil] = useState("18:00");
+
+    //panel
+    const [panelCheckInFrom, setPanelCheckInFrom] = useState(false);
+    const [panelCheckInUntil, setPanelCheckInUntil] = useState(false);
+
+    const [panelCheckOutFrom, setPanelCheckOutFrom] = useState(false);
+    const [panelCheckOutUntil, setPanelCheckOutUntil] = useState(false);
+
+    
+    const dropdownPanelCheckInFrom = (e) => {
+        e.preventDefault();
+        setPanelCheckInFrom(!panelCheckInFrom);
+    };
+
+     const dropdownPanelCheckInUntil = (e) => {
+        e.preventDefault();
+        setPanelCheckInUntil(!panelCheckInUntil);
+    };
+
+     const dropdownPanelCheckOutFrom = (e) => {
+        e.preventDefault();
+        setPanelCheckOutFrom(!panelCheckOutFrom);
+    };
+
+     const dropdownPanelCheckOutUntil = (e) => {
+        e.preventDefault();
+        setPanelCheckOutUntil(!panelCheckOutUntil);
+    };
         
             //const [loading] = useState(false);
             //const [error, setError] = useState('');
@@ -84,6 +119,145 @@ export default function HouseRules(){
                             <button type="button" onClick = {() => (setMembers(members - 1))} disabled = {members <= 1}> - </button>
                             <span>{members}</span>
                             <button type="button" onClick={() => (setMembers(members + 1))} > + </button> 
+                        </div>
+                    </div>
+
+                    <div className="form-section-options-checks"> 
+                        <div className="check-in"> 
+                            <label className="form-label">Check-in</label>
+
+                            <div className="container-checkIn-checkOut"> 
+                                <div className="checkin-from-until"> 
+                                    <label className="form-label">From</label>
+                                    <div className="container" onClick = {dropdownPanelCheckInFrom}> 
+                                        <span className="">{hourCheckInFrom}</span>
+                                        <span > <FaChevronDown /> </span>
+                                    </div>
+                                
+
+                                {panelCheckInFrom && (
+                                <ul className="search-panel-info-checks">
+                                    {Array.from({length:24}, (_, index) => {
+                                        const hour = index < 10 ? `0${index}:00` : `${index}:00`;
+
+                                        return(
+                                            <li key={index}>
+                                            <span onClick={() =>{ 
+                                                setHourCheckInFrom(hour);
+                                                setPanelCheckInFrom(false);
+                                            }}
+                                            >
+                                            {hour}
+                                            </span>
+                                        </li>
+                                        );
+                                    })}
+                                </ul>
+                                 )}
+                                 </div>
+                            
+
+
+                            <div className="container-checkIn-checkOut"> 
+                                <div className="checkin-from-until"> 
+                                    <label className="form-label">Until</label>
+                                        <div className="container" onClick = {dropdownPanelCheckInUntil}> 
+                                            <span>{hourCheckInUntil}</span>
+                                            <span> <FaChevronDown /> </span>
+                                        </div>
+                                {panelCheckInUntil && (
+                                    <ul className="search-panel-info-checks">
+                                    {Array.from({length:24}, (_, index) => {
+                                        const hour = index < 10 ? `0${index}:00` : `${index}:00`;
+
+                                        return(
+                                            <li key={index}>
+                                            <span onClick={() =>{ 
+                                                setHourCheckInUntil(hour);
+                                                setPanelCheckInUntil(false);
+                                            }}
+                                            >
+                                            {hour}
+                                            </span>
+                                        </li>
+                                        );
+                                    })}
+                                </ul>
+                                )}
+                                </div>
+                            </div>
+
+                            </div>
+                        </div>
+
+
+                         <div className="check-out"> 
+                            <label className="form-label">Check-out</label>
+
+                            <div className="container-checkIn-checkOut"> 
+                                <div className="checkin-from-until"> 
+                                    <label className="form-label">From</label>
+                                    <div className="container" onClick = {dropdownPanelCheckOutFrom}> 
+                                        <span>{hourCheckOutFrom}</span>
+                                        <span > <FaChevronDown /> </span>
+                                    </div>
+                                
+
+                                {panelCheckOutFrom && (
+                                <ul className="search-panel-info-checks">
+                                    {Array.from({length:24}, (_, index) => {
+                                        const hour = index < 10 ? `0${index}:00` : `${index}:00`;
+
+                                        return(
+                                            <li key={index}>
+                                            <span onClick={() =>{ 
+                                                setHourCheckOutFrom(hour);
+                                                setPanelCheckOutFrom(false);
+                                            }}
+                                            >
+                                            {hour}
+                                            </span>
+                                        </li>
+                                        );
+                                    })}
+                                </ul>
+                                 )}
+                                 </div>
+                            
+
+
+                            <div className="container-checkIn-checkOut"> 
+                                <div className="checkin-from-until"> 
+                                    <label className="form-label">Until </label>
+                                        <div className="container" onClick = {dropdownPanelCheckOutUntil}> 
+                                            <span>{hourCheckOutUntil}</span>
+                                            <span> <FaChevronDown /> </span>
+                                        </div>
+                                {panelCheckOutUntil && (
+                                    <ul className="search-panel-info-checks">
+                                    {Array.from({length:24}, (_, index) => {
+                                        const hour = index < 10 ? `0${index}:00` : `${index}:00`;
+
+                                        return(
+                                            
+                                            <li key={index}>
+                                            <span onClick={() =>{ 
+                                                setHourCheckOutUntil(hour);
+                                                setPanelCheckOutUntil(false);
+                                            }}
+                                            >
+                                            {hour}
+                                            </span>
+                                        </li>
+                                       
+                                        );
+                                    })}
+                                </ul>
+                                )}
+                                </div>
+                            </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
