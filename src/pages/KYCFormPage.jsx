@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaUserCheck } from "react-icons/fa6";
+import Navbar from "../components/Navbar";
 //import { useNavigate } from "react-router-dom";
 
 export default function KYCFormPage() {
@@ -7,11 +7,14 @@ export default function KYCFormPage() {
 
     const [data, setData] =useState({
         username: '',
-        password: '',
-        name: '',
+        first_name: '',
+        last_name: '',
+        birthday: '',
+        phone_number: '',
+        nationality:'',
+        city: '',
         address: '',
-        email: '',
-        age: '',
+        zipcode: '',
         address_blockchain: ''
     });
 
@@ -29,8 +32,8 @@ export default function KYCFormPage() {
         setLoading(true);
         console.log("Form:", data);
 
-        const { username, password, name, address, email, age, address_blockchain} = data;
-        if(!username || !password || !name || !address || !email || !age || !address_blockchain) {
+        const { username, first_name, last_name, birthday, phone_number, nationality, city, address, zipcode, address_blockchain} = data;
+        if(!username || !first_name || !last_name || !birthday || !phone_number || !nationality || !city || !address || !zipcode || !address_blockchain) {
             setError("You must complete all fields!");
             setLoading(false);
             return;
@@ -45,6 +48,7 @@ export default function KYCFormPage() {
 
      return(
        <div className="kyc-container">
+        <Navbar />
         <div className="kyc-contents"> 
             <h1 className="kyc-title">
                 Verify your identity to continue!
@@ -71,34 +75,94 @@ export default function KYCFormPage() {
                         placeholder="Enter your username"
                     />
                 </div>
-
+                
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="password">Password</label>
+                    <label className="kyc-label" htmlFor="first_name">First Name</label>
                     <input
                         className="kyc-input" 
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={data.password}
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        value={data.first_name}
                         onChange={handleChange}
                         required
                         disabled={loading}
-                        placeholder="Enter your password"
+                        placeholder="Enter your first name"
                     />
                 </div>
 
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="name">Full Name</label>
+                    <label className="kyc-label" htmlFor="last_name">Last Name</label>
                     <input
                         className="kyc-input" 
                         type="text"
-                        id="name"
-                        name="name"
-                        value={data.name}
+                        id="last_name"
+                        name="last_name"
+                        value={data.last_name}
                         onChange={handleChange}
                         required
                         disabled={loading}
-                        placeholder="Enter your full name"
+                        placeholder="Enter your last name"
+                    />
+                </div>
+
+                <div className="kyc-form-group">
+                    <label className="kyc-label" htmlFor="birthday">Birthday</label>
+                    <input
+                        className="kyc-input" 
+                        type="date"
+                        id="birthday"
+                        name="birthday"
+                        value={data.birthday}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                        placeholder="Enter your birthday"
+                    />
+                </div>
+
+                <div className="kyc-form-group">
+                    <label className="kyc-label" htmlFor="phone_number">Phone Number</label>
+                    <input
+                        className="kyc-input" 
+                        type="text"
+                        id="phone_number"
+                        name="phone_number"
+                        value={data.phone_number}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                        placeholder="Enter your phone number"
+                    />
+                </div>
+
+                <div className="kyc-form-group">
+                    <label className="kyc-label" htmlFor="nationality">Nationality</label>
+                    <input
+                        className="kyc-input" 
+                        type="text"
+                        id="nationality"
+                        name="nationality"
+                        value={data.nationality}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                        placeholder="Enter your country name"
+                    />
+                </div>
+
+                <div className="kyc-form-group">
+                    <label className="kyc-label" htmlFor="city">City</label>
+                    <input
+                        className="kyc-input" 
+                        type="text"
+                        id="city"
+                        name="city"
+                        value={data.city}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                        placeholder="Enter your city name"
                     />
                 </div>
 
@@ -117,33 +181,20 @@ export default function KYCFormPage() {
                     />
                 </div>
 
-                <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="email">Email</label>
-                    <input
-                        className="kyc-input" 
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={data.email}
-                        onChange={handleChange}
-                        required
-                        disabled={loading}
-                        placeholder="Enter your email"
-                    />
-                </div>
+               
 
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="age">Age</label>
+                    <label className="kyc-label" htmlFor="zipcode">Zipcode</label>
                     <input
                         className="kyc-input" 
-                        type="number"
-                        id="age"
-                        name="age"
-                        value={data.age}
+                        type="text"
+                        id="zipcode"
+                        name="zipcode"
+                        value={data.zipcode}
                         onChange={handleChange}
                         required
                         disabled={loading}
-                        placeholder="Enter your age"
+                        placeholder="Enter your zipcode"
                         min="18"
                     />
                 </div>

@@ -1,16 +1,20 @@
 .navbar {
   position: fixed;
   top: 0;
+  /*
   left: 2%;
   right: 2%;
+  */
+  left: 0;
+  right: 0;
   z-index: 1000;
   border-bottom: 1px solid rgb(255, 255, 255);
   padding: 6px;
+  background-color:#571fb1;
 }
 
 .navbar-container {
   max-width: 1400px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,7 +34,7 @@
 
 .navbar-brand:hover {
   color: rgb(255, 255, 255);
-  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);
+  background: linear-gradient(135deg, #7f3cf3 0%, #6833c2 100%);
   border-radius: 5px;
   transform: translateY(-3px);
 }
@@ -73,7 +77,7 @@
 */
 .navbar-link:hover {
   color: rgb(255, 255, 255);
-  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);
+   background: linear-gradient(135deg, #7f3cf3 0%, #6833c2 100%);
   border-radius: 5px;
   transform: translateY(-3px);
 }
@@ -81,13 +85,13 @@
 
 .navbar-link.active {
   color: rgb(255, 255, 255);
-  background: linear-gradient(135deg, #b89d7e 0%, #ffd8af 100%);
+  background: linear-gradient(135deg, #7f3cf3 0%, #6833c2 100%);
   border-radius: 10px;
 }
 
 .navbar-link.active:hover {
   color: rgb(255, 255, 255);
-  background: linear-gradient(135deg, #ffd8af 0%, #b89d7e 100%);
+   background: linear-gradient(135deg, #6833c2 0%, #7f3cf3 100%);
   border-radius: 10px;
 }
 
@@ -127,11 +131,12 @@
   border: none;
   outline: none;
   box-shadow: none;
+  cursor: pointer;
 }
 
 .navbar-button:hover {
   color: rgb(255, 255, 255);
-  background: linear-gradient(135deg, #ffd8af 0%, #b89d7e 100%);
+  background: linear-gradient(135deg, #7f3cf3 0%, #6833c2 100%);
   border-radius: 5px;
   transform: translateY(-3px);
 }
@@ -144,10 +149,10 @@
   position: absolute;
   background-color: #f8f9fa;
   border-radius: 20px;
-  border: 2px solid #b89d7e;
+  border: 2px solid #7f3cf3;
   height: auto;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 10px;
   padding: 0;
   overflow: hidden;
 }
@@ -166,7 +171,7 @@
 
 .navbar-link-option:hover {
   color: #495057;
-  background-color: #efeeed;
+  background-color: #f3f2f7;
 }
 
 /*

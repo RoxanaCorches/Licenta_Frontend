@@ -34,7 +34,7 @@ export default function SearchProperty (){
         <div className="search-container"> 
 
              <div className="search-field">
-                <FaRegCalendarAlt className="search-icon" />
+                <IoLocation  className="search-icon" />
                 <div className="container-wrapper"> 
                     <div className="container" onClick={dropdownPanelLocation}>
                         <p>Where are you going?</p>
@@ -80,36 +80,25 @@ export default function SearchProperty (){
                     {panelDate && (
                    
                     <div className="search-panel">
-                        <div className="option">
-                            <div className="info">
-                                <span>Adults</span>
-                                <p>18+ Years Old</p>
-                            </div>
-                            <button  type="button" onClick = {() => (setAdults(adults - 1))} disabled = {adults <= 1}> <FaMinus className="search-icon-plus-minus"/> </button>
-                            <span>{adults}</span>
-                            <button type="button" onClick={() =>(setAdults(adults + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
-                        </div>
+                        <input
+                        className="kyc-input" 
+                        type="date"
+                        id="birthday"
+                        name="birthday"
+                        
+                        placeholder="Enter your birthday"
+                    />
 
-                        <div className="option">
-                             <div className="info">
-                                <span>Children</span>
-                                <p>2-17 Years Old</p>
-                             </div>
-                            <button type="button" onClick = {() =>  (setChildren(children - 1))} disabled = {children <= 0}> <FaMinus className="search-icon-plus-minus"/> </button>
-                            <span>{children}</span>
-                            <button type="button" onClick={() => (setChildren(children + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
-                        </div>
-
-                         <div className="option">
-                            <div className="info">
-                                <span>Rooms</span>
-                                <p> Minimum 1</p>
-                            </div>
-                            <button type="button" onClick = {() => (setRooms(rooms - 1))} disabled = {rooms <= 1}> <FaMinus className="search-icon-plus-minus "/> </button>
-                            <span>{rooms}</span>
-                            <button type="button" onClick={() => (setRooms(rooms + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
-                        </div>
+                    <input
+                        className="kyc-input" 
+                        type="date"
+                        id="birthday"
+                        name="birthday"
+                        placeholder="Enter your birthday"
+                    />
                     </div>
+
+                    
                 )}
                 </div>
             </div>

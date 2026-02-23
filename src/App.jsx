@@ -4,6 +4,7 @@ import PropertiesPage from "./pages/PropertiesPage"
 import { ConnectWallet } from "./components/ConnectWallet";
 import KYCFormPage from "./pages/KYCFormPage";
 import ListYourPropertyPage from "./pages/ListYourPropertyPage";
+import MyAccountPage from "./pages/MyAccountPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/kyc" element={<KYCFormPage />} />
         <Route path="/properties" element={<PropertiesPage />} />
         <Route path="/listYourProperty" element={<ListYourPropertyPage />} />
+        <Route path="/myAccount" element={<MyAccountPage />} />
 
       </Routes>
     </BrowserRouter>

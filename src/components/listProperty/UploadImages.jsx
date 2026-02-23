@@ -48,7 +48,7 @@ export default function UploadImages(){
 
                         {!mainImage && (
                             <>
-                                <span className="content-image">Upload at least 5 photos of ypur property.</span>
+                                <span className="content-image">Upload at least 5 photos of your property.</span>
 
                                 <TbPhotoShare className="icon-image-main"/>
                                 <div className="file-upload"> 
