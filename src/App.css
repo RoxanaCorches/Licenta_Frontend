@@ -1251,53 +1251,110 @@ body {
 
 /* WALLET*/
 /* overview*/
+.wallet-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .overview {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  gap: 20px; 
+  gap: 5rem; 
   padding: 20px;
 }
 
 .card {
-  width: 300px; 
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
+  width: 300px; 
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(21, 21, 21, 0.2);
+  
 }
 
 .card-header-balance,
 .card-header-pending,
 .card-header-spend {
-  background-color: #4CAF50; /* sau alta culoare specifica */
-  color: white;
-  padding: 10px;
-  text-align: center;
-  font-weight: bold;
-  
-  /* Fix pentru text pe orizontala */
-  writing-mode: horizontal-tb; /* forțează textul să fie orizontal */
-  white-space: nowrap;          /* nu sparge textul pe mai multe linii */
-  display: flex;                /* centrare verticală și orizontală */
+  display: flex;                
   align-items: center;
   justify-content: center;
-  height: 50px;                 /* lățime uniformă a header-ului */
+  color: white;
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  height: 40px;   
+  gap: 1rem;             
+}
+
+.card-header-balance {
+  background: linear-gradient(100deg, #2fab33 0%, #9de8a0 90%);
+}
+
+.card-header-pending {
+  background: linear-gradient(100deg, #e8ce57 0%, #f6f081 90%);
+}
+
+.card-header-spend {
+   background: linear-gradient(100deg, #e76464 0%, #eeb5b5 90%);
 }
 
 /* Body-ul cardului */
 .card-body {
-  background-color: #f0f0f0;
+  background-color: white;
+  font-size: 2rem;
+  font-weight: bold;
   color: #333;
-  padding: 15px;
+  padding: 14px;
   text-align: center;
-  font-size: 1.2em;
-  flex-grow: 1; /* face cardul sa fie uniform daca vrei sa ajustezi inaltimea totala */
 }
 
 
 
+.history-container {
+  background-color: white;
+  padding: 1.7rem;
+  margin: 1.5rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 28px rgba(19, 24, 36, 0.06);
+}
+
+.history-table {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.history-table thead th {
+  background-color: #8442f6;
+  color: white;
+  padding: 0.8rem 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.history-table thead th:first-child {
+  border-top-left-radius: 15px;
+}
+
+.history-table thead th:last-child {
+  border-top-right-radius: 15px;
+}
+
+.history-table tbody tr {
+  background-color: #f9f9f9;
+}
 
 
+.history-table tbody tr:hover {
+  background-color: #eef2ff;
+}
 
+.history-table tbody td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #9369dd;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
 

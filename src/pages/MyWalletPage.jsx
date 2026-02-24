@@ -60,7 +60,7 @@ export default function MyWalletPage() {
 
                             <div className="rentals-content">
                                {bookings.length > 0 ? (
-                                <div className="rental-card">
+                                <div className="wallet-card">
                                     {active === "overview" && <OverviewTab />}
                                     {active === "history" && <HistoryTab/>}
                                     {active === "withdraw" && <WithdrawTab/>}
