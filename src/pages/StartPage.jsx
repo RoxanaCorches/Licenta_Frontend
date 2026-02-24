@@ -1,5 +1,5 @@
 import React from "react";
-import img from "../assets/111111.jpg"; 
+import img from "../assets/image.jpg"; 
 import "../App.css";
 import Navbar from "../components/Navbar";
 import Slideshow from "../components/Slideshow";
