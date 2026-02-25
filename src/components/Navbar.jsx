@@ -11,10 +11,9 @@ import { IoMdSettings } from "react-icons/io";
 import { MdAccountCircle } from "react-icons/md";
 
 export default function Navbar() {
-    const { account, connectWallet} = useWallet();
+    const {account, connectWallet} = useWallet();
     const [panelInfo, setPanelInfo] =useState(false);
 
-    
     const dropdownPanel = (e) => {
         e.preventDefault();
         setPanelInfo(!panelInfo);

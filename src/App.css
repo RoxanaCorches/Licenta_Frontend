@@ -104,7 +104,7 @@ body {
   display: flex;
   flex-direction: column;
   padding-top: 60px;
-  overflow: hidden;
+ 
 }
 
 .properties-content {
@@ -140,11 +140,9 @@ body {
   flex-direction: row;
   box-shadow: 0 20px 30px rgba(0, 0, 0, 0.17);
   gap: 2rem;
- 
 }
 
 .search-container:hover {
-  transform: translateY(-3px);
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
 }
 
@@ -173,11 +171,108 @@ body {
   position: absolute;
   background-color: #f8f9fa;
   border-radius: 20px;
-  border: 2px solid #7f3cf3;
+  border: 2px solid #5f0af2;
   height: auto;
   width: 100%;
-  margin-top: 5px;
-  z-index: 100;
+  margin-top: 4px;
+  z-index: 9999;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+}
+
+ .search-panel-suggestions {
+  position: absolute;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  border: 2px solid #5f0af2;
+  width: 100%;
+  margin-top: 4px;
+  z-index: 9999;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+  max-height: 700px;
+  padding: 0;
+  overflow: hidden;
+
+}
+
+.search-panel-suggestions .item {
+  position: relative;
+  list-style: none;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  border-bottom: 1px solid #5f0af2;
+}
+
+.search-panel-suggestions .item:last-child {
+  border-bottom: none;
+}
+
+.search-panel-suggestions .item:hover {
+  background-color: #ebe7f9;
+  overflow: hidden;
+}
+
+.suggestion-icon {
+  color: #494a4b;
+  font-size: 1.3rem;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  margin-right: 0.5rem;
+}
+
+/*
+.location-filter-panel {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.location-filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.location-filter-item {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #374151;
+  transition: background-color 0.15s;
+}
+
+.location-filter-item:hover,
+.location-filter-item:focus {
+  background-color: #e7e0f4;
+  outline: none;
+}
+
+.location-filter-message {
+  margin: 0;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+*/
+.date {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  padding: 1.1rem;
+
+  left: 50%;
+  transform: translateX(-50%); 
+  width: auto;
+  min-width: 500px; 
+  z-index: 9999;
+}
+
+.date .calendar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .container {
@@ -880,7 +975,6 @@ body {
   max-height: 150px;
   overflow-y: auto;
   z-index: 1;
-
 }
 
 
@@ -1357,4 +1451,3 @@ body {
   font-size: 1.1rem;
   font-weight: 500;
 }
-
