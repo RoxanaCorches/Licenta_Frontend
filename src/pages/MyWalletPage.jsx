@@ -14,7 +14,7 @@ import DepositTab from "../components/wallet/DepositTab";
 
 export default function MyWalletPage() {
     const [active, setActive] = useState('overview');
-    const bookings = [1];
+    const bookings = [];
 
     return (
         <div>
@@ -59,7 +59,7 @@ export default function MyWalletPage() {
                             </div>
 
                             <div className="rentals-content">
-                               {bookings.length > 0 ? (
+                               {bookings.length > 0 || (
                                 <div className="wallet-card">
                                     {active === "overview" && <OverviewTab />}
                                     {active === "history" && <HistoryTab/>}
@@ -67,14 +67,8 @@ export default function MyWalletPage() {
                                     {active === "deposit" && <DepositTab/>}
                                 </div>
                                    
-                               ) : (
-                                <div className="no-rentals">
-                                    <img src="src\assets\suitcase.png" alt="No rentals" />
-                                    <p>No rentals found.</p>
-
-                                </div>    
-                               )
-                               }
+                               )}
+                               
                             </div>
                         </div>
                     </div>

@@ -104,7 +104,6 @@ body {
   display: flex;
   flex-direction: column;
   padding-top: 60px;
- 
 }
 
 .properties-content {
@@ -222,51 +221,22 @@ body {
   margin-right: 0.5rem;
 }
 
-/*
-.location-filter-panel {
-  max-height: 280px;
-  overflow-y: auto;
-  padding: 0.5rem 0;
+.availability {
+  position: static;
+  margin-left: 350px;
 }
 
-.location-filter-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.location-filter-item {
-  padding: 0.6rem 1rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  color: #374151;
-  transition: background-color 0.15s;
-}
-
-.location-filter-item:hover,
-.location-filter-item:focus {
-  background-color: #e7e0f4;
-  outline: none;
-}
-
-.location-filter-message {
-  margin: 0;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #6b7280;
-}
-*/
-.date {
+.date,
+.availability {
   display: flex;
   flex-direction: row;
   gap: 3rem;
   padding: 1.1rem;
-
   left: 50%;
-  transform: translateX(-50%); 
+  transform: translateX(-50%);
   width: auto;
-  min-width: 500px; 
-  z-index: 9999;
+  min-width: 500px;
+  z-index: 3;
 }
 
 .date .calendar-column {
@@ -299,17 +269,6 @@ body {
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
-
-/*
-.container:focus-within {
-  outline: none;
-  border-color: #5f5d5d;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-*/
-
-
 
 .option {
   display: flex;
@@ -505,6 +464,151 @@ body {
   cursor: pointer;
 }
 
+
+/* RELEVANT INFO PAGE */
+.info-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0 30px;
+}
+
+.info-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.header .title,
+.place-description .title,
+.place-amenities .title,
+.place-policies .title,
+.place-availability .title {
+  margin-top: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3f4143;
+  margin-bottom: 0.5rem;
+}
+
+.header p,
+.place-description p {
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c6d6e;
+}
+
+.reserve-button button {
+  background: linear-gradient(135deg, #965cfb 0%, #641ae4 100%);
+  border-style: none;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  outline: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.reserve-button button:hover {
+  background: linear-gradient(135deg, #641ae4 0%, #965cfb 100%);
+}
+
+.info-images {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  height: auto; 
+  margin-bottom: 20px;
+}
+
+.main-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 14px;
+}
+
+.side-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  height: 100%;
+  width: 100%;
+  gap: 10px;
+}
+
+.side-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.main-image img:hover,
+.side-images img:hover {
+  cursor: pointer;
+  filter:contrast(1);
+  opacity: 0.8;
+  transition: filter 0.5s ease, opacity 0.5s ease;
+}
+
+.place-description,
+.place-amenities,
+.place-policies,.place-availability {
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.place-description,
+.place-amenities,
+.place-policies {
+  background-color: white;
+}
+
+
+.place-amenities .amenities {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(5, auto);
+  gap: 10px 20px;
+} 
+
+.icon-amenities {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c6d6e;
+}
+
+.icon-amenities .icon,
+.checkIn-checkOut .icon {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #621add
+}
+
+.checkIn-checkOut p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c6d6e;
+}
+
+.checkIn-checkOut .check {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #5f0af2;
+}
+
+.checkIn-checkOut .check:last-child {
+  border-bottom: none;
+}
 
 /*KYS FORM PAGE */
 .kyc-container {
@@ -1451,3 +1555,128 @@ body {
   font-size: 1.1rem;
   font-weight: 500;
 }
+
+/* RESERVE PAGE*/
+.container-reserve {
+  display: flex;
+  gap: 5rem;               
+  width: 100%;
+ 
+  margin: 5rem auto;   
+}        
+
+.contact-info,
+.history-reservation {
+  flex: 1;                 
+  padding: 2rem;
+  background-color: white;
+  border: 2px solid #621add;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(19, 24, 36, 0.06);
+}
+
+.contact-info h2 {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #495057;
+  margin-top: 0;
+}
+
+.history-top {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #9369dd;
+}
+
+.history-top .title h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3f4143;
+  margin-bottom: 0.5rem;
+}
+
+.history-top .title p {
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c6d6e;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #6c6d6e;
+}
+
+.history-content .info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid #9369dd;
+  padding-bottom: 10px;
+}
+
+.history-content .info:last-child {
+  border-bottom: none;
+}
+
+.history-content .info .total-price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #5e0cec;
+}
+
+.botton-payment,
+.botton-payment-eth,
+.botton-payment:focus,
+.botton-payment-eth:focus {
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.4s;
+  border: none;
+  outline: none;
+}
+
+.botton-payment {
+  background: linear-gradient(135deg, #ae8ee4 0%, #7555ae 100%);
+}
+
+.botton-payment-eth {
+  background: linear-gradient(135deg, #8d70c0 0%, #7f3df1 100%);
+}
+
+.botton-payment-eth
+
+.form-group .wallet-address,
+.form-group  .price {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #848585;
+}
+
+.form-group .wallet-address {
+ border-bottom: 1px solid #9369dd;
+ padding-bottom: 10px;
+}
+
+.eth-payment {
+  margin-top: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #6c6d6e;
+  margin-bottom: 0;
+}
+

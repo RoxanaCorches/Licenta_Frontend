@@ -8,7 +8,6 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import "../pages/Navbar.css";
 import { useWallet } from "../hooks/WalletContext";
 import { IoMdSettings } from "react-icons/io";
-import { MdAccountCircle } from "react-icons/md";
 
 export default function Navbar() {
     const {account, connectWallet} = useWallet();
@@ -68,7 +67,7 @@ export default function Navbar() {
                                 <div className="container-wrapper-info"> 
                                 <div className="navbar-container-info"> 
                                     
-                                    <span onClick = {dropdownPanel} className="navbar-button">Your account</span>
+                                    <span onClick = {dropdownPanel} className="navbar-button">Your account: {account &&  `${account.slice(0, 6)}...${account.slice(-4)}`}</span>
                                 </div>
 
                                 {panelInfo && (

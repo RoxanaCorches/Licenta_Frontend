@@ -5,10 +5,9 @@ export default function HouseRules(){
     const [data, setData] = useState({
                 pet: '',
                 smoking: '',
-                occupants: '',
+                parties: '',
             });
 
-    const [members, setMembers] = useState(1);
     //hours
     const [hourCheckInFrom, setHourCheckInFrom] = useState("15:00");
     const [hourCheckInUntil, setHourCheckInUntil] = useState("18:00");
@@ -54,6 +53,10 @@ export default function HouseRules(){
 
         const handleChangeSmoking = (e) => {
             setData(prev => ({...prev, smoking: e.target.value}));
+        }
+
+        const handleChangeParties = (e) => {
+            setData(prev => ({...prev, parties: e.target.value}));
         }
         
     return(
@@ -114,11 +117,29 @@ export default function HouseRules(){
                     </div>
 
                     <div className="form-section-options"> 
-                        <p className="form-label">Maximum members</p>
-                        <div className="buttons-plus-minus">
-                            <button type="button" onClick = {() => (setMembers(members - 1))} disabled = {members <= 1}> - </button>
-                            <span>{members}</span>
-                            <button type="button" onClick={() => (setMembers(members + 1))} > + </button> 
+                        <p className="form-label">Parties or events allowed?</p>
+                        <div className="option-yes-no">
+                            <label className="ratio-custom">
+                                <input 
+                                    type="radio" 
+                                    name="parties"
+                                    value="partiesYes"
+                                    checked={data.parties === "partiesYes"}
+                                    onChange={handleChangeParties}
+                                />
+                                <span className="form-label">YES</span>
+                            </label>
+                            
+                            <label className="ratio-custom"> 
+                                <input 
+                                    type="radio" 
+                                    name="parties"
+                                    value="partiesNo"
+                                    checked={data.parties === "partiesNo"}
+                                    onChange={handleChangeParties}
+                                />
+                                <span className="form-label">NO</span>
+                            </label>
                         </div>
                     </div>
 

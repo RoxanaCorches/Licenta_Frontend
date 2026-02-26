@@ -7,6 +7,8 @@ import ListYourPropertyPage from "./pages/ListYourPropertyPage";
 import MyAccountPage from "./pages/MyAccountPage";
 import MyRentalsPage from "./pages/MyRentalsPage";
 import MyWalletPage from "./pages/MyWalletPage";
+import PropertyInfo from "./components/property/PropertyInfo";
+import ReservePage from "./pages/ReservePage";
 
 function App() {
   return (
@@ -16,6 +18,9 @@ function App() {
         <Route path="/" element={<StartPage />} />
         <Route path="/kyc" element={<KYCFormPage />} />
         <Route path="/properties" element={<PropertiesPage />} />
+        <Route path="/properties/property/:id" element={<PropertyInfo />} />
+        <Route path="/properties/property/:id/reserve" element={<ReservePage />} />
+        
         <Route path="/listYourProperty" element={<ListYourPropertyPage />} />
         <Route path="/myAccount" element={<MyAccountPage />} />
         <Route path="/myRentals" element={<MyRentalsPage />} />

@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import SearchProperty from "../components/SearchProperty";
-import PropertiesImages from "../components/PropertiesImages"
+import PropertiesImages from "../components/property/PropertiesImages"
 
 export default function PropertiesPage() {
     return(
