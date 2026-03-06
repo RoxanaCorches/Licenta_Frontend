@@ -1,21 +1,23 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { createUser } from "../services/UsersService";
+import { useNavigate } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 export default function KYCFormPage() {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [data, setData] =useState({
         username: '',
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         birthday: '',
-        phone_number: '',
+        phoneNumber: '',
         nationality:'',
         city: '',
         address: '',
         zipcode: '',
-        address_blockchain: ''
+        blockchainAddress: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -26,25 +28,43 @@ export default function KYCFormPage() {
         setData(prev => ({...prev, [name]: value}));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         console.log("Form:", data);
 
-        const { username, first_name, last_name, birthday, phone_number, nationality, city, address, zipcode, address_blockchain} = data;
-        if(!username || !first_name || !last_name || !birthday || !phone_number || !nationality || !city || !address || !zipcode || !address_blockchain) {
+        const { username, firstName, lastName, birthday, phoneNumber, nationality, city, address, zipcode, blockchainAddress} = data;
+        if(!username || !firstName || !lastName || !birthday || !phoneNumber || !nationality || !city || !address || !zipcode || !blockchainAddress) {
             setError("You must complete all fields!");
             setLoading(false);
             return;
         }
-        
-        // Aici poți adăuga logica de trimitere a datelor
-        setTimeout(() => {
+
+        const infoUser = {
+            username,
+            firstName,
+            lastName,
+            birthday,
+            phoneNumber,
+            nationality,
+            city,
+            address,
+            zipcode,
+            blockchainAddress
+        };
+
+        try {
+            await createUser(infoUser);
+            alert("User created!");
+            navigate("/properties");
+        } catch(error) {
+            setError(`Error create user: ${error.messge}`);
+        } finally {
             setLoading(false);
-            // navigate('/properties'); // decomentează când vrei să navighezi
-        }, 1000);
-    }
+        }
+        }
+    
 
      return(
        <div className="kyc-container">
@@ -77,13 +97,13 @@ export default function KYCFormPage() {
                 </div>
                 
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="first_name">First Name</label>
+                    <label className="kyc-label" htmlFor="firstName">First Name</label>
                     <input
                         className="kyc-input" 
                         type="text"
-                        id="first_name"
-                        name="first_name"
-                        value={data.first_name}
+                        id="firstName"
+                        name="firstName"
+                        value={data.firstName}
                         onChange={handleChange}
                         required
                         disabled={loading}
@@ -92,13 +112,13 @@ export default function KYCFormPage() {
                 </div>
 
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="last_name">Last Name</label>
+                    <label className="kyc-label" htmlFor="lastName">Last Name</label>
                     <input
                         className="kyc-input" 
                         type="text"
-                        id="last_name"
-                        name="last_name"
-                        value={data.last_name}
+                        id="lastName"
+                        name="lastName"
+                        value={data.lastName}
                         onChange={handleChange}
                         required
                         disabled={loading}
@@ -122,13 +142,13 @@ export default function KYCFormPage() {
                 </div>
 
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="phone_number">Phone Number</label>
+                    <label className="kyc-label" htmlFor="phoneNumber">Phone Number</label>
                     <input
                         className="kyc-input" 
                         type="text"
-                        id="phone_number"
-                        name="phone_number"
-                        value={data.phone_number}
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        value={data.phoneNumber}
                         onChange={handleChange}
                         required
                         disabled={loading}
@@ -200,13 +220,13 @@ export default function KYCFormPage() {
                 </div>
 
                 <div className="kyc-form-group">
-                    <label className="kyc-label" htmlFor="address_blockchain">Wallet Address</label>
+                    <label className="kyc-label" htmlFor="blockchainAddress">Wallet Address</label>
                     <input
                         className="kyc-input" 
                         type="text"
-                        id="address_blockchain"
-                        name="address_blockchain"
-                        value={data.address_blockchain}
+                        id="blockchainAddress"
+                        name="blockchainAddress"
+                        value={data.blockchainAddress}
                         onChange={handleChange}
                         required
                         disabled={loading}
@@ -214,7 +234,13 @@ export default function KYCFormPage() {
                     />
                 </div>
 
-                <button type="submit" className="kyc-submit-btn" disabled={loading}>
+                <button 
+                    type="submit" 
+                    className="kyc-submit-btn" 
+                    disabled={loading}
+                    onClick={handleSubmit}
+                >
+                
                     {loading ? 'Submitting...' : 'Submit'}
                 </button>
             </form>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { GrUploadOption } from "react-icons/gr";
+import { FaEdit } from "react-icons/fa";
 
 export default function MyAccountPage() {
     const [image, setImage] = useState(null);
@@ -69,24 +70,36 @@ export default function MyAccountPage() {
                         <div className="bottom-left">
                             <div className="form-section"> 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Username:</p>
+                                    <p className="form-label">Username</p>
                                     <p className="form-label">username</p>
+                                    <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">First Name:</p>
+                                    <p className="form-label">First Name</p>
+                                    <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Last Name:</p>
+                                    <p className="form-label">Last Name</p>
+                                    <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Birthday:</p>
+                                    <p className="form-label">Birthday</p>
                                 </div>
 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Phone Number:</p>
+                                    <p className="form-label">Phone Number</p>
+                                    <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -94,24 +107,36 @@ export default function MyAccountPage() {
                         <div className="bottom-right">
                             <div className="form-section"> 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Nationality:</p>
+                                    <p className="form-label">Nationality</p>
+                                    <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
                         
                                 <div className="form-section-options"> 
-                                     <p className="form-label">City:</p>
+                                     <p className="form-label">City</p>
+                                     <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                      
                                 </div>
 
                                 <div className="form-section-options"> 
-                                     <p className="form-label">Address:</p>
+                                     <p className="form-label">Address</p>
+                                     <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Zipcode:</p>
+                                    <p className="form-label">Zipcode</p>
+                                    <button className="button-edit">
+                                        <FaEdit className="icon-edit"/>
+                                    </button>
                                 </div>
 
                                 <div className="form-section-options"> 
-                                    <p className="form-label">Wallet Address:</p>
+                                    <p className="form-label">Wallet Address</p>
                                 </div>
                             </div>
                         </div>

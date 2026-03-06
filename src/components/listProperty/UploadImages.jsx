@@ -38,14 +38,17 @@ export default function UploadImages(){
         <div className="form-section"> 
             <div className="container-upload-images-main"> 
                     <div className="upload-image-main"> 
-                        {mainImage &&  (
+                        <div className="wrapper-image">
+                            {mainImage &&  (
                             <img
                                 className="view-image"
                                 src={mainImage.preview}
                                 alt={mainImage.image.name}
                             />
-                        )}
-
+                            )}
+                        <button className="delete-button">&times;</button>
+                        </div>
+                       
                         {!mainImage && (
                             <>
                                 <span className="content-image">Upload at least 5 photos of your property.</span>

@@ -10,6 +10,7 @@ export default function BasicInfo() {
             ListingTitle: '',
             description: '',
             area: '',
+            price: ''
         });
     
         const [loading] = useState(false);
@@ -125,6 +126,22 @@ export default function BasicInfo() {
                             required
                             disabled={loading}
                             placeholder="Area (sqm)"
+                            min={0}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="listindescriptiongTitle">Price per night</label>
+                        <input
+                            className="from-input" 
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={data.price}
+                            onChange={handleChange}
+                            required
+                            disabled={loading}
+                            placeholder="Price per night"
                             min={0}
                         />
                     </div>
