@@ -4,6 +4,7 @@ import { hasKycNft } from "../services/KycNftService";
 
 export function ConnectWallet({children}){
     const [account, setAccount] = useState(null);
+    //const [account, setAccount] = useState(localStorage.getItem("walletAddress"));
     const [error, setError] = useState("");
 
     const connectWallet = async () => {

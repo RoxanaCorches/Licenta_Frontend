@@ -13,10 +13,18 @@ export default function Navbar() {
     const {account, connectWallet} = useWallet();
     const [panelInfo, setPanelInfo] =useState(false);
 
+    const walletAddress = account || localStorage.getItem("walletAddress");
+    console.log("Wallet from kyc:", walletAddress);
+
     const dropdownPanel = (e) => {
         e.preventDefault();
         setPanelInfo(!panelInfo);
     };
+
+    const logout = () => {
+        localStorage.removeItem("walletAddress");
+        window.location.reload();
+    }
 
     return (
         <nav className="navbar">
@@ -28,7 +36,7 @@ export default function Navbar() {
                 
                 <ul className="navbar-menu">
                     <li className="navbar-item">
-                        {account ? (
+                        {walletAddress ? (
                         <NavLink 
                             to="/listYourProperty" 
                             className={({ isActive }) => 
@@ -63,11 +71,10 @@ export default function Navbar() {
                     </li>
 
                     <li className="navbar-item">
-                            {account ? (
+                            {walletAddress ? (
                                 <div className="container-wrapper-info"> 
                                 <div className="navbar-container-info"> 
-                                    
-                                    <span onClick = {dropdownPanel} className="navbar-button">Your account: {account &&  `${account.slice(0, 6)}...${account.slice(-4)}`}</span>
+                                    <span onClick = {dropdownPanel} className="navbar-button">Your account: {walletAddress &&  `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}</span>
                                 </div>
 
                                 {panelInfo && (
@@ -87,7 +94,11 @@ export default function Navbar() {
                                             <span>Settings</span>
                                         </NavLink>
                                             
-                                        <NavLink to="/" className="navbar-link-option">
+                                        <NavLink 
+                                            to="/" 
+                                            className="navbar-link-option"
+                                            onClick={logout}
+                                        >
                                             <RiLogoutCircleRFill className="navbar-icon"/>
                                             <span>Logout</span>
                                         </NavLink>  

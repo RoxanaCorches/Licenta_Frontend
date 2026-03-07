@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import { createUser } from "../services/UsersService";
+import { mintKycForUser } from "../services/UsersService";
 import { useNavigate } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
@@ -23,6 +23,8 @@ export default function KYCFormPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const walletAddress = localStorage.getItem("walletAddress");
+    
     const handleChange = (e) => {
         const { name, value} = e.target;
         setData(prev => ({...prev, [name]: value}));
@@ -55,17 +57,16 @@ export default function KYCFormPage() {
         };
 
         try {
-            await createUser(infoUser);
-            alert("User created!");
+            await mintKycForUser(infoUser);
+            alert("KYC minted!");
             navigate("/properties");
         } catch(error) {
-            setError(`Error create user: ${error.messge}`);
+            setError(`Error create user: ${error.message}`);
         } finally {
             setLoading(false);
         }
-        }
+    }
     
-
      return(
        <div className="kyc-container">
         <Navbar />
@@ -226,11 +227,10 @@ export default function KYCFormPage() {
                         type="text"
                         id="blockchainAddress"
                         name="blockchainAddress"
-                        value={data.blockchainAddress}
+                        value={walletAddress}
                         onChange={handleChange}
                         required
                         disabled={loading}
-                        placeholder="Enter your blockchain wallet address"
                     />
                 </div>
 

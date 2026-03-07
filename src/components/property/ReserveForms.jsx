@@ -11,6 +11,8 @@ export default function ReserveForms() {
     const [step, setStep] = useState(1);
     const [loading] = useState(false);
 
+    const walletAddress = localStorage.getItem("walletAddress");
+
     const handleChange = (e) => {
             const { name, value} = e.target;
             setData(prev => ({...prev, [name]: value}));
@@ -92,7 +94,7 @@ export default function ReserveForms() {
 
                     <div className="form-group">
                         <button type="button" className="botton-payment">Connect Wallet</button>
-                        <p className="wallet-address">Wallet Address:</p>
+                        <p className="wallet-address">Wallet Address: {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}</p>
                     </div>
 
                     <div className="form-group">

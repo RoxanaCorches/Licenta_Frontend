@@ -1,6 +1,23 @@
 const API = "http://localhost:8080/users";
 
-export async function createUser(addUser) {
+export async function getUserById(userId) {
+    const response = await fetch(`${API}/getUserById/${userId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to get user!")
+    }
+
+    const data = await response.json();
+    return data;
+}
+
+export async function mintKycForUser(addUser) {
     const response = await fetch(`${API}/createUser`, {
         method: "POST",
         headers: {
@@ -15,29 +32,35 @@ export async function createUser(addUser) {
     }
 
     const data = await response.json();
-    
-    const username = data.username;
-    const firstName = data.firstName;
-    const lastName = data.lastName;
+    const userId = data.userId;
+    const blockchainAddress = data.blockchainAddress;
     const birthday = data.birthday;
-    const phoneNumber = data.phoneNumber;
-    const nationality = data.nationality;
-    const city = data.city;
-    const address = data.address;
-    const zipcode = data.zipcode;
-    const walletAddress = data.walletAddress;
+  
 
-
-    localStorage.setItem("username", username);
-    localStorage.setItem("firstName", firstName);
-    localStorage.setItem("lastName", lastName);
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("blockchainAddress", blockchainAddress);
     localStorage.setItem("birthday", birthday);
-    localStorage.setItem("phoneNumber", phoneNumber);
-    localStorage.setItem("nationality", nationality);
-    localStorage.setItem("city", city);
-    localStorage.setItem("address", address);
-    localStorage.setItem("zipcode", zipcode);
-    localStorage.setItem("walletAddress", walletAddress);
-
-    return {username, firstName, lastName, birthday, phoneNumber, nationality, city, address, zipcode, walletAddress};
+    return data;
 }
+
+
+export async function updateUser(userId,updateUser) {
+    const response = await fetch(`${API}/updateUser/${userId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        body: JSON.stringify(updateUser),
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to update user!")
+    }
+
+    const data = await response.json();
+    return data;
+}
+
+
+
