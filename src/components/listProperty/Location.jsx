@@ -4,27 +4,17 @@ import { FaHome } from "react-icons/fa";
 
 import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 
-export default function Location(){
-        const [data, setData] =useState({
-                country: '',
-                numberFloor: '',
-                street: '',
-                city: '',
-                zipCode:'',
-                mapLocation:''
-            });
-
+export default function Location({data, updateData, prevStep, nextStep}){
             const [location, setLocation] = useState(null);
         
             const [loading] = useState(false);
             //const [error, setError] = useState('');
         
             const handleChange = (e) => {
-                const { name, value} = e.target;
-                setData(prev => ({...prev, [name]: value}));
+            const { name, value, type, checked} = e.target;
+                updateData({ [name]: type === 'checkbox' ? checked:value});
             };
-    
-           
+
             return(
             <div className="form-section"> 
                     <div className="form-group">
@@ -102,6 +92,7 @@ export default function Location(){
                         />
                     </div>
 
+
                     <div className="form-group">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Map location</label>
                         <LoadScript googleMapsApiKey="AIzaSyBt1WeQk6szrvRyZAYnzXpTFsyS60EInOs" >
@@ -119,6 +110,12 @@ export default function Location(){
                         </LoadScript>
                         
                     </div>
+
+                     <div className="form-buttons">
+                        <button type="button" className="form-prev-button" onClick={prevStep}>Previous</button>
+                        <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
+                    </div>           
+
                 </div>
         );
 }

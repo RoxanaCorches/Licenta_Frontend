@@ -9,6 +9,7 @@ import MyRentalsPage from "./pages/MyRentalsPage";
 import MyWalletPage from "./pages/MyWalletPage";
 import PropertyInfo from "./components/property/PropertyInfo";
 import ReservePage from "./pages/ReservePage";
+import MyListingsPage from "./pages/MyListingsPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/listYourProperty" element={<ListYourPropertyPage />} />
         <Route path="/myAccount" element={<MyAccountPage />} />
         <Route path="/myRentals" element={<MyRentalsPage />} />
+        <Route path="/myListings" element={<MyListingsPage />} />
         <Route path="/myWallet" element={<MyWalletPage />} />
 
 

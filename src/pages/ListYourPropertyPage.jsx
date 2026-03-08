@@ -11,9 +11,57 @@ export default function ListYourPropertyPage() {
     const totalSteps = 5;
     const progress = (step / totalSteps) * 100; 
 
+    const [data, setData] = useState({
+        istingTitle: '',
+            description: '',
+            area: '',
+            price: '',
+            country: '',
+            numberFloor: '',
+            street: '',
+            city: '',
+            zipCode:'',
+            guests: 1,
+            bedrooms:1,
+            bathrooms:1,
+            tv: '',
+            wifi: '',
+            airConditioning: '',
+            kitchen:'',
+            washer:'',
+            pool:'',
+            hotTub:'',
+            bbqGrill:'',
+            poolTable:'',
+            indoorFireplace:'',
+            piano:'',
+            lakeAccess:'',
+            beachAccess:'',
+            skiOut:'',
+            balcony:'',
+            gardenView:'',
+            terrace:'',
+            pet: '',
+            smoking: '',
+            parties: '',
+            checkIn:'',
+            checkOut:'',
+            images:''
+            //mapLocation:''
+    });
+
+    const updateData = (newData) => {
+        setData(prev => ({...prev, ...newData}));
+    };
+
+    /*
+    const createApartment = () => {
+
+    }
+        */
+
     return(
         <form> 
-
          <div className="progress-bar">
             <div className="progress"
                 style={{ width: `${progress}%` }}
@@ -25,10 +73,11 @@ export default function ListYourPropertyPage() {
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 1: Basic Info</h1>
-                    <BasicInfo/>
-                    <div className="form-buttons">
-                        <button type="button" className="form-next-button" onClick={() => setStep(2)}>Next</button>
-                    </div>
+                    <BasicInfo
+                        data={data}
+                        updateData={updateData}
+                        nextStep={() => setStep(2)}
+                    />
                 </div>
             </div>
         )}
@@ -37,11 +86,12 @@ export default function ListYourPropertyPage() {
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 2: Where is your Property?</h1>
-                    <Location />
-                    <div className="form-buttons">
-                        <button type="button" className="form-prev-button" onClick={() => setStep(1)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={() => setStep(3)}>Next</button>
-                    </div>
+                    <Location 
+                        data={data}
+                        updateData={updateData}
+                        prevStep={() => setStep(1)}
+                        nextStep={() => setStep(3)}
+                    />
                 </div>
             </div>
         )}
@@ -50,11 +100,13 @@ export default function ListYourPropertyPage() {
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 3: Share some basics about your place</h1>
-                    <PropertyDetails />
-                    <div className="form-buttons">
-                        <button type="button" className="form-prev-button" onClick={() => setStep(2)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={() => setStep(4)}>Next</button>
-                    </div>
+                    <PropertyDetails 
+                        data={data}
+                        updateData={updateData}
+                        prevStep={() => setStep(2)}
+                        nextStep={() => setStep(4)}
+                    />
+                    
                 </div>
             </div>
         )}
@@ -92,12 +144,11 @@ export default function ListYourPropertyPage() {
                     <UploadImages />
                     <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={() => setStep(5)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={() => setStep(7)}>Next</button>
+                        <button type="button" className="form-next-button" onClick={() => setStep(7)}>Submit</button>
                     </div>
                 </div>
             </div>
         )}
         </form>
     );
-    
 }
