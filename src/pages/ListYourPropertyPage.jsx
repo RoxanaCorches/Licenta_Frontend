@@ -5,14 +5,16 @@ import PropertyDetails from "../components/listProperty/PropertyDetails";
 import Facilities from "../components/listProperty/Facilities";
 import HouseRules from "../components/listProperty/HouseRules";
 import UploadImages from "../components/listProperty/UploadImages";
+import { createApartment } from "../services/ApartmentService";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
-    const totalSteps = 5;
-    const progress = (step / totalSteps) * 100; 
+    //const totalSteps = 5;
+    //const progress = (step / totalSteps) * 100; 
 
     const [data, setData] = useState({
-        istingTitle: '',
+            propertyType: "apartment",
+            listingTitle: '',
             description: '',
             area: '',
             price: '',
@@ -24,58 +26,130 @@ export default function ListYourPropertyPage() {
             guests: 1,
             bedrooms:1,
             bathrooms:1,
-            tv: '',
-            wifi: '',
-            airConditioning: '',
-            kitchen:'',
-            washer:'',
-            pool:'',
-            hotTub:'',
-            bbqGrill:'',
-            poolTable:'',
-            indoorFireplace:'',
-            piano:'',
-            lakeAccess:'',
-            beachAccess:'',
-            skiOut:'',
-            balcony:'',
-            gardenView:'',
-            terrace:'',
-            pet: '',
-            smoking: '',
-            parties: '',
-            checkIn:'',
-            checkOut:'',
-            images:''
+            tv: false,
+            wifi: false,
+            kitchen:false,
+            washer:false,
+            airConditioning:false,
+            pool:false,
+            hotTub:false,
+            bbqGrill:false,
+            poolTable:false,
+            indoorFireplace:false,
+            piano:false,
+            balcony:false,
+            terrace:false,
+            gardenView:false,
+            skiOut:false,
+            lakeAccess:false,
+            beachAccess:false,
+            pet: false,
+            smoking: false,
+            parties: false,
+            hourCheckInFrom: "15:00",
+            hourCheckInUntil: "18:00",
+            hourCheckOutFrom: "10:00",
+            hourCheckOutUntil: "13:00",
+            mainImage: null,
+            otherImage: [null, null, null, null]
             //mapLocation:''
     });
 
-    const updateData = (newData) => {
-        setData(prev => ({...prev, ...newData}));
+    //const [ setLoading] = useState(false);
+    //const [ setError] = useState('');
+
+    const information = (data) => {
+        setData(prev => ({...prev, ...data}));
     };
 
-    /*
-    const createApartment = () => {
+    const handleSubmit = async (e) => {
+            e.preventDefault();
+            //setError('');
+            //setLoading(true);
+            console.log("Form:", data);
 
-    }
-        */
+            try{
+           const images = [];
+
+            if(data.mainImage)
+                images.push(data.mainImage);
+
+            data.otherImage.forEach(img => {
+                if(img)
+                    images.push(img);
+            });
+
+            const imageName = images.map(img => img.name);
+    
+            console.log("Images to upload:", images);
+            console.log(localStorage.getItem("walletAddress"));
+            const addInfoApartment = {
+                blockchainAddress: localStorage.getItem("walletAddress"),
+                title: data.listingTitle,
+                description: data.description,
+                area: Number(data.area),
+                pricePerNight: Number(data.price),
+                country: data.country,
+                floor: Number(data.numberFloor),
+                street: data.street,
+                city: data.city,
+                zipcode: Number(data.zipCode),
+                guests: data.guests,
+                bedrooms: data.bedrooms,
+                bathrooms: data.bathrooms,
+
+                tv: data.tv,
+                wifi: data.wifi,
+                kitchen: data.kitchen,
+                washer: data.washer,
+                air_conditioning: data.airConditioning,
+                pool: data.pool,
+                hot_tub: data.hotTub,
+                BBQ_grill: data.bbqGrill,
+                pool_table: data.poolTable,
+                indoor_fireplace: data.indoorFireplace,
+                piano: data.piano,
+                balcony: data.balcony,
+                terrace: data.terrace,
+                garden_view: data.gardenView,
+                ski_out: data.skiOut,
+                lake_access: data.lakeAccess,
+                beach_access: data.beachAccess,
+                petsAllowed: data.pet === "petYes",
+                smokingAllowed: data.smoking === "smokingYes",
+                partiesAllowed: data.parties === "partiesYes",
+
+                checkInFrom: data.hourCheckInFrom,
+                checkInUntil: data.hourCheckInUntil,
+                checkOutFrom: data.hourCheckOutFrom,
+                checkOutUntil: data.hourCheckOutUntil,
+
+                imageMain: imageName[0],
+                image1: imageName[1],
+                image2: imageName[2],
+                image3: imageName[3],
+                image4: imageName[4],
+            };
+            
+                await createApartment(addInfoApartment, images);
+              
+            } catch(error) { 
+                //setError(`Error create apartment: ${error.message}`);
+                alert(error);
+            } finally {
+                //setLoading(false);
+            }
+        }
 
     return(
         <form> 
-         <div className="progress-bar">
-            <div className="progress"
-                style={{ width: `${progress}%` }}
-             >   
-            </div>     
-        </div>
-
         {step === 1 && ( 
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 1: Basic Info</h1>
                     <BasicInfo
                         data={data}
-                        updateData={updateData}
+                        completeData={information}
                         nextStep={() => setStep(2)}
                     />
                 </div>
@@ -88,7 +162,7 @@ export default function ListYourPropertyPage() {
                     <h1 className="form-step-title">Step 2: Where is your Property?</h1>
                     <Location 
                         data={data}
-                        updateData={updateData}
+                        completeData={information}
                         prevStep={() => setStep(1)}
                         nextStep={() => setStep(3)}
                     />
@@ -102,7 +176,7 @@ export default function ListYourPropertyPage() {
                     <h1 className="form-step-title">Step 3: Share some basics about your place</h1>
                     <PropertyDetails 
                         data={data}
-                        updateData={updateData}
+                        completeData={information}
                         prevStep={() => setStep(2)}
                         nextStep={() => setStep(4)}
                     />
@@ -115,11 +189,13 @@ export default function ListYourPropertyPage() {
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 4: Amenities & Facilities</h1>
-                    <Facilities />
-                    <div className="form-buttons">
-                        <button type="button" className="form-prev-button" onClick={() => setStep(3)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={() => setStep(5)}>Next</button>
-                    </div>
+                    <Facilities 
+                        data={data}
+                        completeData={information}
+                        prevStep={() => setStep(3)}
+                        nextStep={() => setStep(5)}
+                    />
+                    
                 </div>
             </div>
         )}
@@ -128,11 +204,12 @@ export default function ListYourPropertyPage() {
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 5: House Rules</h1>
-                    <HouseRules />
-                    <div className="form-buttons">
-                        <button type="button" className="form-prev-button" onClick={() => setStep(4)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={() => setStep(6)}>Next</button>
-                    </div>
+                    <HouseRules 
+                        data={data}
+                        completeData={information}
+                        prevStep={() => setStep(4)}
+                        nextStep={() => setStep(6)}
+                    />
                 </div>
             </div>
         )}
@@ -141,10 +218,15 @@ export default function ListYourPropertyPage() {
             <div className="form-container">
                 <div className="form-step active">
                     <h1 className="form-step-title">Step 6: Upload Images</h1>
-                    <UploadImages />
+                    <UploadImages 
+                        data={data}
+                        completeData={information}
+                        prevStep={() => setStep(5)}
+                        nextStep={() => setStep(6)}
+                    />
                     <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={() => setStep(5)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={() => setStep(7)}>Submit</button>
+                        <button type="button" className="form-next-button" onClick={handleSubmit}>Submit</button>
                     </div>
                 </div>
             </div>

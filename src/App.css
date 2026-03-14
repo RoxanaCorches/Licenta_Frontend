@@ -1195,7 +1195,7 @@ body {
 .wrapper-image {
   position: relative;
   width: 100%;
-  
+  height: 100%;
 }
 
 .view-image {
@@ -1208,10 +1208,10 @@ body {
   z-index: 1;
 }
 
+/*
 .delete-button {
-  position: absolute;
-  top: -40px;       /* distanța față de colțul superior */
-  right: 2px;     /* distanța față de colțul drept */
+  top: -40px;       
+  right: 2px;     
   background-color: rgba(0,0,0,0.6);
   color: rgb(243, 8, 8);
   border: none;
@@ -1220,11 +1220,13 @@ body {
   height: 25px;
   font-size: 18px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+  */
+
 /* PAGINILE DE LA YOUR ACCOUNT */
 .wrapper-yourAccount {
   display: flex;
@@ -1547,6 +1549,68 @@ border-color: #621add;
   color: #495057;
 }
 
+.rental-card .rental-feedback {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.rental-card .rental-feedback .button-review {
+  background-color: #af83fa;
+  height: 50px;
+  width: 100px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rental-card .rental-feedback .button-review:hover,
+.rental-card .rental-feedback .button-review:focus {
+  background-color: #915bee;
+  border: none;
+  outline: none;
+}
+
+.container-stars {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+  font-size: 2rem;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.star {
+  color:#dbd7d7;
+  transition: 0.5s;
+}
+
+.star.active,
+.star:hover  {
+  color: rgb(240, 240, 37);
+  transform: scale(1.3);
+}
+
+.star.active:focus{
+  color: rgb(240, 240, 37);
+  transform: scale(1.3);
+}
+
+.input-feedback {
+  height: 100px;
+  padding: 12px;
+  resize: none;
+  border-color: #621add;
+  border-radius: 10px;
+  color: #333;
+  font-size: 0.9rem;
+  font-width: 500;
+  outline: none;
+}
+
 .no-rentals {
  display: flex;
  flex-direction: column;
@@ -1625,7 +1689,6 @@ border-color: #621add;
   padding: 14px;
   text-align: center;
 }
-
 
 
 .history-container {

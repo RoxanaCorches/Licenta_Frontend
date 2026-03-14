@@ -8,6 +8,9 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import "../pages/Navbar.css";
 import { useWallet } from "../hooks/WalletContext";
 import { IoMdSettings } from "react-icons/io";
+import { FaClipboardList } from "react-icons/fa";
+import { IoWallet } from "react-icons/io5";
+import { MdRateReview } from "react-icons/md";
 
 export default function Navbar() {
     const {account, connectWallet} = useWallet();
@@ -87,6 +90,21 @@ export default function Navbar() {
                                         <NavLink to="/myRentals" className="navbar-link-option">
                                             <FaSuitcase className="navbar-icon" />
                                             <span>My Rentals</span>
+                                        </NavLink>
+
+                                        <NavLink to="/myListings" className="navbar-link-option">
+                                            <FaClipboardList className="navbar-icon" />
+                                            <span>My Listings</span>
+                                        </NavLink>
+
+                                        <NavLink to="/myWallet" className="navbar-link-option">
+                                            <IoWallet className="navbar-icon" />
+                                            <span>Wallet</span>
+                                        </NavLink>
+
+                                        <NavLink to="/myReviews" className="navbar-link-option">
+                                            <MdRateReview className="navbar-icon" />
+                                            <span>Reviews</span>
                                         </NavLink>
 
                                         <NavLink to="/settings" className="navbar-link-option">

@@ -1,18 +1,15 @@
 import { useState } from "react";
-import { MdApartment } from "react-icons/md";
-import { FaHome } from "react-icons/fa";
-
 import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 
-export default function Location({data, updateData, prevStep, nextStep}){
+export default function Location({data, completeData, prevStep, nextStep}){
             const [location, setLocation] = useState(null);
         
             const [loading] = useState(false);
             //const [error, setError] = useState('');
         
             const handleChange = (e) => {
-            const { name, value, type, checked} = e.target;
-                updateData({ [name]: type === 'checkbox' ? checked:value});
+            const { name, value } = e.target;
+                completeData({ [name]: value});
             };
 
             return(
@@ -58,7 +55,7 @@ export default function Location({data, updateData, prevStep, nextStep}){
                             value={data.street}
                             onChange={handleChange}
                             disabled={loading}
-                            placeholder="Street address)"
+                            placeholder="Street address"
                         />
                     </div>
 

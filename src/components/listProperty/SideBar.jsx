@@ -3,6 +3,8 @@ import { FaUser, FaSuitcase } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { RiLogoutCircleRFill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
+import { IoWallet } from "react-icons/io5";
+import { MdRateReview } from "react-icons/md";
 
 export default function Sidebar() {
     return(
@@ -17,14 +19,19 @@ export default function Sidebar() {
                         <span>My Rentals</span>
                     </NavLink>
 
-                     <NavLink to="/myListings" className="sidebar-link-option">
+                    <NavLink to="/myListings" className="sidebar-link-option">
                         <FaClipboardList className="sidebar-icon" />
                         <span>My Listings</span>
                     </NavLink>
 
                     <NavLink to="/myWallet" className="sidebar-link-option">
-                        <FaSuitcase className="sidebar-icon" />
+                        <IoWallet className="sidebar-icon" />
                         <span>Wallet</span>
+                    </NavLink>
+
+                    <NavLink to="/myReviews" className="sidebar-link-option">
+                        <MdRateReview className="sidebar-icon" />
+                        <span>Reviews</span>
                     </NavLink>
 
                     <NavLink to="/settings" className="sidebar-link-option">

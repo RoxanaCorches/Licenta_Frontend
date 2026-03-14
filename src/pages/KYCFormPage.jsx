@@ -60,7 +60,7 @@ export default function KYCFormPage() {
             await mintKycForUser(infoUser);
             alert("KYC minted!");
             navigate("/properties");
-        } catch(error) {
+        } catch(error) { 
             setError(`Error create user: ${error.message}`);
         } finally {
             setLoading(false);

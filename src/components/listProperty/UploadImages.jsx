@@ -1,37 +1,48 @@
-import { useState } from "react";
 import { TbPhotoShare } from "react-icons/tb";
 
+export default function UploadImages({data, completeData}){
 
-export default function UploadImages(){
-    const [mainImage, setMainImage] = useState(null);
-    const [otherImage, setOtherImage] = useState([null, null, null, null]);
-
+    /*
     const handleUploadeMainImage = (e) => {
         const image = e.target.files[0];
 
         if(image){
-            setMainImage({
+            completeData({
+                mainImage: {
                 image,
                 preview: URL.createObjectURL(image)
+                }
+            });
+        }
+    };
+    */
+    const handleUploadeMainImage = (e) => {
+        const image = e.target.files[0];
+
+        if(image){
+            completeData({
+                mainImage: image
             });
         }
     };
 
-    
     const handleUploadeOtherImages = (e, index) => {
-        const images = e.target.files[0];
+        const image = e.target.files[0];
 
-        if(!images) return;
+        if(!image) return;
 
-        const viewImages = [...otherImage];
+        const viewImages = [...data.otherImage];
+         viewImages[index] = image;
+        /*
         viewImages[index] = {
-            image: images,
-            preview: URL.createObjectURL(images)
+            image,
+            preview: URL.createObjectURL(image)
         };
-        console.log(index,images);
-        setOtherImage(viewImages);
+        */
+        console.log(index,image);
+        completeData({otherImage: viewImages});
 
-        console.log(index,images);
+        console.log(index,image);
     };
 
     return(
@@ -39,17 +50,17 @@ export default function UploadImages(){
             <div className="container-upload-images-main"> 
                     <div className="upload-image-main"> 
                         <div className="wrapper-image">
-                            {mainImage &&  (
+                            {data.mainImage &&  (
                             <img
                                 className="view-image"
-                                src={mainImage.preview}
-                                alt={mainImage.image.name}
+                                src={URL.createObjectURL(data.mainImage)}
+                                alt={data.mainImage.name}
                             />
                             )}
                         <button className="delete-button">&times;</button>
                         </div>
                        
-                        {!mainImage && (
+                        {!data.mainImage && (
                             <>
                                 <span className="content-image">Upload at least 5 photos of your property.</span>
 
@@ -58,7 +69,6 @@ export default function UploadImages(){
                                     <input
                                         id="mainImageInput"
                                         type="file"
-                                        multiple
                                         accept="image/*"
                                         onChange={handleUploadeMainImage}
                                     />
@@ -75,17 +85,17 @@ export default function UploadImages(){
                     <div className="container-upload-images-next" key={containerIndex}> 
 
                         <div className="upload-image-next"> 
-                            {otherImage[containerIndex] && (
+                            {data.otherImage[containerIndex] && (
                                 <img
                                     className="view-image"
-                                    src={otherImage[containerIndex].preview}
-                                    alt={otherImage[containerIndex].image.name}
+                                    src={URL.createObjectURL(data.otherImage[containerIndex])}
+                                    alt={data.otherImage[containerIndex].name}
                                    
                                 />
                             )}
 
                            
-                          {!otherImage[containerIndex] && ( 
+                          {!data.otherImage[containerIndex] && ( 
                                 <> 
                                     <TbPhotoShare className="icon-image-next"/>
                                     <div className="file-upload"> 

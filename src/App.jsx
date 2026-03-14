@@ -10,6 +10,7 @@ import MyWalletPage from "./pages/MyWalletPage";
 import PropertyInfo from "./components/property/PropertyInfo";
 import ReservePage from "./pages/ReservePage";
 import MyListingsPage from "./pages/MyListingsPage";
+import MyReviewPage from "./pages/MyReviewPage";
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
         <Route path="/myRentals" element={<MyRentalsPage />} />
         <Route path="/myListings" element={<MyListingsPage />} />
         <Route path="/myWallet" element={<MyWalletPage />} />
-
+         <Route path="/myReviews" element={<MyReviewPage />} />
 
       </Routes>
     </BrowserRouter>

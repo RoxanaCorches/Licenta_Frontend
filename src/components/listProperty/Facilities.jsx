@@ -1,4 +1,4 @@
-import { useState } from "react";
+//import { useState } from "react";
 import { MdApartment } from "react-icons/md";
 import { FaTv, FaWifi, FaHotTub,FaSkiing,FaUmbrellaBeach  } from "react-icons/fa";
 import { FaKitchenSet, FaHouseFloodWater  } from "react-icons/fa6";
@@ -8,7 +8,8 @@ import { MdOutlinePool, MdOutdoorGrill, MdOutlineFireplace, MdBalcony, MdDeck,Md
 import { GiPoolTableCorner, GiGrandPiano  } from "react-icons/gi";
 
 
-export default function Facilities(){
+export default function Facilities({data, completeData, prevStep, nextStep}) {
+    /*
          const [data, setData] =useState({
             tv: '',
             wifi: '',
@@ -28,16 +29,21 @@ export default function Facilities(){
             gardenView:'',
             terrace:''
         });
-    
+    */
         //const [loading] = useState(false);
         //const [error, setError] = useState('');
-    
+         /*
         const handleChange = (e) => {
             const { name, value} = e.target;
             setData(prev => ({...prev, [name]: value}));
         };
 
-        
+         */  
+        const handleChange = (e) => {
+            const {name, value, type, checked} = e.target;
+            completeData({ [name]: type === 'checkbox' ? checked : value});
+        };
+     
     
         /*
         const handleSubmit = (e) => {
@@ -70,8 +76,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="tv"
-                                value="tv"
-                                checked={data.tv === "tv"}
+                                checked={data.tv}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -84,8 +89,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="wifi"
-                                value="wifi"
-                                checked={data.wifi === "wifi"}
+                                checked={data.wifi}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -98,8 +102,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="kitchen"
-                                value="kitchen"
-                                checked={data.kitchen === "kitchen"}
+                                checked={data.kitchen}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -112,8 +115,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="washer"
-                                value="washer"
-                                checked={data.washer === "washer"}
+                                checked={data.washer}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -126,8 +128,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="airConditioning"
-                                value="airConditioning"
-                                checked={data.airConditioning === "airConditioning"}
+                                checked={data.airConditioning}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -144,8 +145,8 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="pool"
-                                value="pool"
-                                checked={data.pool === "pool"}
+                               
+                                checked={data.pool}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -158,8 +159,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="hotTub"
-                                value="hotTub"
-                                checked={data.hotTub === "hotTub"}
+                                checked={data.hotTub}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -172,8 +172,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="bbqGrill"
-                                value="bbqGrill"
-                                checked={data.bbqGrill === "bbqGrill"}
+                                checked={data.bbqGrill}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -186,8 +185,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="poolTable"
-                                value="poolTable"
-                                checked={data.poolTable === "poolTable"}
+                                checked={data.poolTable}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -200,8 +198,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="indoorFireplace"
-                                value="indoorFireplace"
-                                checked={data.indoorFireplace === "indoorFireplace"}
+                                checked={data.indoorFireplace}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -214,8 +211,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="piano"
-                                value="piano"
-                                checked={data.piano === "piano"}
+                                checked={data.piano}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -232,8 +228,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="balcony"
-                                value="balcony"
-                                checked={data.balcony === "balcony"}
+                                checked={data.balcony}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -246,8 +241,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="terrace"
-                                value="terrace"
-                                checked={data.terrace === "terrace"}
+                                checked={data.terrace}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -260,8 +254,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="gardenView"
-                                value="gardenView"
-                                checked={data.gardenView === "gardenView"}
+                                checked={data.gardenView}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -274,8 +267,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="skiOut"
-                                value="skiOut"
-                                checked={data.skiOut === "skiOut"}
+                                checked={data.skiOut}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -288,8 +280,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="lakeAccess"
-                                value="lakeAccess"
-                                checked={data.lakeAccess === "lakeAccess"}
+                                checked={data.lakeAccess}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -302,8 +293,7 @@ export default function Facilities(){
                             <input 
                                 type="checkbox" 
                                 name="beachAccess"
-                                value="beachAccess"
-                                checked={data.beachAccess === "beachAccess"}
+                                checked={data.beachAccess}
                                 onChange={handleChange}
                             />
                             <span className="form-type-facility-content">
@@ -312,6 +302,10 @@ export default function Facilities(){
                             </span>
                         </label>
                     </div>
+        </div>
+        <div className="form-buttons">
+            <button type="button" className="form-prev-button" onClick={prevStep}>Previous</button>
+            <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
         </div>
     </div>
     );
