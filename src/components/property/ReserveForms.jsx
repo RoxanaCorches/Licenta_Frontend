@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getApartmentById } from "../../services/ApartmentService";
 
 export default function ReserveForms() {
+    const [property, setProperty] = useState(null);
     const [data, setData] =useState({
                 firstName: '',
                 lastName: '',
@@ -9,7 +12,8 @@ export default function ReserveForms() {
             });
 
     const [step, setStep] = useState(1);
-    const [loading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const walletAddress = localStorage.getItem("walletAddress");
 
@@ -17,6 +21,27 @@ export default function ReserveForms() {
             const { name, value} = e.target;
             setData(prev => ({...prev, [name]: value}));
         };
+
+    const {idApartment} = useParams();
+    console.log("Id apartment:" + idApartment)
+    
+    useEffect(() => {
+        const loadInfoProperty = async () => {
+            try {
+                setLoading(true);
+                const data = await getApartmentById(idApartment);
+                setProperty(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadInfoProperty();
+    }, [idApartment]);
+
+     if (loading) return <p>Se încarcă proprietățile...</p>;
+    if (error) return <p>Eroare: {error}</p>;
 
     return(
         <div className="container-reserve">
@@ -118,9 +143,8 @@ export default function ReserveForms() {
                     </div>
 
                     <div className="title">
-                        <h2>Title</h2>
-                        <p>location</p>
-
+                        <h2>{property.title}</h2>
+                        <p>{property.street}, {property.city}, {property.country}</p>
                     </div>
                 </div>
 
@@ -135,11 +159,13 @@ export default function ReserveForms() {
                     </div>
 
                     <div className="info">
-                        <p>Guests:</p>
+                        <p>Guests</p>
+                        <p>{property.guests}</p>
                     </div>
 
                     <div className="info">
                         <p>Price details:</p>
+                        <p>nr_nopti * {property.pricePerNight}</p>
                     </div>
 
                     <div className="info"> 
@@ -147,10 +173,6 @@ export default function ReserveForms() {
                         <p className="total-price">733$</p>
                     </div>
                 </div>
-
-
-                
-
             </div>
 
         </div>

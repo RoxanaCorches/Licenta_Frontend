@@ -69,7 +69,7 @@ export default function MyAccountPage() {
         } finally {
             setLoading(false);
         }
-  };
+    };
  
     if(error){
         return <div>{error}</div>

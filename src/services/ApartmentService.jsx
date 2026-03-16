@@ -1,5 +1,39 @@
 const API = "http://localhost:8080/apartments";
 
+export async function getAllApartments() {
+    const response = await fetch(`${API}/getAllApartments`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to get apartments!")
+    }
+
+    const data = await response.json();
+    return data;
+}
+
+export async function getApartmentById(apartmentId) {
+    const response = await fetch(`${API}/getApartmentById/${apartmentId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to get apartment!")
+    }
+
+    const data = await response.json();
+    return data;
+}
+
 export async function createApartment(addApartment, images) {
     const info = new FormData();
 

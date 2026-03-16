@@ -25,9 +25,10 @@ export default function Navbar() {
     };
 
     const logout = () => {
-        localStorage.removeItem("walletAddress");
-        window.location.reload();
-    }
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("/");
+    };
 
     return (
         <nav className="navbar">

@@ -1350,9 +1350,17 @@ body {
 .bottom-left-right {
   display: flex;
   justify-content: space-between;
+  height: 100%;
+}
+/*
+.main-container .bottom,
+.bottom-left-right {
+  display: flex;
+  justify-content: space-between;
   background-color: white;
   height: 100%;
 }
+*/
 
 
 /* EDIT INFO*/
@@ -1514,20 +1522,26 @@ border-color: #621add;
 }
 
 .rentals-content {
-  background-color: #f3f2f7;
-  border-radius: 10px ;
-  margin:0rem  2rem;
+  margin:1rem  2rem;
   padding: 0rem 1rem;
 }
 
+.rental-card-wrapper {
+  margin-bottom: 30px;
+}
+
 .rental-card {
+  background-color: white;
+  border: 1px solid #915bee;
+  border-radius: 10px ;
   display: grid;
   align-items: center;
   grid-template-columns: 150px 1fr 150px;
   gap: 5rem;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(86, 85, 87, 0.05);
+  padding: 1rem 2rem;
+  box-shadow: 0 10px 10px rgba(13, 2, 13, 0.05);
 }
+
 
 .rentals-content .rental-image img {
   height: 150px;

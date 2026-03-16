@@ -6,6 +6,8 @@ import Facilities from "../components/listProperty/Facilities";
 import HouseRules from "../components/listProperty/HouseRules";
 import UploadImages from "../components/listProperty/UploadImages";
 import { createApartment } from "../services/ApartmentService";
+import { Navbar } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
@@ -55,8 +57,9 @@ export default function ListYourPropertyPage() {
             //mapLocation:''
     });
 
-    //const [ setLoading] = useState(false);
-    //const [ setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const information = (data) => {
         setData(prev => ({...prev, ...data}));
@@ -64,85 +67,86 @@ export default function ListYourPropertyPage() {
 
     const handleSubmit = async (e) => {
             e.preventDefault();
-            //setError('');
-            //setLoading(true);
+            setError('');
+            setLoading(true);
             console.log("Form:", data);
 
             try{
-           const images = [];
+                const images = [];
+                if(data.mainImage)
+                    images.push(data.mainImage);
 
-            if(data.mainImage)
-                images.push(data.mainImage);
-
-            data.otherImage.forEach(img => {
+                 data.otherImage.forEach(img => {
                 if(img)
                     images.push(img);
-            });
+                });
 
-            const imageName = images.map(img => img.name);
-    
-            console.log("Images to upload:", images);
-            console.log(localStorage.getItem("walletAddress"));
-            const addInfoApartment = {
-                blockchainAddress: localStorage.getItem("walletAddress"),
-                title: data.listingTitle,
-                description: data.description,
-                area: Number(data.area),
-                pricePerNight: Number(data.price),
-                country: data.country,
-                floor: Number(data.numberFloor),
-                street: data.street,
-                city: data.city,
-                zipcode: Number(data.zipCode),
-                guests: data.guests,
-                bedrooms: data.bedrooms,
-                bathrooms: data.bathrooms,
+                const imageName = images.map(img => img.name);
+        
+                console.log("Images to upload:", images);
+                console.log(localStorage.getItem("walletAddress"));
+                const addInfoApartment = {
+                    blockchainAddress: localStorage.getItem("walletAddress"),
+                    title: data.listingTitle,
+                    description: data.description,
+                    area: Number(data.area),
+                    pricePerNight: Number(data.price),
+                    country: data.country,
+                    floor: Number(data.numberFloor),
+                    street: data.street,
+                    city: data.city,
+                    zipcode: Number(data.zipCode),
+                    guests: data.guests,
+                    bedrooms: data.bedrooms,
+                    bathrooms: data.bathrooms,
 
-                tv: data.tv,
-                wifi: data.wifi,
-                kitchen: data.kitchen,
-                washer: data.washer,
-                air_conditioning: data.airConditioning,
-                pool: data.pool,
-                hot_tub: data.hotTub,
-                BBQ_grill: data.bbqGrill,
-                pool_table: data.poolTable,
-                indoor_fireplace: data.indoorFireplace,
-                piano: data.piano,
-                balcony: data.balcony,
-                terrace: data.terrace,
-                garden_view: data.gardenView,
-                ski_out: data.skiOut,
-                lake_access: data.lakeAccess,
-                beach_access: data.beachAccess,
-                petsAllowed: data.pet === "petYes",
-                smokingAllowed: data.smoking === "smokingYes",
-                partiesAllowed: data.parties === "partiesYes",
+                    tv: data.tv,
+                    wifi: data.wifi,
+                    kitchen: data.kitchen,
+                    washer: data.washer,
+                    air_conditioning: data.airConditioning,
+                    pool: data.pool,
+                    hot_tub: data.hotTub,
+                    BBQ_grill: data.bbqGrill,
+                    pool_table: data.poolTable,
+                    indoor_fireplace: data.indoorFireplace,
+                    piano: data.piano,
+                    balcony: data.balcony,
+                    terrace: data.terrace,
+                    garden_view: data.gardenView,
+                    ski_out: data.skiOut,
+                    lake_access: data.lakeAccess,
+                    beach_access: data.beachAccess,
+                    petsAllowed: data.pet === "petYes",
+                    smokingAllowed: data.smoking === "smokingYes",
+                    partiesAllowed: data.parties === "partiesYes",
 
-                checkInFrom: data.hourCheckInFrom,
-                checkInUntil: data.hourCheckInUntil,
-                checkOutFrom: data.hourCheckOutFrom,
-                checkOutUntil: data.hourCheckOutUntil,
+                    checkInFrom: data.hourCheckInFrom,
+                    checkInUntil: data.hourCheckInUntil,
+                    checkOutFrom: data.hourCheckOutFrom,
+                    checkOutUntil: data.hourCheckOutUntil,
 
-                imageMain: imageName[0],
-                image1: imageName[1],
-                image2: imageName[2],
-                image3: imageName[3],
-                image4: imageName[4],
-            };
+                    imageMain: imageName[0],
+                    image1: imageName[1],
+                    image2: imageName[2],
+                    image3: imageName[3],
+                    image4: imageName[4],
+                };
             
                 await createApartment(addInfoApartment, images);
-              
+                alert("Apartment listed!");
+                navigate("/properties");
             } catch(error) { 
-                //setError(`Error create apartment: ${error.message}`);
+                setError(`Error create apartment: ${error.message}`);
                 alert(error);
             } finally {
-                //setLoading(false);
+                setLoading(false);
             }
         }
 
     return(
-        <form> 
+        <form>  
+        {error && <div className="kyc-error">{error}</div>}
         {step === 1 && ( 
             <div className="form-container">
                 <div className="form-step active">
@@ -226,7 +230,14 @@ export default function ListYourPropertyPage() {
                     />
                     <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={() => setStep(5)}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={handleSubmit}>Submit</button>
+                        <button 
+                            type="button" 
+                            className="form-next-button" 
+                            onClick={handleSubmit}
+                            disabled={loading}    
+                        >
+                            {loading ? "Listing..." : "Listing"}
+                        </button>
                     </div>
                 </div>
             </div>

@@ -20,8 +20,8 @@ function App() {
         <Route path="/" element={<StartPage />} />
         <Route path="/kyc" element={<KYCFormPage />} />
         <Route path="/properties" element={<PropertiesPage />} />
-        <Route path="/properties/property/:id" element={<PropertyInfo />} />
-        <Route path="/properties/property/:id/reserve" element={<ReservePage />} />
+        <Route path="/properties/property/:idApartment" element={<PropertyInfo />} />
+        <Route path="/properties/property/:idApartment/reserve" element={<ReservePage />} />
         
         <Route path="/listYourProperty" element={<ListYourPropertyPage />} />
         <Route path="/myAccount" element={<MyAccountPage />} />
