@@ -5,7 +5,7 @@ import { FaUsers } from "react-icons/fa";
 import Calendar from "../Calendar";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getApartmentById } from "../../services/ApartmentService";
+import { getApartmentById } from "../../services/backend/ApartmentService";
 import { MdOutlinePets } from "react-icons/md";
 import { TbPawOff } from "react-icons/tb";
 import { FaSmoking } from "react-icons/fa";

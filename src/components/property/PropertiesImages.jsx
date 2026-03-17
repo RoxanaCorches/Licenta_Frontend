@@ -9,7 +9,7 @@ import { FaBath } from "react-icons/fa";
 import { RxRulerSquare } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllApartments } from "../../services/ApartmentService";
+import { getAllApartments } from "../../services/backend/ApartmentService";
 
 export default function PropertiesImages() {
     const [properties, setProperties] = useState([]);

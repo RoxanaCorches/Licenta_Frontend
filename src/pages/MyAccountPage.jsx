@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { GrUploadOption } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
-import { getUserById, updateUser } from "../services/UsersService";
+import { getUserById, updateUser } from "../services/backend/UsersService";
 
 export default function MyAccountPage() {
     const [image, setImage] = useState(null);

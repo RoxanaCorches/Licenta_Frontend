@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
-import { getUserById } from "../services/UsersService";
+import { getUserById } from "../services/backend/UsersService";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);

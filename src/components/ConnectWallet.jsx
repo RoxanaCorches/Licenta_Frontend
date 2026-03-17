@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { WalletContext } from "../hooks/WalletContext";
-import { hasKycNft } from "../services/KycNftService";
+import { hasKycNft } from "../services/backend/KycNftService";
 
 export function ConnectWallet({children}){
     const [account, setAccount] = useState(null);
@@ -17,9 +17,8 @@ export function ConnectWallet({children}){
          const accounts = await window.ethereum.request({
             method: "eth_requestAccounts", });  
             console.log("Accounts:", accounts);
-
             const walletAddress = accounts[0];
-
+           
             console.log("Address wallet connected:",walletAddress);
             setAccount(walletAddress);
             
@@ -36,4 +35,3 @@ export function ConnectWallet({children}){
         </WalletContext.Provider>
   );
 }
-

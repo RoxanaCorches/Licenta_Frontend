@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { mintKycForUser } from "../services/UsersService";
+import { mintKycForUser } from "../services/backend/UsersService";
 import { useNavigate } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
@@ -23,8 +23,11 @@ export default function KYCFormPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const walletAddress = localStorage.getItem("walletAddress");
-    
+    useEffect(() => {
+        const walletAddress = localStorage.getItem("walletAddress") || "";
+        setData(prev => ({...prev, blockchainAddress: walletAddress}));
+    }, []);
+
     const handleChange = (e) => {
         const { name, value} = e.target;
         setData(prev => ({...prev, [name]: value}));
@@ -227,7 +230,7 @@ export default function KYCFormPage() {
                         type="text"
                         id="blockchainAddress"
                         name="blockchainAddress"
-                        value={walletAddress}
+                        value={data.blockchainAddress}
                         onChange={handleChange}
                         required
                         disabled={loading}

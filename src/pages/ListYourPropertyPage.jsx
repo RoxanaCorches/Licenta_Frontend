@@ -5,9 +5,10 @@ import PropertyDetails from "../components/listProperty/PropertyDetails";
 import Facilities from "../components/listProperty/Facilities";
 import HouseRules from "../components/listProperty/HouseRules";
 import UploadImages from "../components/listProperty/UploadImages";
-import { createApartment } from "../services/ApartmentService";
-import { Navbar } from "react-bootstrap";
+import { createApartment } from "../services/backend/ApartmentService";
 import { useNavigate } from "react-router-dom";
+import { approveMarketplace } from "../services/blockchain/PropertyNftService";
+import { listNftProperty } from "../services/blockchain/MarketplaceService";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
@@ -133,7 +134,17 @@ export default function ListYourPropertyPage() {
                     image4: imageName[4],
                 };
             
-                await createApartment(addInfoApartment, images);
+               const response =  await createApartment(addInfoApartment, images);
+               
+               const { tokenId } = response;
+               console.log("Apartment created, tokenId:", tokenId);
+                
+               console.log("Approving marketplace...");
+               await approveMarketplace(); 
+               console.log("Marketplace approved.");
+
+               console.log("Listing NFT...");
+               await listNftProperty(tokenId, data.price, data.hourCheckInFrom);
                 alert("Apartment listed!");
                 navigate("/properties");
             } catch(error) { 

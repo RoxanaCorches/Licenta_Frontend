@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getApartmentById } from "../../services/ApartmentService";
+import { getApartmentById } from "../../services/backend/ApartmentService";
 
 export default function ReserveForms() {
     const [property, setProperty] = useState(null);
