@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
+import { delistNftProperty } from "../services/blockchain/MarketplaceService";
+import { deleteApartment } from "../services/backend/ApartmentService";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
@@ -29,6 +31,36 @@ export default function MyListingsPage() {
         };
         loadInfoUser();
     }, [idUser]);
+
+    const handleDelistProperty = async (apartment) => {
+            console.log("Delete apartment:", apartment);
+            const {idApartment, tokenId } = apartment;
+
+            if (!idApartment || !tokenId) {
+                console.error("Invalid apartment info!", apartment);
+                return;
+            } 
+            console.log("Delete apartment:", idApartment, tokenId );
+
+            try{
+                await delistNftProperty(tokenId);
+                console.log("Delist form marketplace");
+                await deleteApartment(idApartment);
+
+                console.log("Delete form database");
+              
+                setMyListings((prev) => ({
+                    ...prev, 
+                    apartmentList: prev.apartmentList.filter(
+                        (apartment) => apartment.idApartment !== idApartment
+                    ),}
+                ));
+                  alert("Apartment deleted!")
+            }catch(err){
+                console.log(err);
+            }
+    }
+
 
      if(error){
         return <div>{error}</div>
@@ -74,8 +106,16 @@ export default function MyListingsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="rental-price">
-                                            <p>{apartment.pricePerNight}</p>
+                                        <div>
+                                            <div className="rental-price">
+                                                <p>{apartment.pricePerNight}</p>
+                                            </div>
+
+                                            <button 
+                                                    className="button-review"
+                                                    onClick={() => handleDelistProperty(apartment)}>
+                                                    Delist
+                                            </button>
                                         </div>
                                     </div>
                                     </div>

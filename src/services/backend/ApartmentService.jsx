@@ -53,3 +53,17 @@ export async function createApartment(addApartment, images) {
     const data = await response.json();
     return data;
 }
+
+export async function deleteApartment(apartmentId) {
+    const response = await fetch(`${API}/deleteApartment/${apartmentId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to delete apartment!")
+    }
+}

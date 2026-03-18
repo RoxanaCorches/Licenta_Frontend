@@ -1,36 +1,41 @@
 import { ethers } from "ethers";
-import { KYCNFTADDRESS, MARKETPLACEADDRESS } from "../../blockchain/config/BlockchainConfiguration";
+import { MARKETPLACEADDRESS, PROPERTYNFTADDRESS } from "../../blockchain/config/BlockchainConfiguration";
 import  PropertyNftAbi  from "../../blockchain/abi/PropertyNftAbi.json";
 import { getProviderAndSigner } from "./WalletService";
 
-export const mintNftProperty = async(metadataUrl)  => {
-    const {signer} = await getProviderAndSigner();
-    const contract = new ethers.Contract(KYCNFTADDRESS, PropertyNftAbi, signer);
-    const addressWallet = await signer.getAddress();
+export const mintNftProperty = async (metadataUrl) => {
+    const { signer } = await getProviderAndSigner();
+    const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
+    const walletAddress = await signer.getAddress();
 
-    const tx = await contract.mint(addressWallet, metadataUrl);
-    await tx.wait();
-    
-}
+    // --- trimite tranzacția de mint ---
+    const tx = await contract.mint(walletAddress, metadataUrl, {
+        gasLimit: 500_000 // sau un număr mai mare dacă știi că mint-ul e costisitor
+    })
+    console.log("Mint tx hash:", tx.hash);
+
+    // --- așteaptă confirmarea tranzacției ---
+    const receipt = await tx.wait();
+    console.log("Transaction confirmed:", receipt.transactionHash);
+
+    // --- extrage tokenId din event-ul Minted ---
+    let tokenId = null;
+    for (const event of receipt.events) {
+        if (event.event === "Minted") {
+            tokenId = event.args.tokenId;
+            break;
+        }
+    }
+
+    if (!tokenId) throw new Error("Nu am găsit tokenId în event-ul Minted");
+
+    return { tokenId, metadataUrl };
+};
 
 export const approveMarketplace = async () => {
-    const { provider, signer } = await getProviderAndSigner();
+    const { signer } = await getProviderAndSigner();
 
-    const network = await provider.getNetwork();
-    console.log("Connected network:", network);
-
-    const nftCode = await provider.getCode(KYCNFTADDRESS);
-    const marketCode = await provider.getCode(MARKETPLACEADDRESS);
-
-    if (nftCode === "0x") {
-        throw new Error(`No NFT contract deployed at ${KYCNFTADDRESS} on chain ${network.chainId}`);
-    }
-
-    if (marketCode === "0x") {
-        throw new Error(`No Marketplace contract deployed at ${MARKETPLACEADDRESS} on chain ${network.chainId}`);
-    }
-
-    const contract = new ethers.Contract(KYCNFTADDRESS, PropertyNftAbi, signer);
+    const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
 
     const tx = await contract.setApprovalForAll(MARKETPLACEADDRESS, true);
     console.log("Approval tx hash:", tx.hash);

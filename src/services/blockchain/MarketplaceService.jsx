@@ -12,3 +12,13 @@ export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
 
     await tx.wait();
 };
+
+export const delistNftProperty = async (tokenId) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const tx = await contract.delistNftFromMarketplace(tokenId);
+
+    await tx.wait();
+};

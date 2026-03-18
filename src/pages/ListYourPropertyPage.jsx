@@ -7,8 +7,9 @@ import HouseRules from "../components/listProperty/HouseRules";
 import UploadImages from "../components/listProperty/UploadImages";
 import { createApartment } from "../services/backend/ApartmentService";
 import { useNavigate } from "react-router-dom";
-import { approveMarketplace } from "../services/blockchain/PropertyNftService";
+import { approveMarketplace, mintNftProperty } from "../services/blockchain/PropertyNftService";
 import { listNftProperty } from "../services/blockchain/MarketplaceService";
+import { ethers } from "ethers";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
@@ -83,11 +84,13 @@ export default function ListYourPropertyPage() {
                 });
 
                 const imageName = images.map(img => img.name);
-        
                 console.log("Images to upload:", images);
-                console.log(localStorage.getItem("walletAddress"));
+
+                const walletAddress = localStorage.getItem("walletAddress");
+                console.log(walletAddress);
+
                 const addInfoApartment = {
-                    blockchainAddress: localStorage.getItem("walletAddress"),
+                    blockchainAddress: walletAddress,
                     title: data.listingTitle,
                     description: data.description,
                     area: Number(data.area),
@@ -134,22 +137,52 @@ export default function ListYourPropertyPage() {
                     image4: imageName[4],
                 };
             
-               const response =  await createApartment(addInfoApartment, images);
-               
-               const { tokenId } = response;
-               console.log("Apartment created, tokenId:", tokenId);
-                
-               console.log("Approving marketplace...");
-               await approveMarketplace(); 
-               console.log("Marketplace approved.");
+                let response = await createApartment(addInfoApartment, images);
+                const metadataUrl = response.metadataUrl;
+                console.log("MetadataUrl:", metadataUrl);
+                const idApartment = response.idApartment;
 
-               console.log("Listing NFT...");
-               await listNftProperty(tokenId, data.price, data.hourCheckInFrom);
+                const { tokenId } = await mintNftProperty(metadataUrl);
+                alert("NFT property minted!");
+                console.log("Apartment created, tokenId:", tokenId, "Metadata URL:", metadataUrl);
+
+                const saveApartmentComplet = {
+                    ...addInfoApartment, metadataUrl, tokenId: tokenId.toString(), idApartment: idApartment,
+                };
+
+                await createApartment(saveApartmentComplet, images);
+                
+
+
+            
+                const priceWei = ethers.utils.parseEther(String(data.price || "0"));
+                const checkInHour = Number(data.hourCheckInFrom.split(":")[0]);
+
+                console.log("tokenId:", tokenId.toString?.() ?? String(tokenId));
+                console.log("priceWei:", priceWei.toString());
+                console.log("Check-in hour:", checkInHour);
+
+                
+               
+                
+
+            
+
+
+                // --- List NFT on marketplace ---
+                console.log("Approving marketplace...");
+                await approveMarketplace(); // așteaptă confirmarea
+                console.log("Marketplace approved.");
+                await listNftProperty(tokenId, priceWei, checkInHour);
+                console.log("NFT listed successfully!");
+
                 alert("Apartment listed!");
                 navigate("/properties");
-            } catch(error) { 
+
+            } catch (error) {
+                console.error("Error in handleSubmit:", error);
                 setError(`Error create apartment: ${error.message}`);
-                alert(error);
+                alert(`Error: ${error.message}`);
             } finally {
                 setLoading(false);
             }
