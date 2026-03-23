@@ -108,19 +108,19 @@ export default function ListYourPropertyPage() {
                     wifi: data.wifi,
                     kitchen: data.kitchen,
                     washer: data.washer,
-                    air_conditioning: data.airConditioning,
+                    airConditioning: data.airConditioning,
                     pool: data.pool,
-                    hot_tub: data.hotTub,
-                    BBQ_grill: data.bbqGrill,
-                    pool_table: data.poolTable,
-                    indoor_fireplace: data.indoorFireplace,
+                    hotTub: data.hotTub,
+                    bbqGrill: data.bbqGrill,
+                    poolTable: data.poolTable,
+                    indoorFireplace: data.indoorFireplace,
                     piano: data.piano,
                     balcony: data.balcony,
                     terrace: data.terrace,
-                    garden_view: data.gardenView,
-                    ski_out: data.skiOut,
-                    lake_access: data.lakeAccess,
-                    beach_access: data.beachAccess,
+                    gardenView: data.gardenView,
+                    skiOut: data.skiOut,
+                    lakeAccess: data.lakeAccess,
+                    beachAccess: data.beachAccess,
                     petsAllowed: data.pet === "petYes",
                     smokingAllowed: data.smoking === "smokingYes",
                     partiesAllowed: data.parties === "partiesYes",
@@ -137,6 +137,7 @@ export default function ListYourPropertyPage() {
                     image4: imageName[4],
                 };
             
+               
                 let response = await createApartment(addInfoApartment, images);
                 const metadataUrl = response.metadataUrl;
                 console.log("MetadataUrl:", metadataUrl);

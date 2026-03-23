@@ -22,3 +22,37 @@ export const delistNftProperty = async (tokenId) => {
 
     await tx.wait();
 };
+
+export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const priceWei = ethers.utils.parseEther(totalPrice);
+
+    try{
+        await contract.callStatic.rent(
+            tokenId,
+            startDate,
+            endDate,
+            { value: priceWei, gasLimit: 500_000  }
+        );
+
+    }catch(err)
+    {
+        console.log("Smart contract error:", err);
+        throw err;
+    }
+
+      const tx = await contract.rent(
+            tokenId,
+            startDate,
+            endDate,
+            { value: priceWei, gasLimit: 500_000 }
+        );
+
+
+     await tx.wait();
+     console.log("Transaction:", tx.hash);
+     return tx.hash;
+};

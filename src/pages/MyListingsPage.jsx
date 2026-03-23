@@ -4,6 +4,7 @@ import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
 import { delistNftProperty } from "../services/blockchain/MarketplaceService";
 import { deleteApartment } from "../services/backend/ApartmentService";
+import { IoLocation } from "react-icons/io5";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
@@ -61,6 +62,14 @@ export default function MyListingsPage() {
             }
     }
 
+    function convertTime(time) {
+        const [hours, minutes] = time.split(":");
+        let hour = parseInt(hours, 10);
+        const amPm = hour < 12 ? "AM" : "PM";
+       
+        return `${hour}:${minutes} ${amPm}`;
+    }
+
 
      if(error){
         return <div>{error}</div>
@@ -94,25 +103,27 @@ export default function MyListingsPage() {
 
                                         <div className="rental-information">
                                             <p className="rental-name">{apartment.title}</p>
-                                            <p>{apartment.city}</p>
+                                            <div className="location">
+                                                <IoLocation className="icon-location"/>
+
+                                                <p>{apartment.street}, {apartment.city}, {apartment.country}</p>
+                                            </div>
                                             <div className="check"> 
-                                                <p>Check-in: {apartment.checkInFrom>="00:00" && apartment.checkInFrom <= "11:59" ? apartment.checkInFrom + " AM" : apartment.checkInFrom + " PM"}  -  {apartment.checkInUntil>="00:00" && apartment.checkInUntil <= "11:59" ? apartment.checkInUntil + " AM" : apartment.checkInUntil + " PM"}
-                                                </p>
+                                                <p>Check-in: {convertTime(apartment.checkInFrom)} - {convertTime(apartment.checkInUntil)} </p>
                                             </div>
 
                                             <div className="check"> 
-                                                <p>Check-out: {apartment.checkOutFrom>="00:00" && apartment.checkOutFrom <= "11:59" ? apartment.checkOutFrom + " AM" : apartment.checkOutFrom + " PM"} - {apartment.checkOutUntil>="00:00" && apartment.checkOutUntil <= "11:59" ? apartment.checkOutUntil + " AM" : apartment.checkOutUntil + " PM"}
-                                                </p>
+                                                <p>Check-out: {convertTime(apartment.checkOutFrom)} - {convertTime(apartment.checkOutUntil)}</p>
                                             </div>
                                         </div>
 
                                         <div>
                                             <div className="rental-price">
-                                                <p>{apartment.pricePerNight}</p>
+                                                <p>{apartment.pricePerNight} ETH</p>
                                             </div>
 
                                             <button 
-                                                    className="button-review"
+                                                    className="button-delist"
                                                     onClick={() => handleDelistProperty(apartment)}>
                                                     Delist
                                             </button>

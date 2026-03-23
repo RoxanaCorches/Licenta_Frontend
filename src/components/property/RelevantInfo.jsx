@@ -4,7 +4,7 @@ import { IoMdTime } from "react-icons/io";
 import { FaUsers } from "react-icons/fa";
 import Calendar from "../Calendar";
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getApartmentById } from "../../services/backend/ApartmentService";
 import { MdOutlinePets } from "react-icons/md";
 import { TbPawOff } from "react-icons/tb";
@@ -12,13 +12,17 @@ import { FaSmoking } from "react-icons/fa";
 import { FaSmokingBan } from "react-icons/fa";
 import { GiPartyPopper } from "react-icons/gi";
 import { BiSolidVolumeMute } from "react-icons/bi";
+import { RentalContext } from "../../hooks/RentalContext";
+import { NavItem } from "react-bootstrap";
+import { IoLocation } from "react-icons/io5";
 
 export default function RelevantInfo() {
     const [property, setProperty] = useState(null);
 
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { checkIn, checkOut, nrNights } = useContext(RentalContext);
 
     const listAmenities = [
         { key: "tv", label: "TV" },
@@ -40,12 +44,6 @@ export default function RelevantInfo() {
         { key: "beach_acces", label: "Beach Access" }
         ];
 
-    
-
-    //const idProperty = localStorage.getItem("userId");
-    //const walletAddress = localStorage.getItem("walletAddress");
-    //const birthday = localStorage.getItem("birthday");
-
     const {idApartment} = useParams();
     console.log("Id apartment:" + idApartment)
     console.log("Id-ul user ului conectat:", localStorage.getItem("userId"));
@@ -66,7 +64,15 @@ export default function RelevantInfo() {
         loadInfoProperty();
     }, [idApartment]);
 
-     if (loading) return <p>Se încarcă proprietățile...</p>;
+    function convertTime(time) {
+        const [hours, minutes] = time.split(":");
+        let hour = parseInt(hours, 10);
+        const amPm = hour < 12 ? "AM" : "PM";
+       
+        return `${hour}:${minutes} ${amPm}`;
+    }
+
+    if (loading) return <p>Se încarcă proprietățile...</p>;
     if (error) return <p>Eroare: {error}</p>;
     
     return(
@@ -74,14 +80,10 @@ export default function RelevantInfo() {
             <div className="info-header">
                 <div className="header">
                     <h2 className="title">{property.title}</h2>
-                    <p>{property.street}, {property.city}, {property.country}</p>
+                    <p><IoLocation className="suggestion-icon"/> {property.street}, {property.city}, {property.country}</p>
                 </div>
 
-                <div className="reserve-button">
-                    <Link to={`/properties/property/${idApartment}/reserve`}>
-                        <button>Reserve now</button>
-                    </Link>
-                </div>
+                
             </div>
 
             <div className="info-images">
@@ -113,8 +115,71 @@ export default function RelevantInfo() {
             </div>
 
             <div className="place-availability">
-                <h2 className="title">Availability</h2>
+                {!checkIn ? (
+                    <div className="checkIn-checkOut">
+                        <h2 className="title">Select check-in date</h2>
+                        <p className="">Add your travel dates for exact pricing</p>
+                    </div>
+                ) : !checkOut ? (<h2 className="title">Select check-out date</h2>
+
+                ) : (
+                    <div className="dates-checkIn-checkOut">
+                        <p className="numbers-nights">{nrNights} nights in {property.city} </p>
+                        <p className="dates">{checkIn?.toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - {checkOut?.toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
+                    </div>
+                )}
+
+                 <div className="calendar-form-reserve">
                     <Calendar className="calendar"/>
+                    <div className="form-reserve">
+                        <h2>Add dates for prices</h2>
+
+                        <div className="container-booking">
+                            {!checkIn && !checkOut ? (
+                                <div className="info-booking">
+                                    <p className="dates add-dates">CHECK-IN: Add dates</p>
+                                    <p className="dates add-dates">CHECK-OUT: Add dates</p>
+                                </div>
+                            ) : checkIn && !checkOut ? (
+                                    <div className="info-booking"> 
+                                        <p className="dates add-dates">
+                                        CHECK-IN: {checkIn.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                        </p>
+                                        <p className="dates add-dates">CHECK-OUT: Add dates</p>
+                                     </div>
+                            ) : !checkIn && checkOut ? (
+                                    <div> 
+                                        <p className="dates add-dates">CHECK-IN: Add dates</p>
+                                        <p className="dates add-dates">
+                                        CHECK-OUT: {checkOut.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                        </p>
+                                     </div>
+                            ) : (
+                                <div className="info-booking">
+                                    <p className="dates">
+                                        CHECK-IN: {checkIn.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                    </p>
+
+                                    <p className="dates">
+                                        CHECK-OUT: {checkOut.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                    </p>
+
+                                    <p className="dates">{property.pricePerNight} ETH × {nrNights} nights  </p>
+                                    <p className="total-price"> <span> Total</span> {nrNights * property.pricePerNight} ETH</p>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="reserve-button">
+                            <Link to={`/properties/property/${idApartment}/reserve`}>
+                                <button>Reserve now</button>
+                            </Link>
+                        </div>
+                        
+                    </div>
+                </div>   
+               
+
             </div>
 
             <div className="place-amenities">
@@ -138,14 +203,12 @@ export default function RelevantInfo() {
                         <h2>Entry & Exit Times</h2>
                         <div className="check"> 
                             <IoMdTime className="icon"/> 
-                            <p>Check-in: {property.checkInFrom>="00:00" && property.checkInFrom <= "11:59" ? property.checkInFrom + " AM" : property.checkInFrom + " PM"}  -  {property.checkInUntil>="00:00" && property.checkInUntil <= "11:59" ? property.checkInUntil + " AM" : property.checkInUntil + " PM"}
-                            </p>
+                            <p>Check-in: {convertTime(property.checkInFrom)} -  {convertTime(property.checkInUntil)}</p>
                         </div>
 
                         <div className="check"> 
                             <IoMdTime className="icon"/> 
-                            <p>Check-out: {property.checkOutFrom>="00:00" && property.checkOutFrom <= "11:59" ? property.checkOutFrom + " AM" : property.checkOutFrom + " PM"} - {property.checkOutUntil>="00:00" && property.checkOutUntil <= "11:59" ? property.checkOutUntil + " AM" : property.checkOutUntil + " PM"}
-                            </p>
+                            <p>Check-out: {convertTime(property.checkOutFrom)} -  {convertTime(property.checkOutUntil)}</p>                          
                         </div>
                     </div>
 

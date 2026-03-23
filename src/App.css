@@ -511,6 +511,7 @@ body {
 
 .reserve-button button:hover {
   background: linear-gradient(135deg, #641ae4 0%, #965cfb 100%);
+  cursor: pointer;
 }
 
 .info-images {
@@ -561,12 +562,12 @@ body {
   margin-bottom: 20px;
 }
 
+
 .place-description,
 .place-amenities,
 .place-policies {
   background-color: white;
 }
-
 
 .place-amenities .amenities {
   display: grid;
@@ -609,6 +610,109 @@ body {
 .checkIn-checkOut .check:last-child {
   border-bottom: none;
 }
+
+.dates-checkIn-checkOut {
+  color: #1a1b1c;
+}
+
+.numbers-nights {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+
+.dates-checkIn-checkOut .dates {
+  color: #6f6f6f;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.calendar-form-reserve {
+  display: flex;
+  flex-direction: row;
+}
+
+.form-reserve {
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 10;
+  margin-left: -250px;
+  border-radius: 20px;
+  background-color: white;
+  border:2px solid #5f0af2;
+  width: 100%;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+}
+ 
+.form-reserve h2 {
+  color: #1a1b1c;
+  margin-top: 0;
+}
+
+.container-booking {
+  border: 2px solid rgb(171, 171, 171);
+  border-radius: 14px;
+  background: #fffefe;
+  padding: 10px 14px;
+}
+
+.info-booking {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-booking .dates {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9e5f5;
+  color:#6c6d6e;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+
+.container-booking p {
+  margin: 0;
+  color: #6c6d6e;
+}
+
+.info-booking .total-price span {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #221e25 ;
+  margin-right: px;
+}
+
+.info-booking .total-price {
+  color: #5f0af2;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.reserve-button {
+  margin-top: 12px;
+}
+
+.reserve-button button {
+  width: 100%;
+  background: linear-gradient(135deg, #965cfb 0%, #641ae4 100%);
+  border-style: none;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  outline: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.reserve-button button:hover {
+  background: linear-gradient(135deg, #641ae4 0%, #965cfb 100%);
+  cursor: pointer;
+}
+
 
 /*KYS FORM PAGE */
 .kyc-container {
@@ -1542,6 +1646,18 @@ border-color: #621add;
   box-shadow: 0 10px 10px rgba(13, 2, 13, 0.05);
 }
 
+.location {
+  margin-top: -10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.location .icon-location {
+  font-size: 1.5rem;
+  color: #500bc8;
+  transition: all 0.4s ease;
+}
 
 .rentals-content .rental-image img {
   height: 150px;
@@ -1556,9 +1672,14 @@ border-color: #621add;
   color: #8b9197;
 }
 
-.rental-information .rental-name,
-.rental-price {
+.rental-information .rental-name {
   font-size: 1.3rem;
+  font-weight: bold;
+  color: #495057;
+}
+
+.rental-price {
+  font-size: 1.5rem;
   font-weight: bold;
   color: #495057;
 }
@@ -1570,7 +1691,8 @@ border-color: #621add;
   align-items: center;
 }
 
-.rental-card .rental-feedback .button-review {
+.rental-card .rental-feedback .button-review,
+.button-delist {
   background-color: #af83fa;
   height: 50px;
   width: 100px;
@@ -1581,7 +1703,9 @@ border-color: #621add;
 }
 
 .rental-card .rental-feedback .button-review:hover,
-.rental-card .rental-feedback .button-review:focus {
+.rental-card .rental-feedback .button-review:focus,
+.button-delist:hover,
+.button-delist:focus {
   background-color: #915bee;
   border: none;
   outline: none;
@@ -1645,54 +1769,198 @@ border-color: #621add;
 
 /* WALLET*/
 /* overview*/
-.wallet-card {
+.available-balance {
+  background-color: #6e3cc5;
+  border-radius: 10px;
+  height: 230px;
+  padding: 1rem 2rem;
+  margin: 25px;
+}
+
+.available-balance p {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.available-balance .balance {
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.buttons-balance {
+  margin-top: 0;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.deposit-withdraw {
+  font-size: 1.3rem;
+  height: 50px;
+  color: white;
+  background-color: #9c7ad2;
+  display: flex;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
+  padding: 1px px;
 }
 
-.overview {
-  display: flex;
-  flex-direction: row;
-  gap: 5rem; 
-  padding: 20px;
+.deposit-withdraw:hover,
+.deposit-withdraw:focus{
+  background-color: #c8abf7;
+  outline: none;
+  border: none;
 }
 
-.card {
+
+.container-deposit-withdraw {
   display: flex;
   flex-direction: column;
-  width: 300px; 
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(21, 21, 21, 0.2);
-  
+  margin: 8px;
 }
 
-.card-header-balance,
-.card-header-pending,
-.card-header-spend {
-  display: flex;                
-  align-items: center;
-  justify-content: center;
-  color: white;
-  padding: 10px;
+.container-deposit-withdraw label{
+  color: #757575;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.container-deposit-withdraw .input:focus {
+  outline: none;
+  border: 3px solid #8541fa;
+
+}
+
+.container-deposit-withdraw p{
+  color: #7c7878;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.container-walletAddress,
+.container-transaction-history {
+  background-color: white;
+  border:1px solid rgb(187, 186, 186);
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  margin: 25px;
+}
+
+.container-walletAddress {
+   height: 180px;
+}
+
+.container-walletAddress .title,
+.container-transaction-history .title {
+  color: #757575;
   font-size: 1.2rem;
   font-weight: bold;
-  height: 40px;   
-  gap: 1rem;             
 }
 
-.card-header-balance {
-  background: linear-gradient(100deg, #2fab33 0%, #9de8a0 90%);
+.container-transaction-history .title {
+  color: #757575;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(187, 186, 186);
+  padding-bottom: 20px;
 }
 
-.card-header-pending {
-  background: linear-gradient(100deg, #e8ce57 0%, #f6f081 90%);
+
+.button-copy {
+  background: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #8442f6;
 }
 
-.card-header-spend {
-   background: linear-gradient(100deg, #e76464 0%, #eeb5b5 90%);
+.button-copy:focus {
+  outline: none;
 }
+
+.container-transaction-history {
+  height: 100% ;
+}
+
+.container-status-transactions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid rgb(187, 186, 186);
+}
+
+
+.container-copy-address {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.status-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon-status {
+  font-size: 1.2rem;
+  color: #0b8bed;
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.icon-refund {
+  color: rgb(64, 230, 64);
+}
+
+.icon-deposit {
+  color: rgb(78, 234, 78);
+}
+
+
+.icon-withdraw {
+  color: red;
+}
+
+.name-hotel-date {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+.name-hotel {
+  color: #444444;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.date-pay {
+  margin-top: -20px;
+  color: #444444;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.container-status-transactions .price {
+  color: #444444;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+
 
 /* Body-ul cardului */
 .card-body {
@@ -1798,6 +2066,22 @@ border-color: #621add;
   color: #6c6d6e;
 }
 
+.history-top .image img{
+  height: 100px;
+  width: 150px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.title-location h2 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  font-weight: bold;
+  color: #495057;
+}
+
+
 .history-content {
   display: flex;
   flex-direction: column;
@@ -1824,9 +2108,10 @@ border-color: #621add;
 }
 
 .history-content .info .total-price {
-  font-size: 1.3rem;
+
+  color: #5f0af2;
+  font-size: 1.6rem;
   font-weight: bold;
-  color: #5e0cec;
 }
 
 .botton-payment,
@@ -1874,3 +2159,13 @@ border-color: #621add;
   margin-bottom: 0;
 }
 
+/*MY LISTINGS */
+.button-delist {
+  background-color: #af83fa;
+  height: 50px;
+  width: 100px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}

@@ -11,9 +11,11 @@ import PropertyInfo from "./components/property/PropertyInfo";
 import ReservePage from "./pages/ReservePage";
 import MyListingsPage from "./pages/MyListingsPage";
 import MyReviewPage from "./pages/MyReviewPage";
+import { RentalContext, RentalProvider } from "./hooks/RentalContext";
 
 function App() {
   return (
+    <RentalProvider> 
     <ConnectWallet>
     <BrowserRouter>
       <Routes>
@@ -33,6 +35,7 @@ function App() {
       </Routes>
     </BrowserRouter>
     </ConnectWallet>
+    </RentalProvider>
 
   );
 }

@@ -1,22 +1,17 @@
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaChevronDown } from "react-icons/fa";
-
-
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { useRef, useState } from "react";
+import { useRef, useContext } from "react";
+import { RentalContext } from "../hooks/RentalContext";
 
 
-export default function Calendar (){
-    
-    const [checkIn, setCheckIn] = useState();
-    const [checkOut, setCheckOut] = useState();
-
-  
+export default function Calendar () {
     const dateRef = useRef(null);
+    const { checkIn, checkOut, setCheckIn, setCheckOut } =
+        useContext(RentalContext);
+
     return(
         <div className="search-field">
-                <div className="container-wrapper" ref={dateRef}> 
+                <div  ref={dateRef}> 
                         <div className="search-panel availability">
                             <div className="calendar">
                                 <DayPicker
@@ -43,7 +38,6 @@ export default function Calendar (){
                                 />
                             </div>
                         </div>
-                    
                 </div>
             </div>
         );

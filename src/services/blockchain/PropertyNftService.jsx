@@ -20,6 +20,7 @@ export const mintNftProperty = async (metadataUrl) => {
 
     // --- extrage tokenId din event-ul Minted ---
     let tokenId = null;
+    console.log("Events:", receipt.events);
     for (const event of receipt.events) {
         if (event.event === "Minted") {
             tokenId = event.args.tokenId;
