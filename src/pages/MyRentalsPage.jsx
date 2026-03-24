@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
+import { getRentalsForUserById } from "../services/backend/RentalService";
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
-    const bookings = [1];
+    const [rentals, setRentals] = useState([]);
 
     const [completeFeedback, setCompleteFeedback] = useState(false);
     const [hoverStars, setHoverStars] = useState(0);
@@ -33,6 +34,33 @@ export default function MyRentalsPage() {
             loadInfoUser();
         }, [idUser]);
     */
+
+    const idUser = localStorage.getItem("userId");  
+
+    const rentalsStatus = rentals?.filter(rental => {
+        if(active === "upcoming") return rental.status === "UPCOMING";
+        if(active === "completed") return rental.status === "COMPLETED";
+        if(active === "cancelled") return rental.status === "CANCELLED";
+        return false;
+    });
+
+     useEffect(() => {
+        const loadInfoRental = async () => {
+            try {
+                setLoading(true);
+                const data = await getRentalsForUserById(idUser);
+                setRentals(data);
+                console.log("Info for rentals:", data);
+                
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadInfoRental();
+    }, [idUser]);
+
     
     const handleFeedback = () => {
         try{
@@ -59,7 +87,19 @@ export default function MyRentalsPage() {
             setLoading(false);
         }
     };
-     
+
+    const handleCancelRental = () => {
+        try{
+            setLoading(true);
+            
+            console.log("Da");
+        }catch(error) {
+            setError(error.message);
+        }finally {
+            setLoading(false);
+        }
+    };
+  
      if(error){
         return <div>{error}</div>
     }
@@ -100,40 +140,64 @@ export default function MyRentalsPage() {
                             </div>
 
                             <div className="rentals-content">
-                               {bookings.length > 0 ? (
-                                <div className="rental-card">
-                                    <div className="rental-image">
-                                        <img src="src\assets\imgg.jpg" alt="No rentals" />
-                                    </div>   
+                                {rentalsStatus?.length > 0 ? (
+                               <div className="apartmnets-container">
+                                    {rentalsStatus?.map((rental, index) => (
+                                        <div className="rental-card-wrapper" key={index}>
+                                            <div className="rental-card">
+                                                <div className="rental-image">
+                                                    <img src={rental.imageMainUrl} alt={rental.title} />
+                                                </div>   
+                              
+                                                <div className="rental-information">
+                                                    <p className="rental-name">{rental.title} - {rental.city}, {rental.country}</p>
+                                                       
+                                                   
+                                                    <div className="check"> 
+                                                         <p>{new Date (rental.startDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - 
+                                                            {new Date(rental.endDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
+                                                    </div>
+                              
+                                                    <div className="check"> 
+                                                        <p>{rental.status} </p>
+                                                    </div>
+                                                </div>
+                              
+                                                <div className="rental-feedback">
+                                                    <p className="rental-price">234 ETH</p>
 
-                                    <div className="rental-information">
-                                        <p className="rental-name">Nume booking</p>
-                                        <p>City</p>
-                                        <p>Date checkIn - Date checkOut</p>
-                                        <p>Status</p>
+                                                    { active === "upcoming" && (
+                                                        <button 
+                                                            className="button-review"
+                                                            onClick={handleCancelRental}    
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    ) }
+                                                    
+                                                    { active === "completed" && 
+                                                        (
+                                                            <button 
+                                                                className="button-review"
+                                                                onClick={handleReview}    
+                                                            >
+                                                                Review
+                                                            </button>
+                                                        ) 
+                                                    }
+                                                </div>  
+                                            </div>
                                     </div>
-
-                                    <div className="rental-feedback">
-                                        <p className="rental-price">234$</p>
-                                        {active === "completed" && (
-                                            <button 
-                                                className="button-review"
-                                                onClick={handleReview}    
-                                            >
-                                                Review
-                                            </button>
-                                        )}
-                                    </div>  
+                                ))}
                                 </div>
-                                   
-                               ) : (
-                                <div className="no-rentals">
-                                    <img src="src\assets\suitcase.png" alt="No rentals" />
-                                    <p>No rentals found.</p>
-
-                                </div>    
-                               )}
-                            </div>
+                                    
+                                ) : (
+                                    <div className="no-rentals">
+                                        <img src="src\assets\suitcase.png" alt="No rentals" />
+                                        <p>No rentals found.</p>
+                                    </div>    
+                                )}
+                                </div>
                         </div>
 
                         {completeFeedback && (

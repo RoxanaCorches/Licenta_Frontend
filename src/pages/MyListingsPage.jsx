@@ -92,50 +92,49 @@ export default function MyListingsPage() {
 
                             <div className="rentals-content">
                                {myListings?.apartmentList?.length > 0 ? (
-
                                     <div className="apartmnets-container">
                                     {myListings.apartmentList.map((apartment, index) => (
                                     <div className="rental-card-wrapper" key={apartment.tokenId || index}>
-                                    <div className="rental-card">
-                                        <div className="rental-image">
-                                            <img src={apartment.imageMain} alt={apartment.title} />
-                                        </div>   
+                                        <div className="rental-card">
+                                            <div className="rental-image">
+                                                <img src={apartment.imageMain} alt={apartment.title} />
+                                            </div>   
 
-                                        <div className="rental-information">
-                                            <p className="rental-name">{apartment.title}</p>
-                                            <div className="location">
-                                                <IoLocation className="icon-location"/>
+                                            <div className="rental-information">
+                                                <p className="rental-name">{apartment.title}</p>
+                                                <div className="location">
+                                                    <IoLocation className="icon-location"/>
 
-                                                <p>{apartment.street}, {apartment.city}, {apartment.country}</p>
+                                                    <p>{apartment.street}, {apartment.city}, {apartment.country}</p>
+                                                </div>
+                                                <div className="check"> 
+                                                    <p>Check-in: {convertTime(apartment.checkInFrom)} - {convertTime(apartment.checkInUntil)} </p>
+                                                </div>
+
+                                                <div className="check"> 
+                                                    <p>Check-out: {convertTime(apartment.checkOutFrom)} - {convertTime(apartment.checkOutUntil)}</p>
+                                                </div>
                                             </div>
-                                            <div className="check"> 
-                                                <p>Check-in: {convertTime(apartment.checkInFrom)} - {convertTime(apartment.checkInUntil)} </p>
-                                            </div>
 
-                                            <div className="check"> 
-                                                <p>Check-out: {convertTime(apartment.checkOutFrom)} - {convertTime(apartment.checkOutUntil)}</p>
+                                            <div>
+                                                <div className="rental-price">
+                                                    <p>{apartment.pricePerNight} ETH</p>
+                                                </div>
+
+                                                <button 
+                                                        className="button-delist"
+                                                        onClick={() => handleDelistProperty(apartment)}>
+                                                        Delist
+                                                </button>
                                             </div>
                                         </div>
-
-                                        <div>
-                                            <div className="rental-price">
-                                                <p>{apartment.pricePerNight} ETH</p>
-                                            </div>
-
-                                            <button 
-                                                    className="button-delist"
-                                                    onClick={() => handleDelistProperty(apartment)}>
-                                                    Delist
-                                            </button>
-                                        </div>
-                                    </div>
                                     </div>
                                     ))}
                                     </div>
                                ) : (
                                 <div className="no-rentals">
                                     <img src="src\assets\suitcase.png" alt="No rentals" />
-                                    <p>No rentals found.</p>
+                                    <p>No listings found.</p>
                                 </div>    
                                )}
                             </div>

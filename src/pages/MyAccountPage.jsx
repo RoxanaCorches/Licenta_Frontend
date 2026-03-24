@@ -4,6 +4,7 @@ import Sidebar from "../components/listProperty/SideBar";
 import { GrUploadOption } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
 import { getUserById, updateUser } from "../services/backend/UsersService";
+import { useWallet } from "../hooks/WalletContext";
 
 export default function MyAccountPage() {
     const [image, setImage] = useState(null);
@@ -14,11 +15,19 @@ export default function MyAccountPage() {
     const [editValue, setEditValue] = useState("");
 
     const [loading, setLoading] = useState(true);
-    const  [error, setError] = useState(null);
+    const [error, setError] = useState(null);
+
+
+    const { account } = useWallet();
+    
 
     const idUser = localStorage.getItem("userId");
     const walletAddress = localStorage.getItem("walletAddress");
     const birthday = localStorage.getItem("birthday");
+
+    console.log("account", account);
+    console.log("userId", idUser);
+    
 
     const handleUploadeImage = (e) => {
         const image = e.target.files[0];
@@ -33,6 +42,8 @@ export default function MyAccountPage() {
 
 
     useEffect(() => {
+        //if(!idUser) return;
+
         const loadInfoUser = async () => {
             try {
                 setLoading(true);

@@ -25,6 +25,7 @@ export const delistNftProperty = async (tokenId) => {
 
 export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) => {
     const { signer } = await getProviderAndSigner();
+    const { provider } = await getProviderAndSigner();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
@@ -38,21 +39,34 @@ export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) 
             { value: priceWei, gasLimit: 500_000  }
         );
 
-    }catch(err)
-    {
+    } catch(err) {
         console.log("Smart contract error:", err);
         throw err;
     }
 
-      const tx = await contract.rent(
+    const tx = await contract.rent(
             tokenId,
             startDate,
             endDate,
             { value: priceWei, gasLimit: 500_000 }
-        );
+    );
 
+    const receip = await tx.wait();
+    const block = await provider.getBlock(receip.blockNumber);
+    const rentalTime = new Date(block.timestamp * 1000);
 
-     await tx.wait();
-     console.log("Transaction:", tx.hash);
-     return tx.hash;
+    console.log("Transaction:", tx.hash);
+    console.log("Rental time:", rentalTime);
+
+    return tx.hash;
+};
+
+export const cancelRental = async (tokenId) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const tx = await contract.cancel(tokenId);
+
+    await tx.wait();
 };

@@ -15,7 +15,7 @@ export async function hasKycNft(walletAddress) {
     
     const data = await response.json();
     if(data.hasKycNft) {
-        window.location.href = "/";
+        window.location.href = "/properties";
     } else {
         window.location.href = "/kyc";
     }

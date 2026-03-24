@@ -25,7 +25,8 @@ export default function Navbar() {
     };
 
     const logout = () => {
-    localStorage.clear();
+    //localStorage.clear();
+    localStorage.removeItem("userId");
     sessionStorage.clear();
     window.location.replace("/");
     };

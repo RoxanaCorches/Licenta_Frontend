@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 import { getAllApartments } from "../../services/backend/ApartmentService";
 
 export default function PropertiesImages() {
+
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
-    const  [error, setError] = useState(null);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const loadInfoApartment = async () => {
@@ -41,14 +42,13 @@ export default function PropertiesImages() {
                     </div>     
 
                     <div className="image-container-details">
-
                         <div className="details"> 
                         <div className="property-details">
                             <h1 className="name-property">{property.title}</h1>
                             <h2 className="price">{property.pricePerNight} ETH / night</h2>
                             
-                            <div className="address"> 
-                                <FaLocationDot />
+                            <div className="location"> 
+                                <FaLocationDot className= "icon-location"/>
                                 <p className="address">{property.street}, {property.city}, {property.country}</p>
                             </div>
                         </div>    
@@ -71,11 +71,22 @@ export default function PropertiesImages() {
                         </div> 
                         </div> 
 
-                        <div className="check-availability">
-                            <Link to={`/properties/property/${property.idApartment}`}>
-                                <button>Check Availability</button>
-                            </Link>
-                        </div>  
+                        {property.blockchainAddress?.toLowerCase() === (localStorage.getItem("walletAddress")).toLowerCase() ?
+                            (   <div className="check-availability">
+                                     <button>Your Property</button>
+                                </div>  
+                            
+                            )
+                            : ( <div className="check-availability">
+                                    <Link to={`/properties/property/${property.idApartment}`}>
+                                        <button>Check Availability</button>
+                                    </Link>
+                                </div>  
+                            )
+
+                        }
+                       
+                        
                     </div> 
                 </div>    
             ))

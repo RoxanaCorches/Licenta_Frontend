@@ -15,6 +15,7 @@ import { BiSolidVolumeMute } from "react-icons/bi";
 import { RentalContext } from "../../hooks/RentalContext";
 import { NavItem } from "react-bootstrap";
 import { IoLocation } from "react-icons/io5";
+import { useWallet } from "../../hooks/WalletContext";
 
 export default function RelevantInfo() {
     const [property, setProperty] = useState(null);
@@ -22,6 +23,7 @@ export default function RelevantInfo() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const { account } = useWallet();
     const { checkIn, checkOut, nrNights } = useContext(RentalContext);
 
     const listAmenities = [
@@ -46,7 +48,8 @@ export default function RelevantInfo() {
 
     const {idApartment} = useParams();
     console.log("Id apartment:" + idApartment)
-    console.log("Id-ul user ului conectat:", localStorage.getItem("userId"));
+    console.log("Id-ul user ului conectat cu localStorage:", localStorage.getItem("userId"));
+    console.log("Id-ul user ului conectat:", account);
     
     useEffect(() => {
         const loadInfoProperty = async () => {

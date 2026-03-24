@@ -4,11 +4,13 @@ import { getApartmentById } from "../../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { RentalContext } from "../../hooks/RentalContext";
 import { createRental } from "../../services/backend/RentalService";
-import { TbChevronsDownLeft } from "react-icons/tb";
 import { rentNftProperty } from "../../services/blockchain/MarketplaceService";
+import { WalletContext } from "../../hooks/WalletContext";
 
 export default function ReserveForms() {
     const navigate = useNavigate();
+
+    const { connectWallet }  = useContext(WalletContext) ;
 
     const [property, setProperty] = useState(null);
     const [tokenId, setTokenId] = useState(null);
@@ -117,9 +119,6 @@ export default function ReserveForms() {
             }
         }
             
-
-   
-
     if (loading) return <p>Se încarcă proprietățile...</p>;
     if (error) return <p>Eroare: {error}</p>;
 
@@ -182,11 +181,17 @@ export default function ReserveForms() {
                 <div className="contact-info"> 
                 <h2>Payment Methods</h2>
                 <div className="form-section"> 
-                    
-
                     <div className="form-group">
-                        <button type="button" className="botton-payment">Connect Wallet</button>
-                        <p className="wallet-address">Wallet Address: {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}</p>
+                        {!walletAddress ?  (<button 
+                                                type="button" 
+                                                className="botton-payment"
+                                                onClick={connectWallet}
+                                            >
+                                                    Connect Wallet
+                                </button>
+                        ) : (
+                            <p className="wallet-address">Wallet Address: {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
