@@ -5,10 +5,12 @@ import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
 import { getRentalsForUserById } from "../services/backend/RentalService";
+import { getUserById } from "../services/backend/UsersService";
+import { useWallet } from "../hooks/WalletContext";
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
-    const [rentals, setRentals] = useState([]);
+    const [rentals, setRentals] = useState(null);
 
     const [completeFeedback, setCompleteFeedback] = useState(false);
     const [hoverStars, setHoverStars] = useState(0);
@@ -17,6 +19,8 @@ export default function MyRentalsPage() {
     
     const [loading, setLoading] = useState(false);
     const  [error, setError] = useState(null);
+
+    const { account } = useWallet();
 /*
     useEffect(() => {
             const loadInfoUser = async () => {
@@ -35,7 +39,7 @@ export default function MyRentalsPage() {
         }, [idUser]);
     */
 
-    const idUser = localStorage.getItem("userId");  
+    //const idUser = localStorage.getItem("idUserConnected");  
 
     const rentalsStatus = rentals?.filter(rental => {
         if(active === "upcoming") return rental.status === "UPCOMING";
@@ -44,13 +48,33 @@ export default function MyRentalsPage() {
         return false;
     });
 
-     useEffect(() => {
+    
+    useEffect(() => {
         const loadInfoRental = async () => {
+             setRentals([]);
+             setError(null);
+
+            if (!account) 
+                return; 
             try {
                 setLoading(true);
+                
+                const dataUser = await getUserById(account);
+                if (!dataUser || !dataUser.idUser) {
+                setError("User not found for this wallet!");
+                    return;
+                }
+                const idUser = dataUser.idUser;
+
+                console.log("id user for rentals:", idUser);
+
                 const data = await getRentalsForUserById(idUser);
-                setRentals(data);
-                console.log("Info for rentals:", data);
+                console.log("Data from rentals", data);
+                
+                const myRentals = data.filter(r => r.userId === idUser); 
+                console.log("data.userId", myRentals);
+                setRentals(myRentals);
+                console.log("Info for rentals:", myRentals);
                 
             } catch (err) {
                 setError(err.message);
@@ -59,7 +83,7 @@ export default function MyRentalsPage() {
             }
         };
         loadInfoRental();
-    }, [idUser]);
+    }, [account]);
 
     
     const handleFeedback = () => {
@@ -154,8 +178,7 @@ export default function MyRentalsPage() {
                                                        
                                                    
                                                     <div className="check"> 
-                                                         <p>{new Date (rental.startDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - 
-                                                            {new Date(rental.endDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
+                                                         <p>{new Date (rental.startDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - {new Date(rental.endDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
                                                     </div>
                               
                                                     <div className="check"> 
@@ -164,7 +187,7 @@ export default function MyRentalsPage() {
                                                 </div>
                               
                                                 <div className="rental-feedback">
-                                                    <p className="rental-price">234 ETH</p>
+                                                    <p className="rental-price">{rental.totalPrice} ETH</p>
 
                                                     { active === "upcoming" && (
                                                         <button 

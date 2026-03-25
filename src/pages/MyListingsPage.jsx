@@ -5,20 +5,23 @@ import { getUserById } from "../services/backend/UsersService";
 import { delistNftProperty } from "../services/blockchain/MarketplaceService";
 import { deleteApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
+import { useWallet } from "../hooks/WalletContext";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
 
     const [loading, setLoading] = useState(true);
-    const  [error, setError] = useState(null);
+    const [error, setError] = useState(null);
 
-    const idUser = localStorage.getItem("userId");
+    //const idUser = localStorage.getItem("idUserConnected");
+
+    const { account } = useWallet();
 
     useEffect(() => {
         const loadInfoUser = async () => {
             try {
                 setLoading(true);
-                const data = await getUserById(idUser);
+                const data = await getUserById(account);
                 setMyListings(data);
                 console.log("Info:", data);
                 console.log("My listings:", data.apartmentList);
@@ -31,7 +34,7 @@ export default function MyListingsPage() {
             }
         };
         loadInfoUser();
-    }, [idUser]);
+    }, [account]);
 
     const handleDelistProperty = async (apartment) => {
             console.log("Delete apartment:", apartment);

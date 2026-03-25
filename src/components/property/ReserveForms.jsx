@@ -4,8 +4,9 @@ import { getApartmentById } from "../../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { RentalContext } from "../../hooks/RentalContext";
 import { createRental } from "../../services/backend/RentalService";
-import { rentNftProperty } from "../../services/blockchain/MarketplaceService";
-import { WalletContext } from "../../hooks/WalletContext";
+import { rentNftProperty, verifyAvailability } from "../../services/blockchain/MarketplaceService";
+import { useWallet, WalletContext } from "../../hooks/WalletContext";
+import { getUserById } from "../../services/backend/UsersService";
 
 export default function ReserveForms() {
     const navigate = useNavigate();
@@ -37,6 +38,8 @@ export default function ReserveForms() {
             setData(prev => ({...prev, [name]: value}));
         };
 
+    const { account } = useWallet();
+
     const {idApartment} = useParams();
     console.log("Id apartment:" + idApartment)
     
@@ -58,14 +61,27 @@ export default function ReserveForms() {
         loadInfoProperty();
     }, [idApartment]);
 
-    const userId = localStorage.getItem("userId"); 
-    console.log(userId);
+    //const userId = localStorage.getItem("userId"); 
+    //console.log("Id ul user ului care vrea sa rezerve", userId);
+
+   
 
     const handleSubmitReserve = async (e) => {
             e.preventDefault();
+
+            
+
             setError('');
             setLoading(true);
             console.log("Form:", data);
+
+            const dataUser = await getUserById(account);
+                if (!dataUser || !dataUser.idUser) {
+                    setError("User not found for this wallet!");
+                        return;
+                }
+            const idUser = dataUser.idUser;
+            console.log("Id ul user ului care vrea sa rezerve", idUser);
     
             const {firstName, lastName, phoneNumber} = data;
             if(!firstName || !lastName  || !phoneNumber) {
@@ -81,7 +97,7 @@ export default function ReserveForms() {
                 startDate:checkIn.toISOString().split("T")[0],
                 endDate:checkOut.toISOString().split("T")[0],
                 totalPrice:nrNights * property.pricePerNight,
-                userId:userId,
+                userId:idUser,
                 apartmentId: idApartment,
                 transactionHash: ''
             };
@@ -94,14 +110,23 @@ export default function ReserveForms() {
                 
                 const startDate = Math.floor(new Date(checkIn).getTime() / 1000);
                 const endDate = Math.floor(new Date(checkOut).getTime() / 1000);
+
                 console.log("StartDate:", startDate);
                 console.log("EndDate:", endDate);
 
 
                 const totalPriceInEth = nrNights * property.pricePerNight;
-                console.log("totalPriceInEth:",totalPriceInEth);
+                console.log("totalPriceInEth:", totalPriceInEth);
 
                 //const priceWei = ethers.utils.parseEther(totalPriceInEth.toString());
+
+                const available = await verifyAvailability(tokenId, startDate, endDate);
+
+                if (!available) {
+                    setError("Perioada a fost rezervată între timp.");
+                    setLoading(false);
+                    return;
+                }
 
                 //console.log("Price in wei:", priceWei);
                 const tx = await rentNftProperty(tokenId, startDate, endDate, totalPriceInEth.toString());

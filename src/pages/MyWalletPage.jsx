@@ -5,8 +5,12 @@ import { FiSend } from "react-icons/fi";
 import { IoCopy } from "react-icons/io5";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import { FaArrowTrendUp } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getProviderAndSigner } from "../services/blockchain/WalletService";
+import { useWallet } from "../hooks/WalletContext";
+import { getUserById } from "../services/backend/UsersService";
+import { getRentalsForUserById } from "../services/backend/RentalService";
 
 
 export default function MyWalletPage() {
@@ -21,6 +25,7 @@ const [loading, setLoading] = useState(false);
 const [error, setError] = useState(null);
 
 const myWalletAddress = localStorage.getItem("walletAddress");
+const [copyWalletAddress, setCopyWalletAddress] = useState(false);
 
 const [balance, setBalance] = useState("0.0");
 
@@ -71,6 +76,16 @@ const handleSubmitWithdraw = () => {
         }
     };
 
+
+    const handleCopyAddress = () => {
+        navigator.clipboard.writeText(myWalletAddress);
+        setCopyWalletAddress(true);
+
+        setTimeout(() => {
+            setCopyWalletAddress(false);
+        }, 1000);
+    }
+
     useEffect(() => {
         async function getBalance() {
             try{
@@ -87,6 +102,66 @@ const handleSubmitWithdraw = () => {
         }
         getBalance();
     }, []);
+
+
+     
+    const [rentals, setRentals] = useState(null);
+    const { account } = useWallet();
+    /*
+        useEffect(() => {
+                const loadInfoUser = async () => {
+                    try {
+                        setLoading(true);
+                        const data = await getUserById(idUser);
+                        setUser(data);
+                        console.log("Info:", data);
+                    } catch (err) {
+                        setError(err.message);
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+                loadInfoUser();
+            }, [idUser]);
+        */
+    
+        //const idUser = localStorage.getItem("idUserConnected");  
+        
+        useEffect(() => {
+            const loadInfoRental = async () => {
+                 setRentals([]);
+                 setError(null);
+    
+                if (!account) 
+                    return; 
+                try {
+                    setLoading(true);
+                    
+                    const dataUser = await getUserById(account);
+                    if (!dataUser || !dataUser.idUser) {
+                    setError("User not found for this wallet!");
+                        return;
+                    }
+                    const idUser = dataUser.idUser;
+    
+                    console.log("id user for rentals:", idUser);
+    
+                    const data = await getRentalsForUserById(idUser);
+                    console.log("Data from rentals", data);
+                    
+                    const myRentals = data.filter(r => r.userId === idUser); 
+                    console.log("data.userId", myRentals);
+                    setRentals(myRentals);
+                    console.log("Info for rentals:", myRentals);
+                    
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            loadInfoRental();
+        }, [account]);
 
       if(error){
         return <div>{error}</div>
@@ -222,88 +297,75 @@ const handleSubmitWithdraw = () => {
                                 <div className="container-copy-address">
                                     <p className="address">{myWalletAddress}</p>
 
-                                    <button className="button-copy">
-                                        <IoCopy className="icon"/>
-                                       
+                                    <button 
+                                        className="button-copy"
+                                        onClick={handleCopyAddress}
+                                    >
+                                        {copyWalletAddress ? (<FaCheck  className="icon"/>)
+                                        : (
+                                              <IoCopy className="icon"/>
+                                        )}
                                     </button>
                                 </div>
                             </div>
 
 
                         <div className="container-transaction-history">
-                                <p className="title"> Transaction History</p>
-                                
-                                <div className="container-status-transactions">
-                                    <div className="status-date">
-                                        <div className="icon-status">
-                                            <FiSend className="icon"/>
-                                        </div>
-                                        <div className="name-hotel-date">
-                                            <p className="name-hotel">Payment for booking - Old Town Boutique Hotel</p>
-                                            <p className="date-pay">Jan 15, 2024</p>
-                                        </div>
+                            <p className="title"> Transaction History</p>
+                            
+                            <div className="container-status-transactions">
+                                {rentals?.length > 0 ? (
+                                   
+                                        rentals?.map((rental) => (
+                                            <div className="transaction-item" key={rental.idRental}>
+
+                                                <div className="status-date">
+                                                    <div className="icon-status">
+                                                        <FiSend className="icon"/>
+                                                    </div>
+
+                                                    {rental.status === "UPCOMING" &&
+                                                        <div className="name-hotel-date">
+                                                        <p className="name-hotel">Payment for booking - {rental.title}</p>
+                                                        <p className="date-pay">Jan 15, 2024</p>
+                                                    </div>
+                                                    }
+
+                                                    {rental.status === "CENCELED" &&
+                                                        <div className="name-hotel-date">
+                                                        <p className="name-hotel">Refund - Cnacelled booking - {rental.title}</p>
+                                                        <p className="date-pay">Jan 15, 2024</p>
+                                                    </div>
+                                                    }
+                                                </div>
+                                                
+
+                                                
+                                                 <div className="name-hotel-date">
+                                                     {rental.status === "UPCOMING" &&
+                                                        <div>
+                                                            <p className="price"> - {rental.totalPrice} ETH</p>
+                                                        </div>
+                                                    }
+
+                                                    {rental.status === "CENCELED" &&
+                                                        <div>
+                                                            <p className="price"> + {rental.totalPrice} ETH</p>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        ))
+                                 
                                         
-                                    </div>
-                                        <div>
-                                            <p className="price">+2.4 ETH</p>
-                                             <p className="price">Status</p>
-                                        </div>
-                                </div>
-
-                                <div className="container-status-transactions">
-                                    <div className="status-date">
-                                        <div className="icon-status">
-                                            <MdOutlineFileDownload className="icon-refund"/>
-                                        </div>
-                                        <div className="name-hotel-date">
-                                            <p className="name-hotel">Refund - Cancelled booking</p>
-                                            <p className="date-pay">Jan 15, 2024</p>
-                                        </div>
-                                        
-                                    </div>
-                                        <div>
-                                            <p className="price">+2.4 ETH</p>
-                                             <p className="price">Status</p>
-                                        </div>
-                                </div>
-
-                                 <div className="container-status-transactions">
-                                    <div className="status-date">
-                                        <div className="icon-status">
-                                            <FaArrowTrendDown className="icon-deposit"/>
-                                        </div>
-                                        <div className="name-hotel-date">
-                                            <p className="name-hotel">Deposit from external wallet</p>
-                                            <p className="date-pay">Jan 15, 2024</p>
-                                        </div>
-                                        
-                                    </div>
-                                        <div>
-                                            <p className="price">+2.4 ETH</p>
-                                             <p className="price">Status</p>
-                                        </div>
-                                </div>
-
-                                <div className="container-status-transactions">
-                                    <div className="status-date">
-                                        <div className="icon-status">
-                                            <FaArrowTrendUp className="icon-withdraw"/>
-                                        </div>
-                                        <div className="name-hotel-date">
-                                            <p className="name-hotel">Withdrawal to external wallet</p>
-                                            <p className="date-pay">Jan 15, 2024</p>
-                                        </div>
-                                        
-                                    </div>
-                                        <div>
-                                            <p className="price">+2.4 ETH</p>
-                                             <p className="price">Status</p>
-                                        </div>
-                                </div>
-
-
-                                
+                                ) : (
+                                    <div className="no-rentals">
+                                        <img src="src\assets\suitcase.png" alt="No rentals" />
+                                        <p>No rentals found.</p>
+                                    </div>    
+                                    )}
                             </div>
+                        </div>
 
 
                             

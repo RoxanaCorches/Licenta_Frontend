@@ -21,12 +21,12 @@ export default function MyAccountPage() {
     const { account } = useWallet();
     
 
-    const idUser = localStorage.getItem("userId");
+    //const idUser = localStorage.getItem("userId");
     const walletAddress = localStorage.getItem("walletAddress");
-    const birthday = localStorage.getItem("birthday");
+    //const birthday = localStorage.getItem("birthday");
 
     console.log("account", account);
-    console.log("userId", idUser);
+    //console.log("userId", idUser);
     
 
     const handleUploadeImage = (e) => {
@@ -47,7 +47,7 @@ export default function MyAccountPage() {
         const loadInfoUser = async () => {
             try {
                 setLoading(true);
-                const data = await getUserById(idUser);
+                const data = await getUserById(account);
                 setUser(data);
                 console.log("Info:", data);
             } catch (err) {
@@ -57,9 +57,13 @@ export default function MyAccountPage() {
             }
         };
         loadInfoUser();
-    }, [idUser]);
+    }, [account]);
 
+    const idUserConnected = user.idUser;
+    localStorage.setItem("idUserConnected", idUserConnected);
 
+    console.log("Id  user connected:", idUserConnected);
+    
      const handleUpdate = async() => {
        try {
             setLoading(true);
@@ -67,7 +71,7 @@ export default function MyAccountPage() {
                 ...user, 
                 [editField]:editValue
             };
-            const newInfoUser =  await updateUser(idUser, newInfo);
+            const newInfoUser =  await updateUser(idUserConnected, newInfo);
             setUser(newInfoUser);
             setEditInfo(false);
             setEditField("");
@@ -197,7 +201,7 @@ export default function MyAccountPage() {
 
                                 <div className="form-section-options"> 
                                     <p className="form-label">Birthday</p>
-                                    <p className="form-label">{birthday}</p>
+                                    <p className="form-label">{user.birthday}</p>
                                 </div>
                             </div>
                         </div>

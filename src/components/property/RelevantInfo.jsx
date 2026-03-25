@@ -47,9 +47,10 @@ export default function RelevantInfo() {
         ];
 
     const {idApartment} = useParams();
+
     console.log("Id apartment:" + idApartment)
     console.log("Id-ul user ului conectat cu localStorage:", localStorage.getItem("userId"));
-    console.log("Id-ul user ului conectat:", account);
+    console.log("Wallet Address al  user ului conectat:", account);
     
     useEffect(() => {
         const loadInfoProperty = async () => {
@@ -133,7 +134,7 @@ export default function RelevantInfo() {
                 )}
 
                  <div className="calendar-form-reserve">
-                    <Calendar className="calendar"/>
+                    <Calendar tokenId={property.tokenId} className="calendar"/>
                     <div className="form-reserve">
                         <h2>Add dates for prices</h2>
 

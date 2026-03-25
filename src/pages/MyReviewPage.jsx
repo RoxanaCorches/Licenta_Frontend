@@ -5,7 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
 
 export default function MyReviewPage() {
-    const [active, setActive] = useState('upcoming');
+    const [active, setActive] = useState('received');
     const bookings = [1];
 
     return (
@@ -16,30 +16,22 @@ export default function MyReviewPage() {
                 <div className="main-container">
                     <div className="bottom">
                         <div >
-                            <div className="bottom-title">
-                                <h2>My rentals</h2>
+                            <div className="title-review">
+                                <h2>Reviews</h2>
                             </div>
 
-                            <div className="rentals-sections">
-                                <div className={`rentals-filters ${active === 'upcoming' ? "active" : ""}`}
-                                    onClick={() => setActive("upcoming")}
+                            <div className="reviews-sections">
+                                <div className={`reviews-filters ${active === 'received' ? "active" : ""}`}
+                                    onClick={() => setActive("received")}
                                 >
-                                    <FaCheckCircle className="sidebar-icon" />
-                                    <span>Upcoming</span>
+                                    <span>Reviews Received (nr)</span>
                                 </div>
 
-                                <div className={`rentals-filters ${active === 'completed' ? "active" : ""}`}
-                                    onClick={() => setActive("completed")}
+                                <div className={`reviews-filters ${active === 'given' ? "active" : ""}`}
+                                    onClick={() => setActive("given")}
                                 >
-                                    <FaCheckCircle className="sidebar-icon" />
-                                    <span>Completed</span>
-                                </div>
-
-                                <div className={`rentals-filters ${active === 'cancelled' ? "active" : ""}`}
-                                    onClick={() => setActive("cancelled")}
-                                >
-                                    <TbCancel className="sidebar-icon" />
-                                    <span>Cancelled</span>
+                                    
+                                    <span>Review Given</span>
                                 </div>
                             </div>
 

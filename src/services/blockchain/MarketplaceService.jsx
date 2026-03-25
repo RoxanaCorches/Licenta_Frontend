@@ -14,13 +14,23 @@ export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
 };
 
 export const delistNftProperty = async (tokenId) => {
-    const { signer } = await getProviderAndSigner();
+    const { provider } = await getProviderAndSigner();
 
-    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, provider);
 
     const tx = await contract.delistNftFromMarketplace(tokenId);
 
     await tx.wait();
+};
+
+export const verifyAvailability = async (tokenId, startDate, endDate) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const available = await contract.isAvailableForRent(tokenId, startDate, endDate);
+
+    return available;
 };
 
 export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) => {

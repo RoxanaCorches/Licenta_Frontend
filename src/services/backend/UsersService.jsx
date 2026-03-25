@@ -1,7 +1,7 @@
 const API = "http://localhost:8080/users";
 
-export async function getUserById(userId) {
-    const response = await fetch(`${API}/getUserById/${userId}`, {
+export async function getUserById(walletAddress) {
+    const response = await fetch(`${API}/getUserById/${walletAddress}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

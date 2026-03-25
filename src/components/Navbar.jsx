@@ -13,10 +13,11 @@ import { IoWallet } from "react-icons/io5";
 import { MdRateReview } from "react-icons/md";
 
 export default function Navbar() {
-    const {account, connectWallet} = useWallet();
-    const [panelInfo, setPanelInfo] =useState(false);
+    const { account, connectWallet, disconnectWallet } = useWallet();
+    const [panelInfo, setPanelInfo] = useState(false);
 
-    const walletAddress = account || localStorage.getItem("walletAddress");
+    //const walletAddress = account || localStorage.getItem("walletAddress");
+    const walletAddress = account;
     console.log("Wallet from kyc:", walletAddress);
 
     const dropdownPanel = (e) => {
@@ -24,12 +25,17 @@ export default function Navbar() {
         setPanelInfo(!panelInfo);
     };
 
+    
     const logout = () => {
+    disconnectWallet();
+    localStorage.setItem("walletDisconnected", true);
     //localStorage.clear();
     localStorage.removeItem("userId");
+    //localStorage.removeItem("walletAddress");
     sessionStorage.clear();
     window.location.replace("/");
     };
+    
 
     return (
         <nav className="navbar">
