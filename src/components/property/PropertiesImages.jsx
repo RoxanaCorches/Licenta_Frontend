@@ -8,8 +8,9 @@ import { useEffect, useState } from "react";
 import { getAllApartments } from "../../services/backend/ApartmentService";
 
 export default function PropertiesImages() {
-
     const [properties, setProperties] = useState([]);
+    const [nrProperties, setNrProperties] = useState(10);
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -35,10 +36,10 @@ export default function PropertiesImages() {
     return (
         <div className="propertiesImages-container"> 
         {
-            properties.map((property) => (
+            properties.slice(0, nrProperties).map((property) => (
                 <div className="property-card" key={property.idApartment}>
                     <div className="image-container">
-                        <img src={property.imageMain} alt={property.title}/>
+                        <img src={property?.imageMain} alt={property.title}/>
                     </div>     
 
                     <div className="image-container-details">
@@ -71,7 +72,7 @@ export default function PropertiesImages() {
                         </div> 
                         </div> 
 
-                        {property.blockchainAddress?.toLowerCase() === (localStorage.getItem("walletAddress")).toLowerCase() ?
+                        {property.blockchainAddress?.toLowerCase() === (localStorage.getItem("walletAddress"))?.toLowerCase() ?
                             (   <div className="check-availability">
                                      <button>Your Property</button>
                                 </div>  
@@ -90,8 +91,22 @@ export default function PropertiesImages() {
                     </div> 
                 </div>    
             ))
+            
         }
-        </div>
-        
+
+           <div className="button-load-results">
+                {nrProperties < properties.length ? (
+                    <button
+                        className="button-load-more"
+                        onClick={() => setNrProperties(prev => prev + 3)}
+                    >
+                         View more results
+                     </button>
+                ) :(
+                                        
+                <p>End of results list.</p>
+                )}
+            </div>
+      </div>  
     );
 }

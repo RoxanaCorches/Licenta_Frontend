@@ -14,9 +14,9 @@ export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
 };
 
 export const delistNftProperty = async (tokenId) => {
-    const { provider } = await getProviderAndSigner();
+    const { signer } = await getProviderAndSigner();
 
-    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, provider);
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
     const tx = await contract.delistNftFromMarketplace(tokenId);
 
@@ -68,7 +68,10 @@ export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) 
     console.log("Transaction:", tx.hash);
     console.log("Rental time:", rentalTime);
 
-    return tx.hash;
+    return {
+        transactionHash: tx.hash,
+        reservationDate: rentalTime
+    }
 };
 
 export const cancelRental = async (tokenId) => {

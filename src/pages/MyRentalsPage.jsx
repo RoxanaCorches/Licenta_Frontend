@@ -4,21 +4,25 @@ import Sidebar from "../components/listProperty/SideBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
-import { getRentalsForUserById } from "../services/backend/RentalService";
+import {cancelRentalFromBackend, getRentalsForUserById } from "../services/backend/RentalService";
 import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
+import { cancelRental } from "../services/blockchain/MarketplaceService";
+import { createReview } from "../services/backend/ReviewService";
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
     const [rentals, setRentals] = useState(null);
+    const [nrRentals, setNrRentals] = useState(3);
 
+    const [selectedRental, setSelectedRental] = useState(false);
     const [completeFeedback, setCompleteFeedback] = useState(false);
     const [hoverStars, setHoverStars] = useState(0);
     const [rating, setRating] = useState(1);
     const [feedback, setFeedback] = useState("");
     
     const [loading, setLoading] = useState(false);
-    const  [error, setError] = useState(null);
+    const [error, setError] = useState(null);
 
     const { account } = useWallet();
 /*
@@ -85,7 +89,7 @@ export default function MyRentalsPage() {
         loadInfoRental();
     }, [account]);
 
-    
+    /*
     const handleFeedback = () => {
         try{
             setLoading(true);
@@ -99,28 +103,84 @@ export default function MyRentalsPage() {
             setLoading(false);
         }
     };
+    */
+    const handleReview = async (apartment) => {
+        setSelectedRental(apartment);
+        setCompleteFeedback(true);
+    }
 
-    const handleReview = () => {
-        try{
-            setLoading(true);
-            setCompleteFeedback(true);
-            console.log("Da");
-        }catch(error) {
-            setError(error.message);
-        }finally {
+    const submitReview = async () => {
+            if (!selectedRental) return;
+            //console.log("Create review for apartment:", apartment);
+           // const {rentalId, userId } = apartment;
+            //console.log("Id ul rezervarii pt care se lasa review", rentalId);
+           // console.log("Id ul user ului care lasa review", userId);
+/*
+            if (!rentalId || !userId) {
+                console.error("Invalid apartment info!", apartment);
+                return;
+            } 
+            console.log("Create review for rental, user:", rentalId, userId );
+*/
+            try{
+                setLoading(true);
+                const addReviewInfo = {
+                    idUser: selectedRental.userId,
+                    idRental: selectedRental.rentalId,
+                    comment: feedback,
+                    date: new Date(),
+                    rating:rating,
+                }
+
+                console.log(addReviewInfo);
+       
+                console.log(selectedRental)
+                await createReview(addReviewInfo);
+
+                alert("Review posted!")
+                setCompleteFeedback(false);
+                setRating(1);
+                setHoverStars(1);
+            }catch(err){
+                console.log(err);
+                setError(err.message);
+            } finally {
             setLoading(false);
         }
-    };
+    }
 
-    const handleCancelRental = () => {
+    const handleCancelRental =  async (apartment) => {
+        console.log("Cancel rantal for apartment:", apartment);
+
+        const {apartmentId, tokenId, rentalId } = apartment;
+
+        console.log("IdRental:", rentalId);
+        console.log("apartmentId", apartmentId);
+        console.log("tokenId", tokenId );
+    
+        if (!rentalId || !tokenId) {
+            console.error("Invalid apartment info!", apartment);
+            return;
+        } 
+        console.log("Cancel reantal for rental:", rentalId, tokenId );
+    
         try{
-            setLoading(true);
-            
-            console.log("Da");
-        }catch(error) {
-            setError(error.message);
-        }finally {
-            setLoading(false);
+            await cancelRental(tokenId);
+            console.log("Cancel rental from marketplace");
+            await cancelRentalFromBackend(rentalId);
+    
+            //console.log("Delete form database");
+                  
+            setRentals(prev => 
+                prev.map(rental => rental.rentalId === rentalId 
+                    ? {...rental, status:"CANCELLED" } : rental 
+                )
+            );
+
+            setActive("cancelled");
+            alert("Rental cancelled!")
+            } catch(err){
+                 console.log(err);
         }
     };
   
@@ -140,7 +200,7 @@ export default function MyRentalsPage() {
                                 <h2>My rentals</h2>
                             </div>
 
-                            <div className="rentals-sections">
+                            <div className="reviews-sections">
                                 <div className={`rentals-filters ${active === 'upcoming' ? "active" : ""}`}
                                     onClick={() => setActive("upcoming")}
                                 >
@@ -165,9 +225,9 @@ export default function MyRentalsPage() {
 
                             <div className="rentals-content">
                                 {rentalsStatus?.length > 0 ? (
-                               <div className="apartmnets-container">
-                                    {rentalsStatus?.map((rental, index) => (
-                                        <div className="rental-card-wrapper" key={index}>
+                               <div className="apartments-container">
+                                    {rentalsStatus?.slice(0, nrRentals).map((rental) => (
+                                        <div className="rental-card-wrapper" key={rental.rentalId}>
                                             <div className="rental-card">
                                                 <div className="rental-image">
                                                     <img src={rental.imageMainUrl} alt={rental.title} />
@@ -192,8 +252,8 @@ export default function MyRentalsPage() {
                                                     { active === "upcoming" && (
                                                         <button 
                                                             className="button-review"
-                                                            onClick={handleCancelRental}    
-                                                        >
+                                                            onClick={() => handleCancelRental(rental)}>
+                                                        
                                                             Cancel
                                                         </button>
                                                     ) }
@@ -202,8 +262,9 @@ export default function MyRentalsPage() {
                                                         (
                                                             <button 
                                                                 className="button-review"
-                                                                onClick={handleReview}    
-                                                            >
+                                                                onClick={() => handleReview(rental)}
+                                                                disabled={loading}
+                                                            >   
                                                                 Review
                                                             </button>
                                                         ) 
@@ -212,6 +273,22 @@ export default function MyRentalsPage() {
                                             </div>
                                     </div>
                                 ))}
+
+                                <div className="button-load-results">
+                                    {nrRentals < rentalsStatus.length ? (
+                                        <button
+                                            className="button-load-more"
+                                            onClick={() => setNrRentals(prev => prev + 3)}
+                                        >
+                                            View more results
+                                        </button>
+                                    ) :(
+                                        
+                                        <p>End of rentals list</p>
+                                    )}
+                                </div>
+                                
+
                                 </div>
                                     
                                 ) : (
@@ -264,7 +341,7 @@ export default function MyRentalsPage() {
 
                                         <button  
                                             className="submit" 
-                                            onClick={handleFeedback} 
+                                            onClick={submitReview} 
                                             disabled={loading}
                                         >
                                             {loading ? 'Submitting...' : 'Submit'}

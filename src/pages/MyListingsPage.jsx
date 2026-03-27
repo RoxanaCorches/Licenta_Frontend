@@ -9,6 +9,7 @@ import { useWallet } from "../hooks/WalletContext";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
+    const [nrListings, setNrListings] = useState(3);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -48,7 +49,7 @@ export default function MyListingsPage() {
 
             try{
                 await delistNftProperty(tokenId);
-                console.log("Delist form marketplace");
+                console.log("Delist from marketplace");
                 await deleteApartment(idApartment);
 
                 console.log("Delete form database");
@@ -96,7 +97,7 @@ export default function MyListingsPage() {
                             <div className="rentals-content">
                                {myListings?.apartmentList?.length > 0 ? (
                                     <div className="apartmnets-container">
-                                    {myListings.apartmentList.map((apartment, index) => (
+                                    {myListings.apartmentList.slice(0, nrListings).map((apartment, index) => (
                                     <div className="rental-card-wrapper" key={apartment.tokenId || index}>
                                         <div className="rental-card">
                                             <div className="rental-image">
@@ -133,7 +134,22 @@ export default function MyListingsPage() {
                                         </div>
                                     </div>
                                     ))}
+
+                                    <div className="button-load-results">
+                                        {nrListings < myListings.apartmentList.length ? (
+                                            <button
+                                                className="button-load-more"
+                                                onClick={() => setNrListings(prev => prev + 3)}
+                                            >
+                                                View more results
+                                            </button>
+                                        ) : (
+                                            
+                                            <p>End of listings list.</p>
+                                        )}
                                     </div>
+
+                                </div>
                                ) : (
                                 <div className="no-rentals">
                                     <img src="src\assets\suitcase.png" alt="No rentals" />

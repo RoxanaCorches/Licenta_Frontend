@@ -278,32 +278,32 @@ export default function MyAccountPage() {
                         </div>
 
                         {editInfo && (
-                        <div className="edit-container">
-                        <div className="modal-edit">
-                            <h2>Edit {editField}</h2>
-                            <input
-                                type="text"
-                                value={editValue}
-                                onChange={(e) => setEditValue(e.target.value)}
-                            />
+                            <div className="edit-container">
+                            <div className="modal-edit">
+                                <h2>Edit {editField}</h2>
+                                <input
+                                    type="text"
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                />
 
-                            <div className="modal-edit-buttons">
-                                <button className="cancel" onClick={() => setEditInfo(false)}>
-                                    Cancel
-                                </button>
+                                <div className="modal-edit-buttons">
+                                    <button className="cancel" onClick={() => setEditInfo(false)}>
+                                        Cancel
+                                    </button>
 
-                                <button  
-                                    className="submit" 
-                                    onClick={handleUpdate} 
-                                    disabled={loading}
-                                >
-                                    {loading ? 'Submitting...' : 'Submit'}
-                                </button>
+                                    <button  
+                                        className="submit" 
+                                        onClick={handleUpdate} 
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Submitting...' : 'Submit'}
+                                    </button>
+                                </div>
+
                             </div>
-
-                        </div>
-                        </div>
-                    )} 
+                            </div>
+                         )} 
 
                     </div>
                     </div>

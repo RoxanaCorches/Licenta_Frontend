@@ -5,6 +5,8 @@ import { FiSend } from "react-icons/fi";
 import { IoCopy } from "react-icons/io5";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import { FaArrowTrendUp } from "react-icons/fa6";
+import { BsDownload } from "react-icons/bs";
+import { BiSolidDownload } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { getProviderAndSigner } from "../services/blockchain/WalletService";
@@ -28,6 +30,8 @@ const myWalletAddress = localStorage.getItem("walletAddress");
 const [copyWalletAddress, setCopyWalletAddress] = useState(false);
 
 const [balance, setBalance] = useState("0.0");
+
+ const [nrTransactions, setNrTransactions] = useState(5);
 
 const handleSubmitDeposit = () => {
      try{
@@ -315,26 +319,36 @@ const handleSubmitWithdraw = () => {
                             
                             <div className="container-status-transactions">
                                 {rentals?.length > 0 ? (
-                                   
-                                        rentals?.map((rental) => (
-                                            <div className="transaction-item" key={rental.idRental}>
+                                        rentals?.slice(0, nrTransactions).map((rental, index) => (
+                                            <div 
+                                                className={`transaction-item ${index === Math.min(nrTransactions, rentals.length) - 1 ? "last" : ""}`} 
+                                                key={rental.idRental}
+                                            >
 
                                                 <div className="status-date">
-                                                    <div className="icon-status">
-                                                        <FiSend className="icon"/>
-                                                    </div>
+                                                    {rental.status === "UPCOMING" &&
+                                                        <div className="icon-status">
+                                                            <FiSend className="icon"/>
+                                                        </div>
+                                                    }
+
+                                                    {rental.status === "CANCELLED" &&
+                                                        <div className="icon-status ">
+                                                            <BiSolidDownload className="icon-refund"/>
+                                                        </div>
+                                                    }
 
                                                     {rental.status === "UPCOMING" &&
                                                         <div className="name-hotel-date">
                                                         <p className="name-hotel">Payment for booking - {rental.title}</p>
-                                                        <p className="date-pay">Jan 15, 2024</p>
+                                                        <p className="date-pay">{new Date(rental.rentalDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
                                                     </div>
                                                     }
 
-                                                    {rental.status === "CENCELED" &&
+                                                    {rental.status === "CANCELLED" &&
                                                         <div className="name-hotel-date">
-                                                        <p className="name-hotel">Refund - Cnacelled booking - {rental.title}</p>
-                                                        <p className="date-pay">Jan 15, 2024</p>
+                                                        <p className="name-hotel">Refund - Cancelled booking - {rental.title}</p>
+                                                        <p className="date-pay">{new Date(rental.rentalDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
                                                     </div>
                                                     }
                                                 </div>
@@ -343,27 +357,43 @@ const handleSubmitWithdraw = () => {
                                                 
                                                  <div className="name-hotel-date">
                                                      {rental.status === "UPCOMING" &&
-                                                        <div>
-                                                            <p className="price"> - {rental.totalPrice} ETH</p>
+                                                        <div className="price-for-rental">
+                                                           <p className="price-payment"> - {rental.totalPrice}</p>
+                                                            <p>ETH</p>
                                                         </div>
                                                     }
 
-                                                    {rental.status === "CENCELED" &&
-                                                        <div>
-                                                            <p className="price"> + {rental.totalPrice} ETH</p>
+                                                    {rental.status === "CANCELLED" &&
+                                                        <div className="price-for-rental">
+                                                            <p className="price-refund"> + {(90 * rental.totalPrice) / 100}</p>
+                                                            <p>ETH</p>
                                                         </div>
                                                     }
                                                 </div>
                                             </div>
                                         ))
-                                 
                                         
-                                ) : (
-                                    <div className="no-rentals">
-                                        <img src="src\assets\suitcase.png" alt="No rentals" />
-                                        <p>No rentals found.</p>
-                                    </div>    
-                                    )}
+                                    ) : (
+                                        <div className="no-rentals">
+                                            <img src="src\assets\suitcase.png" alt="No rentals" />
+                                            <p>No rentals found.</p>
+                                        </div>    
+                                )}
+
+                                <div className="button-load-results">
+                                            {nrTransactions < rentals?.length ? (
+                                                <button
+                                                    className="button-load-more"
+                                                    onClick={() => setNrTransactions(prev => prev + 3)}
+                                                >
+                                                    View more transactions
+                                                </button>
+                                            ) : (
+                                                
+                                                <p>End of transactions list.</p>
+                                            )}
+                                </div>
+
                             </div>
                         </div>
 

@@ -14,7 +14,6 @@ export default function Calendar({ tokenId }) {
         <div className="search-field">
             <div ref={dateRef}>
                 <div className="search-panel availability">
-
                     <div className="calendar">
                         <DayPicker
                             mode="single"
@@ -54,7 +53,7 @@ export default function Calendar({ tokenId }) {
                                     );
 
                                     if (!available) {
-                                        alert("Perioada selectată este ocupată!");
+                                        alert("The selected period is busy!");
                                         setCheckOut(undefined);
                                     }
 

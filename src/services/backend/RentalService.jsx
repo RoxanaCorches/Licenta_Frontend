@@ -36,7 +36,7 @@ export async function createRental(addARenatalInfo) {
     return data;
 }
 
-export async function cancelRental (idRental) {
+export async function cancelRentalFromBackend(idRental) {
     const response = await fetch(`${API}/cancelRental/${idRental}`, {
         method: "PUT",
         headers: {
@@ -46,7 +46,7 @@ export async function cancelRental (idRental) {
     });
 
     if(!response.ok) {
-        throw new Error("Error to cancel rental!")
+        throw new Error(data.message);
     }
 
     const data = await response.json();
