@@ -477,6 +477,30 @@ body {
   justify-content: space-between;
 }
 
+.rating-location{
+  display: flex;
+  gap: 15px;
+}
+
+.icon-location-info-location {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rating-stars-header {
+  color: #641ae4;
+  display: flex;
+  gap: 5px;
+  font-size: 1.5rem;
+}
+
+.icon-location-info-location .icon {
+  font-size: 1.5rem;
+  color: #917bb6;
+  transition: all 0.4s ease;
+}
+
 .header .title,
 .place-description .title,
 .place-amenities .title,
@@ -1678,8 +1702,10 @@ border-color: #621add;
 }
 
 .button-load-results  {
+  grid-column: 1 / -1;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .button-load-results p {
@@ -1810,7 +1836,8 @@ outline: none;
   outline: none;
 }
 
-.no-rentals {
+.no-rentals, 
+.no-reviews {
  display: flex;
  flex-direction: column;
  align-items: center;
@@ -2014,9 +2041,17 @@ outline: none;
 }
 
 .transaction-item  {
+  display: flex;
   color: #444444;
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+.status {
+  color: #4dd834;
+  margin-top: -20px;
+  font-size: 1.1rem;
+  font-weight: bpold;
 }
 
 .price-for-rental {
@@ -2024,6 +2059,7 @@ outline: none;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  
 }
 
 .price-payment {
@@ -2216,6 +2252,23 @@ outline: none;
   color: rgb(16, 202, 22);
 }
 
+.canceled {
+  color: rgb(228, 24, 24);
+}
+
+.try-again {
+  background-color: rgb(228, 24, 24); ;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 10px 30px;
+  border-radius: 20px;
+}
+
+.try-again:focus {
+  outline: none;
+}
+
 .modal-reservation h2 {
   font-size: 2rem;
   color: #151515;
@@ -2302,11 +2355,12 @@ outline: none;
   padding: 0;
 }
 
+
 .details-rentals .name-renter {
   color: #515050;
   font-size: 1.2rem;
   font-weight: bold;
-   margin: 0;
+  margin: 0;
 }
 
 .details-rentals .date-rental {
@@ -2320,73 +2374,26 @@ outline: none;
    color: #aaa9a9;
 }
 
-
-
-/*
-.review-info-relevant {
+.rating-stars {
   display: flex;
-  flex-direction: row;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: rgb(236, 236, 57);
+}
+
+.no-reviews img {
+  height: 300px;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(86, 85, 87, 0.05);
+}
+
+
+.reviews-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
-.first-letter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 1 / 1;
-  width: 80px;
-  height: 80px;
-  background-color: #dabfee;
-  border-radius: 50%;
-  font-size: 2rem;
-   color: #8442f7;
-  font-weight: bold;
-  padding: 0;
-}
 
-.details-rentals {
-  display: flex;
-  flex-direction: column;
-}
-
-
-.details-rentals .name-renter {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom:-10px;
-}
-
-.details-rentals .date-rental {
-  color: red;
-  font-size: 1.1rem;
-  font-weight: 500;
-  top: 0;
-}
-
-.review-card {
-  background-color: white;
-  border: 1px solid #915bee;
-  border-radius: 10px ;
-  align-items: center;
-  padding: 1rem 2rem;
-  box-shadow: 0 10px 10px rgba(13, 2, 13, 0.05);
-}
-
-
-
-/*
-
-  background-color: #0b8bed;
-  border-radius: 50%;
-  
- 
-  color: white; 
-  font-size: 2rem;
-  font-weight: bold;
-  
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
- 
-  padding: 0; 

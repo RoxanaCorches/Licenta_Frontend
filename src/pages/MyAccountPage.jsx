@@ -5,6 +5,7 @@ import { GrUploadOption } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
 import { getUserById, updateUser } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
+import  Footer  from "../components/Footer";
 
 export default function MyAccountPage() {
     const [image, setImage] = useState(null);
@@ -43,7 +44,6 @@ export default function MyAccountPage() {
 
     useEffect(() => {
         //if(!idUser) return;
-
         const loadInfoUser = async () => {
             try {
                 setLoading(true);
@@ -309,6 +309,6 @@ export default function MyAccountPage() {
                     </div>
                 </div>
         </div>
-     </div>   
+     </div> 
     );
 }

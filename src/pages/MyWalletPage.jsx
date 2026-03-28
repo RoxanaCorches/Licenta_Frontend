@@ -319,14 +319,15 @@ const handleSubmitWithdraw = () => {
                             
                             <div className="container-status-transactions">
                                 {rentals?.length > 0 ? (
-                                        rentals?.slice(0, nrTransactions).map((rental, index) => (
+                                    <div className="apartmnets-container">
+                                        {rentals?.slice(0, nrTransactions).map((rental, index) => (
                                             <div 
                                                 className={`transaction-item ${index === Math.min(nrTransactions, rentals.length) - 1 ? "last" : ""}`} 
                                                 key={rental.idRental}
                                             >
 
                                                 <div className="status-date">
-                                                    {rental.status === "UPCOMING" &&
+                                                    {(rental.status === "UPCOMING"  || rental.status === "COMPLETED") &&
                                                         <div className="icon-status">
                                                             <FiSend className="icon"/>
                                                         </div>
@@ -338,28 +339,32 @@ const handleSubmitWithdraw = () => {
                                                         </div>
                                                     }
 
-                                                    {rental.status === "UPCOMING" &&
+                                                    {(rental.status === "UPCOMING"  || rental.status === "COMPLETED")  &&
                                                         <div className="name-hotel-date">
-                                                        <p className="name-hotel">Payment for booking - {rental.title}</p>
-                                                        <p className="date-pay">{new Date(rental.rentalDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
-                                                    </div>
+                                                            <p className="name-hotel">Payment for booking - {rental.title}</p>
+                                                            <p className="date-pay">{new Date(rental.rentalDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
+                                                        </div>
                                                     }
 
                                                     {rental.status === "CANCELLED" &&
                                                         <div className="name-hotel-date">
-                                                        <p className="name-hotel">Refund - Cancelled booking - {rental.title}</p>
-                                                        <p className="date-pay">{new Date(rental.rentalDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
-                                                    </div>
+                                                            <p className="name-hotel">Refund - Cancelled booking - {rental.title}</p>
+                                                            <p className="date-pay">{new Date(rental.rentalDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
+                                                        </div>
                                                     }
                                                 </div>
                                                 
 
                                                 
-                                                 <div className="name-hotel-date">
-                                                     {rental.status === "UPCOMING" &&
-                                                        <div className="price-for-rental">
-                                                           <p className="price-payment"> - {rental.totalPrice}</p>
-                                                            <p>ETH</p>
+                                                 <div className="status-date">
+                                                     {(rental.status === "UPCOMING"  || rental.status === "COMPLETED") &&
+                                                        <div className="name-hotel-date">
+                                                            <div className="price-for-rental">
+                                                                <p className="price-payment"> - {rental.totalPrice}</p>
+                                                                <p>ETH</p>
+                                                            </div>
+                                                            <p className="status">{rental.status.charAt(0).toUpperCase() 
+                                                            +  rental.status.slice(1).toLowerCase()}</p>
                                                         </div>
                                                     }
 
@@ -371,16 +376,9 @@ const handleSubmitWithdraw = () => {
                                                     }
                                                 </div>
                                             </div>
-                                        ))
-                                        
-                                    ) : (
-                                        <div className="no-rentals">
-                                            <img src="src\assets\suitcase.png" alt="No rentals" />
-                                            <p>No rentals found.</p>
-                                        </div>    
-                                )}
+                                        ))}
 
-                                <div className="button-load-results">
+                                        <div className="button-load-results">
                                             {nrTransactions < rentals?.length ? (
                                                 <button
                                                     className="button-load-more"
@@ -389,21 +387,23 @@ const handleSubmitWithdraw = () => {
                                                     View more transactions
                                                 </button>
                                             ) : (
-                                                
                                                 <p>End of transactions list.</p>
                                             )}
-                                </div>
-
+                                        </div>
+                                    </div>
+                                    ) : (
+                                        <div className="no-reviews">
+                                            <img src="src\assets\transactions.png" alt="No rentals" />
+                                            <p>No transactions found.</p>
+                                        </div>    
+                                    )}
                             </div>
-                        </div>
-
-
-                            
                         </div>
                     </div>
                 </div>
             </div>
-     </div>   
+        </div>  
+     </div> 
     );
 }
 

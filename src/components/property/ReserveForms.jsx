@@ -70,6 +70,11 @@ export default function ReserveForms() {
 
     //const userId = localStorage.getItem("userId"); 
     //console.log("Id ul user ului care vrea sa rezerve", userId);
+    const handleTryAgain =  (idApartment) => {
+        navigate(`/properties/property/${idApartment}`);
+    }
+
+
     const handleSubmitReserve = async (e) => {
             e.preventDefault();
             setError('');
@@ -148,20 +153,18 @@ export default function ReserveForms() {
                 setProcessingPayment(false);
               
                 setTimeout(() => {
-                     navigate("/properties");
-                }, 10000);
+                     navigate("/myRentals");
+                }, 5000);
                
             } catch(error) { 
-                setError(`Error create rental: ${error.message}`);
+                setError(`${error.message}`);
+                alert(error.message);
                 setProcessingPayment(false);
             } finally {
                  setProcessingPayment(false);
             }
         }
             
-
-    if (error) return <p>Eroare: {error}</p>;
-   
     return(
         <form onSubmit={handleSubmitReserve}> 
         <div className="container-reserve">
@@ -308,13 +311,19 @@ export default function ReserveForms() {
                 </div>
             )} 
 
-
             {!processingPayment && error && !rentalConfirmed && (
                 <div className="edit-container">
                     <div className="modal-reservation">
-                        <IoMdCloseCircle  className="icon-reservation-status confirmed"/>
+                        <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
-                        <p>Please try again!</p>
+                        <button 
+                            className="try-again"
+                            type="botton"
+                            onClick = {() => handleTryAgain(property.idApartment)}
+                        >
+                            Try again
+
+                        </button>
                     </div>
                 </div>
             )}

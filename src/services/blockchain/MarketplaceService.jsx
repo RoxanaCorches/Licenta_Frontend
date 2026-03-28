@@ -41,7 +41,7 @@ export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) 
 
     const priceWei = ethers.utils.parseEther(totalPrice);
 
-    try{
+    try {
         await contract.callStatic.rent(
             tokenId,
             startDate,
@@ -51,14 +51,19 @@ export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) 
 
     } catch(err) {
         console.log("Smart contract error:", err);
-        throw err;
+        const message =
+        err.reason ||
+        err.error?.message ||
+        err.data?.message ||
+        "Transaction failed";
+        throw new Error(message);
     }
 
     const tx = await contract.rent(
-            tokenId,
-            startDate,
-            endDate,
-            { value: priceWei, gasLimit: 500_000 }
+        tokenId,
+        startDate,
+        endDate,
+        { value: priceWei, gasLimit: 500_000 }
     );
 
     const receip = await tx.wait();

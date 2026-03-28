@@ -16,12 +16,18 @@ import { RentalContext } from "../../hooks/RentalContext";
 import { NavItem } from "react-bootstrap";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../../hooks/WalletContext";
+import { getReviewsForApartment } from "../../services/backend/ReviewService";
+import { FaStar } from "react-icons/fa6";
+import { IoIosStarOutline } from "react-icons/io";
 
 export default function RelevantInfo() {
     const [property, setProperty] = useState(null);
+    const [reviews, setReviews] = useState(null);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [nrReviews, setNrReviews] = useState(4);
 
     const { account } = useWallet();
     const { checkIn, checkOut, nrNights } = useContext(RentalContext);
@@ -68,13 +74,44 @@ export default function RelevantInfo() {
         loadInfoProperty();
     }, [idApartment]);
 
+
+    
+    useEffect(() => {
+        const loadInfoUser = async () => {
+            try {
+                setLoading(true);
+                const data = await getReviewsForApartment(idApartment);
+                setReviews(data);
+                console.log("Reviews info for apartment:", data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                    setLoading(false);
+            }
+        };
+            loadInfoUser();
+    }, [idApartment]);
+
     function convertTime(time) {
+        if(!time) return "";
         const [hours, minutes] = time.split(":");
         let hour = parseInt(hours, 10);
         const amPm = hour < 12 ? "AM" : "PM";
        
         return `${hour}:${minutes} ${amPm}`;
     }
+
+
+    const calculateRting = (reviews) => {
+        if(!reviews || reviews?.length === 0 ) return 0;
+        const totalRating = reviews.reduce((acc, rev) => acc + rev.rating, 0);
+        const nrReviews = reviews.length;
+        const average = (totalRating / nrReviews).toFixed(2);
+
+        return  average;
+    }
+
+    const averageRating = reviews?.length > 0 ? calculateRting(reviews) : "No reviews yet";
 
     if (loading) return <p>Se încarcă proprietățile...</p>;
     if (error) return <p>Eroare: {error}</p>;
@@ -83,8 +120,19 @@ export default function RelevantInfo() {
        <div className="info-container"> 
             <div className="info-header">
                 <div className="header">
-                    <h2 className="title">{property.title}</h2>
-                    <p><IoLocation className="suggestion-icon"/> {property.street}, {property.city}, {property.country}</p>
+                    <h2 className="title">{property?.title}</h2>
+                    <div className="rating-location"> 
+                        <div className="rating-stars-header">
+                            {[...Array(5)].map((_, i) =>
+                            i < averageRating && <FaStar key={i} /> 
+                            )}
+                        </div>
+
+                        <div className="icon-location-info-location">
+                            <p><IoLocation className="icon"/></p>
+                            <p>{property?.street}, {property?.city}, {property?.country}</p>
+                        </div>
+                    </div>
                 </div>
 
                 
@@ -115,7 +163,7 @@ export default function RelevantInfo() {
 
             <div className="place-description">
                 <h2 className="title">About this place</h2>
-                <p>{property.description}</p>
+                <p>{property?.description}</p>
             </div>
 
             <div className="place-availability">
@@ -134,7 +182,7 @@ export default function RelevantInfo() {
                 )}
 
                  <div className="calendar-form-reserve">
-                    <Calendar tokenId={property.tokenId} className="calendar"/>
+                    <Calendar tokenId={property?.tokenId} className="calendar"/>
                     <div className="form-reserve">
                         <h2>Add dates for prices</h2>
 
@@ -182,21 +230,88 @@ export default function RelevantInfo() {
                         
                     </div>
                 </div>   
-               
-
             </div>
+
+        {reviews?.length > 0 ? (
+            <div className="place-amenities">
+                <h2 className="title">Reviews - {reviews?.length} reviews</h2>
+                <p>Rating: {averageRating}</p>
+
+                <p className="rating-stars">
+                    {[...Array(5)].map((_, i) =>
+                    i < averageRating && <FaStar key={i} /> 
+                    )}
+                </p>
+
+                <div className="">
+                    {reviews?.length > 0 ? (
+                        <div className="reviews-container">
+                            {reviews?.slice(0, nrReviews).map((review) => (
+                                <div className="apartment-card-wrapper" key={review.id}>
+                                    <div className="review-card">
+                                        <div className="review-header">
+                                            <div className="first-letter">
+                                                <p>{review.firstName[0]}</p> 
+                                            </div>
+                                            <div className="details-rentals">
+                                                <p className="name-renter">{review.firstName} {review.lastName}</p>
+                                                <p className="date-rental">{new Date (review.date).toLocaleDateString("en-US",{ year:"numeric", month:"long", day:"numeric"})}</p>
+                                            </div>
+                                        </div>
+                                                                            
+                    
+                                        <div className="review-body">
+                                            <p className="rating-stars">
+                                                {[...Array(5)].map((_, i) =>
+                                                    i < review.rating ? <FaStar key={i} /> : <IoIosStarOutline key={i} />
+                                                )}
+                                            </p>
+                                            <p className="name-apartment"> {review.comment}</p>
+                                        </div>   
+                                    </div>
+                                </div>
+                            ))}
+                                                  
+                                                                                      
+                            <div className="button-load-results">
+                                {nrReviews < reviews?.length ? (
+                                    <button
+                                        className="button-load-more"
+                                        onClick={() => setNrReviews(prev => prev + 4)}
+                                    >
+                                        Show more reviews
+                                    </button>
+                                ) : (
+                                                                
+                                    <p>End of reviews list.</p>
+                                )}
+                            </div>
+                        </div>
+
+                    ) : (
+                         <div className="no-reviews">
+                    
+                            <p>No review yet.</p>
+                        </div>    
+                    )}
+                </div>
+            </div>
+
+            ) : ("")
+        }
+
 
             <div className="place-amenities">
                 <h2 className="title">Amenities</h2>
                 <div className="amenities">
                     {listAmenities
-                        .filter(facility => property[facility.key])
+                        .filter(facility => property?.[facility.key])
                         .map((facility, index) => (
                         <div className="icon-amenities" key={index}>
                             <FaRegCheckCircle className="icon" />
-                            <p>{facility.label}</p>
+                            <p>{facility?.label}</p>
                         </div>
-                        ))}
+                    ))}
                 </div>
             </div>
 
@@ -207,12 +322,12 @@ export default function RelevantInfo() {
                         <h2>Entry & Exit Times</h2>
                         <div className="check"> 
                             <IoMdTime className="icon"/> 
-                            <p>Check-in: {convertTime(property.checkInFrom)} -  {convertTime(property.checkInUntil)}</p>
+                            <p>Check-in: {convertTime(property?.checkInFrom)} -  {convertTime(property?.checkInUntil)}</p>
                         </div>
 
                         <div className="check"> 
                             <IoMdTime className="icon"/> 
-                            <p>Check-out: {convertTime(property.checkOutFrom)} -  {convertTime(property.checkOutUntil)}</p>                          
+                            <p>Check-out: {convertTime(property?.checkOutFrom)} -  {convertTime(property?.checkOutUntil)}</p>                          
                         </div>
                     </div>
 
@@ -220,22 +335,22 @@ export default function RelevantInfo() {
                         <h2>While You’re Here</h2>
                         <div className="check"> 
                             <FaUsers className="icon"/> 
-                            <p>Maximum guests: {property.guests}</p>
+                            <p>Maximum guests: {property?.guests}</p>
                         </div>
 
                         <div className="check"> 
-                            <p>{property.petsAllowed ? <MdOutlinePets className="icon"/> : <TbPawOff className="icon"/> }</p>
-                            <p>{property.petsAllowed ? "Pets are allowed!" : "Pets are not allowed!"}</p>
+                            <p>{property?.petsAllowed ? <MdOutlinePets className="icon"/> : <TbPawOff className="icon"/> }</p>
+                            <p>{property?.petsAllowed ? "Pets are allowed!" : "Pets are not allowed!"}</p>
                         </div>
 
                         <div className="check"> 
-                            <p>{property.smokingAllowed ? <FaSmoking className="icon"/> : <FaSmokingBan className="icon"/> }</p>
-                            <p>{property.smokingAllowed ? "Smoking is allowed!" : "Smoking is not allowed!"}</p>
+                            <p>{property?.smokingAllowed ? <FaSmoking className="icon"/> : <FaSmokingBan className="icon"/> }</p>
+                            <p>{property?.smokingAllowed ? "Smoking is allowed!" : "Smoking is not allowed!"}</p>
                         </div>
 
                         <div className="check"> 
-                            <p>{property.partiesAllowed ? <GiPartyPopper className="icon"/> : <BiSolidVolumeMute className="icon"/> }</p>
-                            <p>{property.partiesAllowed ? "Parties or events are allowed!" : "Parties or events are not allowed!"}</p>
+                            <p>{property?.partiesAllowed ? <GiPartyPopper className="icon"/> : <BiSolidVolumeMute className="icon"/> }</p>
+                            <p>{property?.partiesAllowed ? "Parties or events are allowed!" : "Parties or events are not allowed!"}</p>
                         </div>
                     </div>
                 </div>

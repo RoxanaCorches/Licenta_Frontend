@@ -44,32 +44,32 @@ export default function PropertiesImages() {
 
                     <div className="image-container-details">
                         <div className="details"> 
-                        <div className="property-details">
-                            <h1 className="name-property">{property.title}</h1>
-                            <h2 className="price">{property.pricePerNight} ETH / night</h2>
-                            
-                            <div className="location"> 
-                                <FaLocationDot className= "icon-location"/>
-                                <p className="address">{property.street}, {property.city}, {property.country}</p>
-                            </div>
-                        </div>    
+                            <div className="property-details">
+                                <h1 className="name-property">{property.title}</h1>
+                                <h2 className="price">{property.pricePerNight} ETH / night</h2>
+                                
+                                <div className="location"> 
+                                    <FaLocationDot className= "icon-location"/>
+                                    <p className="address">{property.street}, {property.city}, {property.country}</p>
+                                </div>
+                            </div>    
 
-                        <div className="property-amenities">
-                            <div className="bedrooms">
-                                <IoBed className="icon"/>
-                                <p>{property.bedrooms} Bedrooms</p>
-                            </div>
+                            <div className="property-amenities">
+                                <div className="bedrooms">
+                                    <IoBed className="icon"/>
+                                    <p>{property.bedrooms} Bedrooms</p>
+                                </div>
 
-                            <div className="bathrooms">
-                                <FaBath className="icon"/>
-                                <p>{property.bathrooms} Bathrooms</p>
-                            </div>
+                                <div className="bathrooms">
+                                    <FaBath className="icon"/>
+                                    <p>{property.bathrooms} Bathrooms</p>
+                                </div>
 
-                            <div className="area">
-                                <RxRulerSquare className="icon"/>
-                                <p>{property.area}m²</p>
-                            </div>
-                        </div> 
+                                <div className="area">
+                                    <RxRulerSquare className="icon"/>
+                                    <p>{property.area}m²</p>
+                                </div>
+                            </div> 
                         </div> 
 
                         {property.blockchainAddress?.toLowerCase() === (localStorage.getItem("walletAddress"))?.toLowerCase() ?

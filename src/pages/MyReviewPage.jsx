@@ -5,6 +5,8 @@ import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
 import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
+import { FaStar } from "react-icons/fa6";
+import { IoIosStarOutline } from "react-icons/io";
 
 export default function MyReviewPage() {
     const [active, setActive] = useState('received');
@@ -28,6 +30,7 @@ export default function MyReviewPage() {
 
                 console.log("Info:", data);
                 console.log("My reviews:", data.reviewList);
+                console.log("My apartments:", data.apartmentList);
                 console.log("Numbers reviews:", data.reviewList.length);
             } catch (err) {
                 setError(err.message);
@@ -39,13 +42,37 @@ export default function MyReviewPage() {
         }, [account]);
 
 
+        /*
     const idUserConnected = myReviews.idUser;
     console.log("Id user curent conectat:", idUserConnected);
     const reviewReceived = myReviews?.reviewList?.filter(rev => rev.idUser !== idUserConnected);
     const reviewGiven = myReviews?.reviewList?.filter(rev => rev.idUser === idUserConnected);
 
     const showReview = active === 'received' ? reviewReceived : reviewGiven;
+*/
 
+    const idUserConnected = myReviews?.idUser;
+    console.log("Id user curent conectat:", idUserConnected);
+
+    /*
+    const reviewReceived = myReviews?.reviewList?.filter(rev => {
+        const ownerId = rev.rentalList?.apartmentList?.idUser;
+        console.log("Owner:", ownerId);
+        return ownerId === idUserConnected && rev.userId !== idUserConnected 
+
+    });
+
+    */
+        //rev => rev.ownerId === idUserConnected && rev.userId !== idUserConnected 
+    
+    const reviewReceived = myReviews?.reviewList?.filter(rev => rev.ownerId === idUserConnected && rev.userId !== idUserConnected );
+    
+    console.log("Id user for reviewReceived:", reviewReceived);
+
+    const reviewGiven = myReviews?.reviewList?.filter(rev => rev.userId === idUserConnected);
+    console.log("Id user for reviewGiven:", reviewGiven);
+
+    const showReview = active === 'received' ? reviewReceived : reviewGiven;
 
    if(error){
         return <div>{error}</div>
@@ -89,21 +116,26 @@ export default function MyReviewPage() {
                                         {showReview.slice(0, nrListings).map((review) => (
                                             <div className="rental-card-wrapper" key={review.id}>
                                                 <div className="review-card">
-                                                        <div className="review-header">
-                                                            <div className="first-letter">
-                                                                {active === 'given' ? "Y" : review?.firstName.[0]}
-                                                            </div>
-                                                            <div className="details-rentals">
-                                                                {active === 'given' ? `${myReviews.firstName} ${myReviews.lastName}` : `${myReviews.firstName}`}
-                                                                <p className="date-rental">{new Date (review.date).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
-                                                             </div>
+                                                    <div className="review-header">
+                                                        <div className="first-letter">
+                                                            {active === 'given' ?  "Y" : review.firstNameOwner[0]}
                                                         </div>
+                                                        <div className="details-rentals">
+                                                            {active === 'given' ?  "You"  : `${review.firstNameOwner} ${review.lastNameOwner}`}
+                                                            <p className="date-rental">{new Date (review.date).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})}</p>
+                                                        </div>
+                                                    </div>
+                                                        
 
-                                                        <div className="review-body">
-                                                            <p className="name-apartment"><span>for:</span> {review.title}</p>
-                                                            <p className="rating-stars">{"⭐".repeat(review.rating)}</p>
-                                                            <p className="review-comment">{review.comment}</p>
-                                                        </div>   
+                                                    <div className="review-body">
+                                                        <p className="name-apartment"><span>for:</span> {review.title}</p>
+                                                        <p className="rating-stars">
+                                                            {[...Array(5)].map((_, i) =>
+                                                                i < review.rating ? <FaStar key={i} /> : <IoIosStarOutline key={i} />
+                                                            )}
+                                                        </p>
+                                                        <p className="review-comment">{review.comment}</p>
+                                                    </div>   
                                                 </div>
                                             </div>
                                         ))}
@@ -124,9 +156,9 @@ export default function MyReviewPage() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="no-rentals">
-                                        <img src="src\assets\suitcase.png" alt="No rentals" />
-                                        <p>No listings found.</p>
+                                    <div className="no-reviews">
+                                        <img src="src\assets\review.png" alt="No rentals" />
+                                        <p>No review yet.</p>
                                     </div>    
                                 )}
                             </div>
