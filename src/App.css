@@ -1680,6 +1680,7 @@ border-color: #621add;
 }
 
 .rental-card-wrapper {
+  margin-right: 10px ;
   margin-bottom: 30px;
 }
 
@@ -1687,10 +1688,9 @@ border-color: #621add;
   background-color: white;
   border: 1px solid #915bee;
   border-radius: 10px ;
-  display: grid;
+  display: flex;
   align-items: center;
-  grid-template-columns: 150px 1fr 150px;
-  gap: 5rem;
+  gap: 1rem;
   padding: 1rem 2rem;
   box-shadow: 0 10px 10px rgba(13, 2, 13, 0.05);
 }
@@ -1754,6 +1754,7 @@ outline: none;
 }
 
 .rentals-content  .rental-information {
+  flex: 1;
   font-size: 1rem;
   font-weight: 500;
   color: #8b9197;
@@ -1782,8 +1783,9 @@ outline: none;
 .button-delist {
   background-color: #7a33f4;
   height: 50px;
-  width: 100px;
+  width: 150px;
   color: white;
+  font-size: 1.2rem;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -2301,8 +2303,13 @@ outline: none;
 }
 
 .rentals-filters span{
+  margin-left: 10px
+}
+
+.buttons-status-rentals {
+  display: flex;
+  gap: 25px;
   margin-left: 10px;
-  
 }
 
 .reviews-filters.active, 

@@ -3,6 +3,23 @@ import  MarketplaceAbi  from "../../blockchain/abi/MarketplaceAbi.json";
 import { getProviderAndSigner } from "./WalletService";
 import { ethers } from "ethers";
 
+
+export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const txList = await contract.listNftOnMarketplace(tokenId, price, hoursForCheckIn);
+
+    //await txList.wait();
+
+    return txList;
+};
+
+
+
+
+/*
 export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
     const { signer } = await getProviderAndSigner();
 
@@ -12,15 +29,17 @@ export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
 
     await tx.wait();
 };
+*/
 
 export const delistNftProperty = async (tokenId) => {
     const { signer } = await getProviderAndSigner();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
-    const tx = await contract.delistNftFromMarketplace(tokenId);
+    const txDelist = await contract.delistNftFromMarketplace(tokenId);
 
-    await tx.wait();
+    //await tx.wait();
+    return txDelist;
 };
 
 export const verifyAvailability = async (tokenId, startDate, endDate) => {
@@ -84,7 +103,8 @@ export const cancelRental = async (tokenId) => {
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
-    const tx = await contract.cancel(tokenId);
+    const txCancel = await contract.cancel(tokenId);
 
-    await tx.wait();
+    //await tx.wait();
+    return txCancel;
 };

@@ -7,15 +7,24 @@ import { deleteApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
 
+import { IoMdCloseCircle } from "react-icons/io";
+import { LuHourglass } from "react-icons/lu";
+import { FaCoins } from "react-icons/fa";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
     const [nrListings, setNrListings] = useState(3);
+
+    const [statusBlockchain, setStatusBlockchain] = useState("idle");
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     //const idUser = localStorage.getItem("idUserConnected");
-
+    const navigate = useNavigate();
     const { account } = useWallet();
 
     useEffect(() => {
@@ -37,6 +46,10 @@ export default function MyListingsPage() {
         loadInfoUser();
     }, [account]);
 
+     const handleTryAgain =  () => {
+        navigate(`/myListings`);
+    }
+
     const handleDelistProperty = async (apartment) => {
             console.log("Delete apartment:", apartment);
             const {idApartment, tokenId } = apartment;
@@ -47,8 +60,17 @@ export default function MyListingsPage() {
             } 
             console.log("Delete apartment:", idApartment, tokenId );
 
-            try{
-                await delistNftProperty(tokenId);
+            try {
+                setStatusBlockchain("delist_nft");
+                
+
+                const txDelist = await delistNftProperty(tokenId);
+                setStatusBlockchain("delisting_nft");
+
+                await new Promise(r => setTimeout(r, 2000));
+
+                await txDelist.wait();
+
                 console.log("Delist from marketplace");
                 await deleteApartment(idApartment);
 
@@ -60,9 +82,17 @@ export default function MyListingsPage() {
                         (apartment) => apartment.idApartment !== idApartment
                     ),}
                 ));
-                  alert("Apartment deleted!")
+
+                setStatusBlockchain("success_nft");
+                setTimeout(() => {
+                     navigate("/myListings");
+                    setStatusBlockchain("idle");
+                }, 2000);
+                //alert("Apartment deleted!")
+
             }catch(err){
                 console.log(err);
+                setStatusBlockchain("error_delist_nft");
             }
     }
 
@@ -161,6 +191,58 @@ export default function MyListingsPage() {
                     </div>
                 </div>
             </div>
+
+        {statusBlockchain === "delist_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <FaCoins className="icon-reservation-status hourglass"/>
+                    <h2>Delist Property NFT</h2>
+                    <p>Please confirm the transaction in your wallet to delist your property NFT!</p>
+                </div>
+            </div>
+        )}
+        
+        
+        {statusBlockchain === "delisting_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <LuHourglass className="icon-reservation-status hourglass"/>
+                    <h2>Delisting Property NFT...</h2>
+                    <p>Your property NFT is being delisting from marketplace</p>
+                </div>
+            </div>
+        )}
+
+
+        {statusBlockchain === "success_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <FaRegCheckCircle className="icon-reservation-status confirmed"/>
+                    <h2>Property Delisted Successfully!</h2>
+                    <p>Your property NFT has been successfully delisted from the marketplace.</p>
+                </div>
+            </div>
+        )}
+        
+        {statusBlockchain === "error_delist_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <IoMdCloseCircle  className="icon-reservation-status canceled"/>
+                    <h2>Something went wrong...</h2>
+                    <button 
+                        className="try-again"
+                        type="button"
+                        onClick = {() => handleTryAgain()}
+                    >
+                        Try again
+                
+                    </button>
+                </div>
+            </div>
+        )}
+
+
+
      </div>   
     );
 }

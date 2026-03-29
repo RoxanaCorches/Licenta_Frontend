@@ -139,22 +139,22 @@ export default function RelevantInfo() {
             </div>
 
             <div className="info-images">
-               {property && property.imageMain && (
+               {property && property?.imageMain && (
                 <div className="main-image">
-                    <img src={property.imageMain} alt={property.title || "Apartament"} />
+                    <img src={property?.imageMain} alt={property?.title || "Apartament"} />
                 </div>
                 )}
 
             
                {property && (
                 <div className="side-images">
-                    {[property.image1, property.image2, property.image3, property.image4]
+                    {[property?.image1, property?.image2, property?.image3, property?.image4]
                     .filter(img => img) 
                     .map((img, index) => (
                         <img
                         key={index}
                         src={`http://localhost:8080${img}`}
-                        alt={property.title || "Apartament"}
+                        alt={property?.title || "Apartament"}
                         />
                     ))}
                 </div>
@@ -176,7 +176,7 @@ export default function RelevantInfo() {
 
                 ) : (
                     <div className="dates-checkIn-checkOut">
-                        <p className="numbers-nights">{nrNights} nights in {property.city} </p>
+                        <p className="numbers-nights">{nrNights} nights in {property?.city} </p>
                         <p className="dates">{checkIn?.toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - {checkOut?.toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
                     </div>
                 )}
@@ -209,15 +209,15 @@ export default function RelevantInfo() {
                             ) : (
                                 <div className="info-booking">
                                     <p className="dates">
-                                        CHECK-IN: {checkIn.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                        CHECK-IN: {checkIn?.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
                                     </p>
 
                                     <p className="dates">
-                                        CHECK-OUT: {checkOut.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                        CHECK-OUT: {checkOut?.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
                                     </p>
 
-                                    <p className="dates">{property.pricePerNight} ETH × {nrNights} nights  </p>
-                                    <p className="total-price"> <span> Total</span> {nrNights * property.pricePerNight} ETH</p>
+                                    <p className="dates">{property?.pricePerNight} ETH × {nrNights} nights  </p>
+                                    <p className="total-price"> <span> Total</span> {nrNights * property?.pricePerNight} ETH</p>
                                 </div>
                             )}
                         </div>

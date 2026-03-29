@@ -9,10 +9,19 @@ import { createApartment } from "../services/backend/ApartmentService";
 import { useNavigate } from "react-router-dom";
 import { approveMarketplace, mintNftProperty } from "../services/blockchain/PropertyNftService";
 import { listNftProperty } from "../services/blockchain/MarketplaceService";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { IoMdCloseCircle } from "react-icons/io";
+import { LuHourglass } from "react-icons/lu";
+import { FaCoins } from "react-icons/fa";
+import { GiLockedFortress } from "react-icons/gi";
+import { FaLockOpen } from "react-icons/fa6";
+import { MdOutlineSell } from "react-icons/md";
 import { ethers } from "ethers";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
+
+    const [statusBlockchain, setStatusBlockchain] = useState("start");
     //const totalSteps = 5;
     //const progress = (step / totalSteps) * 100; 
 
@@ -67,6 +76,10 @@ export default function ListYourPropertyPage() {
         setData(prev => ({...prev, ...data}));
     };
 
+    const handleTryAgain =  () => {
+        navigate(`/listYourProperty`);
+    }
+    
     const handleSubmit = async (e) => {
             e.preventDefault();
             setError('');
@@ -143,8 +156,31 @@ export default function ListYourPropertyPage() {
                 console.log("MetadataUrl:", metadataUrl);
                 const idApartment = response.idApartment;
 
-                const { tokenId } = await mintNftProperty(metadataUrl);
-                alert("NFT property minted!");
+                setStatusBlockchain("mint_nft");
+                //const { tokenId } = await mintNftProperty(metadataUrl);
+                const  txMint  = await mintNftProperty(metadataUrl);
+                setStatusBlockchain("minting_nft");
+
+                await new Promise(r => setTimeout(r, 100));
+
+                const receipt = await txMint.wait();
+                //console.log("Transaction confirmed:", receipt.transactionHash);
+
+                // --- extrage tokenId din event-ul Minted ---
+                
+                let tokenId = null;
+                console.log("Events:", receipt.events);
+                for (const event of receipt.events) {
+                    if (event.event === "Minted") {
+                        tokenId = event.args.tokenId;
+                        break;
+                    }
+                }
+                //await txMint.wait();
+
+                if (!tokenId) throw new Error("Nu am găsit tokenId în event-ul Minted");
+
+                //alert("NFT property minted!");
                 console.log("Apartment created, tokenId:", tokenId, "Metadata URL:", metadataUrl);
 
                 const saveApartmentComplet = {
@@ -152,10 +188,6 @@ export default function ListYourPropertyPage() {
                 };
 
                 await createApartment(saveApartmentComplet, images);
-                
-
-
-            
                 const priceWei = ethers.utils.parseEther(String(data.price || "0"));
                 const checkInHour = Number(data.hourCheckInFrom.split(":")[0]);
 
@@ -163,27 +195,43 @@ export default function ListYourPropertyPage() {
                 console.log("priceWei:", priceWei.toString());
                 console.log("Check-in hour:", checkInHour);
 
-                
-               
-                
-
-            
-
-
                 // --- List NFT on marketplace ---
                 console.log("Approving marketplace...");
-                await approveMarketplace(); // așteaptă confirmarea
+
+                setStatusBlockchain("approve_wallet");
+                // așteaptă confirmarea
+                const txApprove  =  await approveMarketplace();; 
+                setStatusBlockchain("approving_wallet");
+
+                await new Promise(r => setTimeout(r, 2000));
+
+                await txApprove.wait();
+
                 console.log("Marketplace approved.");
-                await listNftProperty(tokenId, priceWei, checkInHour);
+
+                setStatusBlockchain("list_nft");
+                const  txList  = await listNftProperty(tokenId, priceWei, checkInHour);
+                setStatusBlockchain("listing_nft");
+                await new Promise(r => setTimeout(r, 2000));
+
+                await txList.wait();
+                
+
+                setStatusBlockchain("success_nft");
+
                 console.log("NFT listed successfully!");
 
-                alert("Apartment listed!");
-                navigate("/properties");
+                //alert("Apartment listed!");
+
+                setTimeout(() => {
+                     navigate("/myListings");
+                }, 5000);
 
             } catch (error) {
                 console.error("Error in handleSubmit:", error);
                 setError(`Error create apartment: ${error.message}`);
                 alert(`Error: ${error.message}`);
+                setStatusBlockchain("error_nft");
             } finally {
                 setLoading(false);
             }
@@ -284,6 +332,95 @@ export default function ListYourPropertyPage() {
                             {loading ? "Listing..." : "Listing"}
                         </button>
                     </div>
+                </div>
+            </div>
+        )}
+
+
+        {statusBlockchain === "mint_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <FaCoins className="icon-reservation-status hourglass"/>
+                        <h2>Create Property NFT</h2>
+                        <p>Please confirm the transaction in your wallet to create your property NFT!</p>
+                    </div>
+            </div>
+        )}
+
+
+        {statusBlockchain === "minting_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <LuHourglass className="icon-reservation-status hourglass"/>
+                        <h2>Creating Property NFT...</h2>
+                        <p>Your property NFT is being created on the blockchain.</p>
+                    </div>
+            </div>
+        )}
+
+        {statusBlockchain === "approve_wallet" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <FaLockOpen className="icon-reservation-status hourglass"/>
+                        <h2>Approve Marketplace</h2>
+                        <p>Please confirm the transaction in your wallet so the marketplace can manage your NFT.</p>
+                    </div>
+            </div>
+        )}
+
+        {statusBlockchain === "approving_wallet" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <LuHourglass className="icon-reservation-status hourglass"/>
+                        <h2>Approving Marketplace...</h2>
+                        <p>The approval transaction is being processed on the blockchain.</p>
+                    </div>
+            </div>
+        )}
+
+        {statusBlockchain === "list_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <MdOutlineSell className="icon-reservation-status hourglass"/>
+                        <h2>List Property</h2>
+                        <p>Please confirm the listing transaction in your wallet to make your property available.</p>
+                    </div>
+            </div>
+        )}
+
+        {statusBlockchain === "listing_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <LuHourglass  className="icon-reservation-status hourglass"/>
+                        <h2>Listing Property...</h2>
+                        <p><LuHourglass />The listing transaction is being confirmed on the blockchain.</p>
+                    </div>
+            </div>
+        )}
+
+        {statusBlockchain === "success_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <FaRegCheckCircle className="icon-reservation-status confirmed"/>
+                    <h2>Property Listed Successfully!</h2>
+                    <p>Your property NFT has been successfully listed on the marketplace.</p>
+                </div>
+            </div>
+        )}
+
+        {statusBlockchain === "error_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <IoMdCloseCircle  className="icon-reservation-status canceled"/>
+                    <h2>Something went wrong...</h2>
+                    <button 
+                        className="try-again"
+                        type="botton"
+                        onClick = {() => handleTryAgain()}
+                    >
+                        Try again
+        
+                    </button>
                 </div>
             </div>
         )}

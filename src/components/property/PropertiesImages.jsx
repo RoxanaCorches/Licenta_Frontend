@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllApartments } from "../../services/backend/ApartmentService";
 
+
 export default function PropertiesImages() {
     const [properties, setProperties] = useState([]);
     const [nrProperties, setNrProperties] = useState(10);
@@ -84,10 +85,7 @@ export default function PropertiesImages() {
                                     </Link>
                                 </div>  
                             )
-
                         }
-                       
-                        
                     </div> 
                 </div>    
             ))

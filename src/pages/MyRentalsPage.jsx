@@ -9,6 +9,10 @@ import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
 import { cancelRental } from "../services/blockchain/MarketplaceService";
 import { createReview } from "../services/backend/ReviewService";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { IoMdCloseCircle } from "react-icons/io";
+import { LuHourglass } from "react-icons/lu";
+import { FaLockOpen } from "react-icons/fa6";
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
@@ -23,6 +27,8 @@ export default function MyRentalsPage() {
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const [statusBlockchain, setStatusBlockchain] = useState("idle");
 
     const { account } = useWallet();
 /*
@@ -47,6 +53,7 @@ export default function MyRentalsPage() {
 
     const rentalsStatus = rentals?.filter(rental => {
         if(active === "upcoming") return rental.status === "UPCOMING";
+        if(active === "progress") return rental.status === "IN_PROGRESS";
         if(active === "completed") return rental.status === "COMPLETED";
         if(active === "cancelled") return rental.status === "CANCELLED";
         return false;
@@ -89,6 +96,15 @@ export default function MyRentalsPage() {
         loadInfoRental();
     }, [account]);
 
+    const handleTryAgain =  () => {
+        console.log("Da");
+        setTimeout(() => {
+                setActive("upcoming");
+                setStatusBlockchain("idle");
+        }, 2000);
+    }
+
+
     /*
     const handleFeedback = () => {
         try{
@@ -110,7 +126,7 @@ export default function MyRentalsPage() {
     }
 
     const submitReview = async () => {
-            if (!selectedRental) return;
+        if (!selectedRental) return;
             //console.log("Create review for apartment:", apartment);
            // const {rentalId, userId } = apartment;
             //console.log("Id ul rezervarii pt care se lasa review", rentalId);
@@ -122,31 +138,31 @@ export default function MyRentalsPage() {
             } 
             console.log("Create review for rental, user:", rentalId, userId );
 */
-            try{
-                setLoading(true);
-                const addReviewInfo = {
-                    idUser: selectedRental.userId,
-                    idRental: selectedRental.rentalId,
-                    comment: feedback,
-                    date: new Date(),
-                    rating:rating,
-                }
+         try{
+            setLoading(true);
+            const addReviewInfo = {
+                idUser: selectedRental.userId,
+                idRental: selectedRental.rentalId,
+                comment: feedback,
+                date: new Date(),
+                rating:rating,
+            }
 
-                console.log(addReviewInfo);
+            console.log(addReviewInfo);
        
-                console.log(selectedRental)
-                await createReview(addReviewInfo);
+            console.log(selectedRental)
+            await createReview(addReviewInfo);
 
-                alert("Review posted!")
-                setCompleteFeedback(false);
-                setRating(1);
-                setHoverStars(1);
-            }catch(err){
-                console.log(err);
-                setError(err.message);
-            } finally {
+            alert("Review posted!")
+            setCompleteFeedback(false);
+            setRating(1);
+            setHoverStars(1);
+         }catch(err){
+            console.log(err);
+            setError(err.message);
+        } finally {
             setLoading(false);
-        }
+    }
     }
 
     const handleCancelRental =  async (apartment) => {
@@ -164,9 +180,17 @@ export default function MyRentalsPage() {
         } 
         console.log("Cancel reantal for rental:", rentalId, tokenId );
     
-        try{
-            await cancelRental(tokenId);
+        try {
+            setStatusBlockchain("cancel_rental");
+            const txCancel =  await cancelRental(tokenId);
+            setStatusBlockchain("cancelling_rental");
+
+            await new Promise(r => setTimeout(r, 2000));
+
+            await txCancel.wait();
+
             console.log("Cancel rental from marketplace");
+
             await cancelRentalFromBackend(rentalId);
     
             //console.log("Delete form database");
@@ -178,11 +202,17 @@ export default function MyRentalsPage() {
             );
 
             setActive("cancelled");
-            alert("Rental cancelled!")
+            setStatusBlockchain("success_cancel_rental");
+
+            setTimeout(() => {
+                setStatusBlockchain("idle");        
+            }, 2000);
+            //alert("Rental cancelled!")
             } catch(err){
                  console.log(err);
-        }
-    };
+                 setStatusBlockchain("error_cancel_rental");
+            }
+        };
   
      if(error){
         return <div>{error}</div>
@@ -206,6 +236,13 @@ export default function MyRentalsPage() {
                                 >
                                     <FaCheckCircle className="sidebar-icon" />
                                     <span>Upcoming</span>
+                                </div>
+
+                                <div className={`rentals-filters ${active === 'progress' ? "active" : ""}`}
+                                    onClick={() => setActive("progress")}
+                                >
+                                    <FaCheckCircle className="sidebar-icon" />
+                                    <span>In progress</span>
                                 </div>
 
                                 <div className={`rentals-filters ${active === 'completed' ? "active" : ""}`}
@@ -247,15 +284,28 @@ export default function MyRentalsPage() {
                                                 </div>
                               
                                                 <div className="rental-feedback">
-                                                    <p className="rental-price">{rental.totalPrice} ETH</p>
+                                                   
+                                                        <p className="rental-price">{rental.totalPrice} ETH</p>
+                                                    
+
+                                                    <div className="buttons-status">
 
                                                     { active === "upcoming" && (
-                                                        <button 
-                                                            className="button-review"
-                                                            onClick={() => handleCancelRental(rental)}>
-                                                        
-                                                            Cancel
-                                                        </button>
+                                                        <div className="buttons-status-rentals"> 
+                                                            <button 
+                                                                className="button-review"
+                                                                onClick={() => handleCancelRental(rental)}
+                                                            >
+                                                                Cancel
+                                                            </button>
+
+                                                            <button 
+                                                                className="button-review"
+                                                                
+                                                            >
+                                                                Check-in
+                                                            </button>
+                                                        </div>
                                                     ) }
                                                     
                                                     { active === "completed" && 
@@ -269,6 +319,7 @@ export default function MyRentalsPage() {
                                                             </button>
                                                         ) 
                                                     }
+                                                    </div>
                                                 </div>  
                                             </div>
                                     </div>
@@ -328,13 +379,11 @@ export default function MyRentalsPage() {
                                     <div className="modal-edit-buttons">
                                         <button 
                                             className="cancel" 
-                                            onClick={
-                                                () => {setCompleteFeedback(false)
-                                                    setHoverStars(1);
-                                                    setRating(1);
-                                                }
-                                            }
-                                            
+                                            onClick={() => {setCompleteFeedback(false)
+                                                            setHoverStars(1);
+                                                            setRating(1);
+                                                            }
+                                                     }
                                         >
                                             Cancel
                                         </button>
@@ -353,6 +402,53 @@ export default function MyRentalsPage() {
                     </div>
                 </div>
             </div>  
+
+            {statusBlockchain === "cancel_rental" && (
+                <div className="edit-container">
+                    <div className="modal-reservation">
+                        <FaLockOpen className="icon-reservation-status hourglass"/>
+                            <h2>Cancel Rental</h2>
+                            <p>Please confirm the transaction in your wallet to cancel rental from the marketplace!</p>
+                    </div>
+                </div>
+            )}
+            
+            {statusBlockchain === "cancelling_rental" && (
+                <div className="edit-container">
+                    <div className="modal-reservation">
+                        <LuHourglass className="icon-reservation-status hourglass"/>
+                            <h2>Cancelling Rental...</h2>
+                            <p>Your reantal is being cancelled from the marketplace!</p>
+                     </div>
+                </div>
+            )}
+
+            {statusBlockchain === "success_cancel_rental" && (
+                <div className="edit-container">
+                    <div className="modal-reservation">
+                        <FaRegCheckCircle className="icon-reservation-status confirmed"/>
+                        <h2>Rental Cancelled Successfully!</h2>
+                        <p>Your rental has been removed from the marketplace.</p>
+                    </div>
+                </div>
+            )}
+            
+            {statusBlockchain === "error_cancel_rental" && (
+                <div className="edit-container">
+                    <div className="modal-reservation">
+                        <IoMdCloseCircle  className="icon-reservation-status canceled"/>
+                        <h2>Something went wrong...</h2>
+                        <button 
+                            className="try-again"
+                            type="button"
+                            onClick = {() => handleTryAgain()}
+                        >
+                        Try again
+                    
+                        </button>
+                     </div>
+                </div>
+            )}
         </div> 
     );
 }

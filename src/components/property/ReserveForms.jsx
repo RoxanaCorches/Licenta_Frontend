@@ -45,7 +45,7 @@ export default function ReserveForms() {
     const handleChange = (e) => {
             const { name, value} = e.target;
             setData(prev => ({...prev, [name]: value}));
-        };
+    };
 
    
     console.log("Id apartment:" + idApartment)
