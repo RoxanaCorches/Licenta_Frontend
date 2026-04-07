@@ -91,7 +91,6 @@ export default function MyAccountPage() {
     }
     return (
         <div>
-            <Navbar />
             <div className="wrapper-yourAccount">
                 <Sidebar />
 

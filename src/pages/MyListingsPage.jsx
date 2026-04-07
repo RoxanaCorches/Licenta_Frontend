@@ -6,13 +6,11 @@ import { delistNftProperty } from "../services/blockchain/MarketplaceService";
 import { deleteApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
-
 import { IoMdCloseCircle } from "react-icons/io";
 import { LuHourglass } from "react-icons/lu";
 import { FaCoins } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
@@ -47,7 +45,10 @@ export default function MyListingsPage() {
     }, [account]);
 
      const handleTryAgain =  () => {
-        navigate(`/myListings`);
+        //console.log("Da");
+        setTimeout(() => {
+            setStatusBlockchain("idle");
+        }, 2000);
     }
 
     const handleDelistProperty = async (apartment) => {
@@ -104,7 +105,6 @@ export default function MyListingsPage() {
         return `${hour}:${minutes} ${amPm}`;
     }
 
-
      if(error){
         return <div>{error}</div>
     }
@@ -112,9 +112,9 @@ export default function MyListingsPage() {
      if(loading){
         return <div>{loading}</div>
     }
+    
     return (
         <div>
-            <Navbar />
             <div className="wrapper-yourAccount">
                 <Sidebar />
                 <div className="main-container">
@@ -230,19 +230,15 @@ export default function MyListingsPage() {
                     <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                     <h2>Something went wrong...</h2>
                     <button 
-                        className="try-again"
-                        type="button"
-                        onClick = {() => handleTryAgain()}
-                    >
+                            className="try-again"
+                            type="button"
+                            onClick = {() => handleTryAgain()}
+                        >
                         Try again
-                
-                    </button>
+                        </button>
                 </div>
             </div>
         )}
-
-
-
      </div>   
     );
 }

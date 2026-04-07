@@ -17,6 +17,24 @@ export async function getAllApartments() {
     return data;
 }
 
+export async function getFilteredApartments(location, checkIn, checkOut, guests, rooms) {
+    const response = await fetch(`${API}/getFilteredApartments?location=${location}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}&rooms=${rooms}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to filter apartments!")
+    }
+
+    const data = await response.json();
+    return data;
+}
+
+
 export async function getApartmentById(apartmentId) {
     const response = await fetch(`${API}/getApartmentById/${apartmentId}`, {
         method: "GET",

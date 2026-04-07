@@ -173,7 +173,6 @@ const handleSubmitWithdraw = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="wrapper-yourAccount">
                 <Sidebar />
                 <div className="main-container">

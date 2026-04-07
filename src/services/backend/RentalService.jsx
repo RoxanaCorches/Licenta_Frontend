@@ -36,6 +36,40 @@ export async function createRental(addARenatalInfo) {
     return data;
 }
 
+export async function checkInRentalFromBackend(idRental) {
+    const response = await fetch(`${API}/checkInRental/${idRental}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error(data.message);
+    }
+
+    const data = await response.json();
+    return data;
+}
+
+export async function checkOutRentalFromBackend(idRental) {
+    const response = await fetch(`${API}/checkOutRental/${idRental}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+    });
+
+    if(!response.ok) {
+        throw new Error(data.message);
+    }
+
+    const data = await response.json();
+    return data;
+}
+
 export async function cancelRentalFromBackend(idRental) {
     const response = await fetch(`${API}/cancelRental/${idRental}`, {
         method: "PUT",

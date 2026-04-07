@@ -4,10 +4,10 @@ import Sidebar from "../components/listProperty/SideBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
 import { FaStar } from "react-icons/fa";
-import {cancelRentalFromBackend, getRentalsForUserById } from "../services/backend/RentalService";
+import {cancelRentalFromBackend, checkInRentalFromBackend, checkOutRentalFromBackend, getRentalsForUserById } from "../services/backend/RentalService";
 import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
-import { cancelRental } from "../services/blockchain/MarketplaceService";
+import { cancelRental, checkIn, checkOut } from "../services/blockchain/MarketplaceService";
 import { createReview } from "../services/backend/ReviewService";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -27,29 +27,11 @@ export default function MyRentalsPage() {
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [errorCheckIn, sertErrorCheckIn] = useState(null);
 
     const [statusBlockchain, setStatusBlockchain] = useState("idle");
 
     const { account } = useWallet();
-/*
-    useEffect(() => {
-            const loadInfoUser = async () => {
-                try {
-                    setLoading(true);
-                    const data = await getUserById(idUser);
-                    setUser(data);
-                    console.log("Info:", data);
-                } catch (err) {
-                    setError(err.message);
-                } finally {
-                    setLoading(false);
-                }
-            };
-            loadInfoUser();
-        }, [idUser]);
-    */
-
-    //const idUser = localStorage.getItem("idUserConnected");  
 
     const rentalsStatus = rentals?.filter(rental => {
         if(active === "upcoming") return rental.status === "UPCOMING";
@@ -59,17 +41,16 @@ export default function MyRentalsPage() {
         return false;
     });
 
-    
     useEffect(() => {
         const loadInfoRental = async () => {
-             setRentals([]);
-             setError(null);
+            setRentals([]);
+            setError(null);
 
             if (!account) 
                 return; 
+
             try {
                 setLoading(true);
-                
                 const dataUser = await getUserById(account);
                 if (!dataUser || !dataUser.idUser) {
                 setError("User not found for this wallet!");
@@ -97,13 +78,12 @@ export default function MyRentalsPage() {
     }, [account]);
 
     const handleTryAgain =  () => {
-        console.log("Da");
+        //console.log("Da");
         setTimeout(() => {
                 setActive("upcoming");
                 setStatusBlockchain("idle");
         }, 2000);
     }
-
 
     /*
     const handleFeedback = () => {
@@ -186,15 +166,10 @@ export default function MyRentalsPage() {
             setStatusBlockchain("cancelling_rental");
 
             await new Promise(r => setTimeout(r, 2000));
-
             await txCancel.wait();
-
-            console.log("Cancel rental from marketplace");
 
             await cancelRentalFromBackend(rentalId);
     
-            //console.log("Delete form database");
-                  
             setRentals(prev => 
                 prev.map(rental => rental.rentalId === rentalId 
                     ? {...rental, status:"CANCELLED" } : rental 
@@ -207,20 +182,244 @@ export default function MyRentalsPage() {
             setTimeout(() => {
                 setStatusBlockchain("idle");        
             }, 2000);
-            //alert("Rental cancelled!")
             } catch(err){
                  console.log(err);
                  setStatusBlockchain("error_cancel_rental");
             }
         };
-  
-     if(error){
+
+        const handleCheckInRental =  async (apartment) => {
+            const {tokenId, rentalId } = apartment;
+        
+            if (!rentalId || !tokenId) {
+                console.error("Invalid apartment info!", apartment);
+                return;
+            } 
+
+            try {
+                setStatusBlockchain("checkIn_rental");
+                const txCheckIn =  await checkIn(tokenId);
+                setStatusBlockchain("checking_in_rental");
+
+                await new Promise(r => setTimeout(r, 2000));
+                await txCheckIn.wait();
+
+                await checkInRentalFromBackend(rentalId);
+                    
+                setRentals(prev => 
+                    prev.map(rental => rental.rentalId === rentalId 
+                        ? {...rental, status:"IN_PROGRESS" } : rental 
+                    )
+                );
+
+                setStatusBlockchain("success_checkIn_rental");
+
+                setTimeout(() => {
+                    setStatusBlockchain("idle");        
+                }, 2000);
+
+                } catch(err){
+                    sertErrorCheckIn(err.message);
+                    console.log("Error from check-in:", err.message);
+                    setStatusBlockchain("error_checkIn_rental");
+                }
+        };
+
+        const handleCheckOutRental =  async (apartment) => {
+            const {tokenId, rentalId } = apartment;
+        
+            if (!rentalId || !tokenId) {
+                console.error("Invalid apartment info!", apartment);
+                return;
+            } 
+
+            try {
+                setStatusBlockchain("checkOut_rental");
+                const txCheckOut =  await checkOut(tokenId);
+                setStatusBlockchain("checking_out_rental");
+
+                await new Promise(r => setTimeout(r, 2000));
+                await txCheckOut.wait();
+
+                await checkOutRentalFromBackend(rentalId);
+                    
+                setRentals(prev => 
+                    prev.map(rental => rental.rentalId === rentalId 
+                        ? {...rental, status:"COMPLETTED" } : rental 
+                    )
+                );
+
+                setStatusBlockchain("success_checkOut_rental");
+
+                setTimeout(() => {
+                    setStatusBlockchain("idle");        
+                }, 2000);
+
+                } catch(err){
+                    sertErrorCheckIn(err.message);
+                    console.log("Error from check-out:", err.message);
+                    setStatusBlockchain("error_checkOut_rental");
+                }
+        };
+
+        
+        const validCheckIn = (rental) => {
+            const currentDate = new Date();
+            console.log("Current date:", currentDate);
+            const startDateCheckIn = new Date(rental.startDate);
+            console.log("Date for checkin", startDateCheckIn);
+
+            const today = currentDate === startDateCheckIn;
+            console.log("You can checkIn:", today);
+            //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
+            //const hourForCheckIn = startDateCheckIn.getHours();
+            //console.log("Hour for checkIn:", hourForCheckIn);
+           
+            //const hourCheckInStart = currentDate.getHours() >= hourForCheckIn;
+
+            //console.log(currentDate.getHours());
+            //console.log("hourCheckInStart", hourCheckInStart);
+
+            return rental.status === "UPCOMING" && today;
+        }
+
+        const validCheckOut = (rental) => {
+            const currentDate = new Date();
+            console.log("Current date:", currentDate);
+            const endDateCheckIn = new Date(rental.endDate);
+            console.log("Date for checkin", endDateCheckIn);
+
+            const today = currentDate === endDateCheckIn;
+            console.log("You can checkOut:", today);
+            //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
+           // const hourForCheckIn = startDateCheckIn.getHours();
+            //console.log("Hour for checkIn:", hourForCheckIn);
+           
+            //const hourCheckInStart = currentDate.getHours() >= hourForCheckIn;
+
+            //console.log(currentDate.getHours());
+            //console.log("hourCheckInStart", hourCheckInStart);
+
+            return rental.status === "IN_PROGRESS" && today;
+        }
+
+        const transactionStatus = {
+            cancel_rental: {
+                title: "Cancel Rental",
+                description: "Please confirm the transaction in your wallet to cancel rental from the marketplace!"
+            },
+
+            cancelling_rental: {
+                title: "Cancelling Rental...",
+                description: "Your reantal is being cancelled from the marketplace!"
+            }, 
+
+            success_cancel_rental: {
+                title: "Rental Cancelled Successfully!",
+                description: "Your rental has been removed from the marketplace."
+            },  
+
+            checkIn_rental: {
+                title: "Initiating check-in",
+                description: "Please confirm the transaction in your wallet and wait for the process to complete!"
+            }, 
+
+            checking_in_rental: {
+                title: "Check-in in progres",
+                description: "Your check-in is being processed on the marketplace!"
+            }, 
+
+            success_checkIn_rental: {
+                title: "Check-in completed successfully!",
+                description: "Your reservation is now active."
+            }, 
+
+            checkOut_rental: {
+                title: "Initiating check-out!",
+                description: "Please confirm the transaction in your wallet and wait for the process to complete!"
+            }, 
+
+            checking_out_rental: {
+                title: "Check-out in progress",
+                description: "Your check-out is being processed on the marketplace!"
+            }, 
+
+            success_checkOut_rental: {
+                title: "Check-out completed successfully!",
+                description: "Your reservation is completted."
+            }
+        }
+
+        /*
+        const transactionStatusError = {
+            error_cancel_rental: {
+                title: "Something went wrong...",
+                description: 
+            },
+
+            error_checkIn_rental: {
+                title: "Something went wrong...",
+                description: 
+            },
+
+            error_checkOut_rental: {
+                title: "Something went wrong...",
+                description: 
+            }
+
+        }
+        */
+
+    const BlockchainStatusTransaction = ({status}) => {
+        if(!status || !transactionStatus[status])
+            return null;
+
+        const {title, description} = transactionStatus[status];
+
+        return (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <FaLockOpen className="icon-reservation-status hourglass"/>
+                        <h2>{title}</h2>
+                        <p>{description}</p>
+                </div>
+            </div>
+        );
+    }
+
+    /*
+    const BlockchainStatusErrorTransaction = ({status}) => {
+        if(!status || !transactionStatusError[status])
+            return null;
+
+        const {title, description} = statusBlockchain[status];
+
+        return( 
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <IoMdCloseCircle  className="icon-reservation-status canceled"/>
+                    <h2>{title}</h2>
+                    <p>{description}</p>
+                    <button 
+                        className="try-again"
+                        type="button"
+                        onClick = {() => handleTryAgain()}
+                    >
+                        Try again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+        */
+       
+
+     if(error) {
         return <div>{error}</div>
     }
 
     return (
         <div>
-            <Navbar />
             <div className="wrapper-yourAccount">
                 <Sidebar />
                 <div className="main-container">
@@ -299,14 +498,31 @@ export default function MyRentalsPage() {
                                                                 Cancel
                                                             </button>
 
-                                                            <button 
-                                                                className="button-review"
-                                                                
-                                                            >
-                                                                Check-in
-                                                            </button>
+                                                            { validCheckIn(rental) && (
+                                                                <button 
+                                                                    className="button-review"
+                                                                    onClick={() => handleCheckInRental(rental)}
+                                                                >
+                                                                    Check-in
+                                                                </button>
+                                                            )}
+                                                           
                                                         </div>
                                                     ) }
+
+                                                    { active === "progress" && (
+                                                        <div className="buttons-status-rentals"> 
+                                                        { validCheckOut(rental) && (
+                                                             <button 
+                                                                className="button-review"
+                                                                onClick={() => handleCheckOutRental(rental)}
+                                                            >
+                                                                 Check-out
+                                                            </button>
+                                                            )
+                                                        }
+                                                        </div>
+                                                    )}
                                                     
                                                     { active === "completed" && 
                                                         (
@@ -403,48 +619,53 @@ export default function MyRentalsPage() {
                 </div>
             </div>  
 
-            {statusBlockchain === "cancel_rental" && (
-                <div className="edit-container">
-                    <div className="modal-reservation">
-                        <FaLockOpen className="icon-reservation-status hourglass"/>
-                            <h2>Cancel Rental</h2>
-                            <p>Please confirm the transaction in your wallet to cancel rental from the marketplace!</p>
-                    </div>
-                </div>
-            )}
-            
-            {statusBlockchain === "cancelling_rental" && (
-                <div className="edit-container">
-                    <div className="modal-reservation">
-                        <LuHourglass className="icon-reservation-status hourglass"/>
-                            <h2>Cancelling Rental...</h2>
-                            <p>Your reantal is being cancelled from the marketplace!</p>
-                     </div>
-                </div>
-            )}
-
-            {statusBlockchain === "success_cancel_rental" && (
-                <div className="edit-container">
-                    <div className="modal-reservation">
-                        <FaRegCheckCircle className="icon-reservation-status confirmed"/>
-                        <h2>Rental Cancelled Successfully!</h2>
-                        <p>Your rental has been removed from the marketplace.</p>
-                    </div>
-                </div>
-            )}
-            
-            {statusBlockchain === "error_cancel_rental" && (
+        <BlockchainStatusTransaction status={statusBlockchain} />
+       {statusBlockchain === "error_cancel_rental" && (
                 <div className="edit-container">
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
+                        
                         <button 
                             className="try-again"
                             type="button"
                             onClick = {() => handleTryAgain()}
                         >
                         Try again
-                    
+                        </button>
+                     </div>
+                </div>
+            )}
+
+            {statusBlockchain === "error_checkIn_rental" && (
+                <div className="edit-container">
+                    <div className="modal-reservation">
+                        <IoMdCloseCircle  className="icon-reservation-status canceled"/>
+                        <h2>Something went wrong...</h2>
+                        <p>{errorCheckIn}!</p>
+                        <button 
+                            className="try-again"
+                            type="button"
+                            onClick = {() => handleTryAgain()}
+                        >
+                        Try again
+                        </button>
+                     </div>
+                </div>
+            )}
+
+            {statusBlockchain === "error_checkOut_rental" && (
+                <div className="edit-container">
+                    <div className="modal-reservation">
+                        <IoMdCloseCircle  className="icon-reservation-status canceled"/>
+                        <h2>Something went wrong...</h2>
+                        
+                        <button 
+                            className="try-again"
+                            type="button"
+                            onClick = {() => handleTryAgain()}
+                        >
+                        Try again
                         </button>
                      </div>
                 </div>

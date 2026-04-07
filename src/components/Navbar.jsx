@@ -11,6 +11,7 @@ import { IoMdSettings } from "react-icons/io";
 import { FaClipboardList } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
 import { MdRateReview } from "react-icons/md";
+import { IoWalletOutline } from "react-icons/io5";
 
 export default function Navbar() {
     const { account, connectWallet, disconnectWallet } = useWallet();
@@ -36,35 +37,38 @@ export default function Navbar() {
     window.location.replace("/");
     };
     
-
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <NavLink to="/" className="navbar-brand">
-                    <FaHome />
-                    <span>Booking</span>
-                </NavLink>
-                
                 <ul className="navbar-menu">
                     <li className="navbar-item">
+                        <NavLink to="/" className = {({ isActive }) => 
+                                `navbar-link ${isActive ? 'active' : ''}`
+                        }>
+                            <FaHome className="navbar-icon"/>
+                            <span>Booking</span>
+                        </NavLink>
+                    </li>
+
+                     <li className="navbar-item">
                         {walletAddress ? (
                         <NavLink 
                             to="/listYourProperty" 
-                            className={({ isActive }) => 
+                            className = {({ isActive }) => 
                                 `navbar-link ${isActive ? 'active' : ''}`
                             }
                         >
-                            <FaHome className="navbar-icon" />
+                            <FaHome className="navbar-icon"/>
                             <span>List your property</span>
                         </NavLink>
                         ) : (<NavLink 
-                            to="/home" 
-                            className={({ isActive }) => 
+                            to="/about" 
+                            className = {({ isActive }) => 
                                 `navbar-link ${isActive ? 'active' : ''}`
                             }
                         >
                             <FaHome className="navbar-icon" />
-                            <span>Home</span>
+                            <span>About</span>
                         </NavLink>
                     )}
                     </li>
@@ -72,7 +76,7 @@ export default function Navbar() {
                     <li className="navbar-item">
                         <NavLink 
                             to="/properties" 
-                            className={({ isActive }) => 
+                            className = {({ isActive }) => 
                                 `navbar-link ${isActive ? 'active' : ''}`
                             }
                         >
@@ -80,12 +84,15 @@ export default function Navbar() {
                             <span>Properties</span>
                         </NavLink>
                     </li>
+                </ul>
 
-                    <li className="navbar-item">
+                <div className="navbar-brand">
                             {walletAddress ? (
                                 <div className="container-wrapper-info"> 
                                 <div className="navbar-container-info"> 
-                                    <span onClick = {dropdownPanel} className="navbar-button">Your account: {walletAddress &&  `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}</span>
+                                    <span onClick = {dropdownPanel} className="navbar-button-active">
+                                        <IoWalletOutline className="navbar-icon" />
+                                        Your account: {walletAddress &&  `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}</span>
                                 </div>
 
                                 {panelInfo && (
@@ -134,12 +141,11 @@ export default function Navbar() {
                         ) : (<button type="button"
                             onClick={connectWallet} 
                             className="navbar-button">
-                                <FaWallet  className="navbar-icon" />
+                                <IoWalletOutline className="navbar-icon" />
                             <span>Connect Wallet</span></button>
                         )}
                        
-                    </li>
-                </ul>
+                    </div>
             </div>
         </nav>
     );

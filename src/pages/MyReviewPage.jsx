@@ -81,11 +81,8 @@ export default function MyReviewPage() {
      if(loading){
         return <div>{loading}</div>
     }
-
-
     return (
         <div>
-            <Navbar />
             <div className="wrapper-yourAccount">
                 <Sidebar />
                 <div className="main-container">

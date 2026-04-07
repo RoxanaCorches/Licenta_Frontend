@@ -6,7 +6,6 @@ export default function PropertyInfo() {
     return(
         
        <div className="properties-container">
-                   <Navbar />
                    <div className="properties-content">
                        <SearchProperty /> 
                        <RelevantInfo />

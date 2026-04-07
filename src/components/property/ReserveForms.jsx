@@ -74,6 +74,7 @@ export default function ReserveForms() {
         navigate(`/properties/property/${idApartment}`);
     }
 
+ 
 
     const handleSubmitReserve = async (e) => {
             e.preventDefault();
@@ -102,8 +103,8 @@ export default function ReserveForms() {
                     firstName:data.firstName,
                     lastName:data.lastName,
                     phoneNumber:data.phoneNumber,
-                    startDate:checkIn.toISOString().split("T")[0],
-                    endDate:checkOut.toISOString().split("T")[0],
+                    startDate: checkIn.toLocaleDateString('en-CA'),
+                    endDate:checkOut.toLocaleDateString('en-CA'),
                     rentalDate: '',
                     totalPrice:nrNights * property.pricePerNight,
                     userId:idUser,
@@ -118,6 +119,14 @@ export default function ReserveForms() {
                 
                 const startDate = Math.floor(new Date(checkIn).getTime() / 1000);
                 const endDate = Math.floor(new Date(checkOut).getTime() / 1000);
+                //
+                //const startDate = toLocalTimestamp(checkIn);
+                //const endDate = toLocalTimestamp(checkOut);
+
+                //const valueStartDate = ethers.BigNumber.from(startDate.toString());
+                //const valueEndDate = ethers.BigNumber.from(endDate.toString());
+
+               
 
                 console.log("StartDate:", startDate);
                 console.log("EndDate:", endDate);

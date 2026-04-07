@@ -72,7 +72,6 @@ export default function KYCFormPage() {
     
      return(
        <div className="kyc-container">
-        <Navbar />
         <div className="kyc-contents"> 
             <h1 className="kyc-title">
                 Verify your identity to continue!

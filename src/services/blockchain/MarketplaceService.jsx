@@ -11,25 +11,8 @@ export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
 
     const txList = await contract.listNftOnMarketplace(tokenId, price, hoursForCheckIn);
 
-    //await txList.wait();
-
     return txList;
 };
-
-
-
-
-/*
-export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
-    const { signer } = await getProviderAndSigner();
-
-    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
-
-    const tx = await contract.listNftOnMarketplace(tokenId, price, hoursForCheckIn);
-
-    await tx.wait();
-};
-*/
 
 export const delistNftProperty = async (tokenId) => {
     const { signer } = await getProviderAndSigner();
@@ -38,7 +21,6 @@ export const delistNftProperty = async (tokenId) => {
 
     const txDelist = await contract.delistNftFromMarketplace(tokenId);
 
-    //await tx.wait();
     return txDelist;
 };
 
@@ -105,6 +87,45 @@ export const cancelRental = async (tokenId) => {
 
     const txCancel = await contract.cancel(tokenId);
 
-    //await tx.wait();
     return txCancel;
+};
+
+export const checkIn = async (tokenId) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    try {
+        await contract.callStatic.checkIn(tokenId);
+    } catch(err) {
+        const message =
+        err.reason ||
+        err.error?.message ||
+        err.data?.message ||
+        "Transaction failed";
+        throw new Error(message);
+    }
+
+    const txCheckIn = await contract.checkIn(tokenId);
+    return txCheckIn;
+};
+
+export const checkOut = async (tokenId) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    try {
+        await contract.callStatic.checkOut(tokenId);
+    } catch(err) {
+        const message =
+        err.reason ||
+        err.error?.message ||
+        err.data?.message ||
+        "Transaction failed";
+        throw new Error(message);
+    }
+
+    const txCheckOut = await contract.checkOut(tokenId);
+    return txCheckOut;
 };

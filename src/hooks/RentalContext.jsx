@@ -18,7 +18,7 @@ export function RentalProvider({children}) {
                 setCheckIn,
                 setCheckOut,
                 nrNights
-      }}
+            }}
         >
             {children}
         </RentalContext.Provider>

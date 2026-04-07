@@ -9,8 +9,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import LocationFilter from "./LocationFilter";
 
-
-export default function SearchProperty (){
+export default function SearchProperty ({onSearchProperties}){
     const [panelLocation, setPanelLocation] = useState(false);
     const [panelDate, setPanelDate] = useState(false);
     const [checkIn, setCheckIn] = useState();
@@ -44,8 +43,20 @@ export default function SearchProperty (){
             document.removeEventListener("mousedown", handleClickOutsideDropdown);
         };
     }, []);
+
+    const guests = adults + children;
+    console.log("Nr guests", guests);
+
+    const handleSearchProperties = () => {
+       onSearchProperties({
+        location,
+        checkIn,
+        checkOut,
+        guests, 
+        rooms
+       });
+    };
     
-     
     return(
         <div className="search-container"> 
              <div className="search-field">
@@ -70,6 +81,7 @@ export default function SearchProperty (){
                             setLocation={setLocation}
                             setPanelLocation={setPanelLocation}
                         />
+                        
                     )}
                 </div>
             </div>
@@ -136,9 +148,20 @@ export default function SearchProperty (){
                                 <span>Adults</span>
                                 <p>18+ Years Old</p>
                             </div>
-                            <button  type="button" onClick = {() => (setAdults(adults - 1))} disabled = {adults <= 1}> <FaMinus className="search-icon-plus-minus"/> </button>
+                            <button 
+                                type="button" 
+                                onClick = {() => (setAdults(adults - 1))} 
+                                disabled = {adults <= 1}> 
+                                <FaMinus className="search-icon-plus-minus"
+                            /> 
+                            </button>
                             <span>{adults}</span>
-                            <button type="button" onClick={() =>(setAdults(adults + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
+                            <button 
+                                type="button" 
+                                onClick={() =>(setAdults(adults + 1))} 
+                            > 
+                                <FaPlus className="search-icon-plus-minus" /> 
+                            </button> 
                         </div>
 
                         <div className="option">
@@ -146,9 +169,20 @@ export default function SearchProperty (){
                                 <span>Children</span>
                                 <p>2-17 Years Old</p>
                              </div>
-                            <button type="button" onClick = {() =>  (setChildren(children - 1))} disabled = {children <= 0}> <FaMinus className="search-icon-plus-minus"/> </button>
+                            <button 
+                                type="button" 
+                                onClick = {() =>  (setChildren(children - 1))} 
+                                disabled = {children <= 0}
+                            > 
+                                <FaMinus className="search-icon-plus-minus"/> 
+                                </button>
                             <span>{children}</span>
-                            <button type="button" onClick={() => (setChildren(children + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
+                            <button 
+                                type="button" 
+                                onClick={() => (setChildren(children + 1))} 
+                            > 
+                                <FaPlus className="search-icon-plus-minus" /> 
+                            </button> 
                         </div>
 
                          <div className="option">
@@ -156,16 +190,30 @@ export default function SearchProperty (){
                                 <span>Rooms</span>
                                 <p> Minimum 1</p>
                                 </div>
-                            <button type="button" onClick = {() => (setRooms(rooms - 1))} disabled = {rooms <= 1}> <FaMinus className="search-icon-plus-minus "/> </button>
+                            <button 
+                                type="button" 
+                                onClick = {() => (setRooms(rooms - 1))} 
+                                disabled = {rooms <= 1}
+                            > 
+                                <FaMinus className="search-icon-plus-minus"/> 
+                            </button>
                             <span>{rooms}</span>
-                            <button type="button" onClick={() => (setRooms(rooms + 1))} > <FaPlus className="search-icon-plus-minus" /> </button> 
+                            <button 
+                                type="button" 
+                                onClick={() => (setRooms(rooms + 1))} 
+                            > 
+                                <FaPlus className="search-icon-plus-minus"/>
+                            </button> 
                         </div>
                     </div>
                 )}
                 </div>
             </div>
 
-            <button className="button-search">
+            <button 
+                className="button-search"
+                onClick={handleSearchProperties}
+            >
                 Search
             </button>
         </div>
