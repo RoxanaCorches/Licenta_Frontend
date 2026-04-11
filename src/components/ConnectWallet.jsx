@@ -43,7 +43,7 @@ export function ConnectWallet({children}){
                 setAccount(accounts[0]);
         };
         verifyConnectWallet();
-    }, []);
+    }, [account]);
 
     const disconnectWallet = () => {
         setAccount(null);

@@ -46,7 +46,7 @@ export async function checkInRentalFromBackend(idRental) {
     });
 
     if(!response.ok) {
-        throw new Error(data.message);
+        throw new Error("Error to check in rental!")
     }
 
     const data = await response.json();
@@ -63,7 +63,7 @@ export async function checkOutRentalFromBackend(idRental) {
     });
 
     if(!response.ok) {
-        throw new Error(data.message);
+        throw new Error("Error to check out rental!");
     }
 
     const data = await response.json();
@@ -80,7 +80,7 @@ export async function cancelRentalFromBackend(idRental) {
     });
 
     if(!response.ok) {
-        throw new Error(data.message);
+        throw new Error("Error to cancel rental!");
     }
 
     const data = await response.json();

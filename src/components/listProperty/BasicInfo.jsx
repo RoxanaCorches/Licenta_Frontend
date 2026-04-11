@@ -61,20 +61,20 @@ export default function BasicInfo({data, completeData, nextStep}) {
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Description</label>
-                        <input
-                            className="from-input" 
-                            type="text"
+                        <textarea
+                            className="input-description"
                             id="description"
                             name="description"
                             value={data.description}
+                            placeholder="Description"
                             onChange={handleChange}
                             required
-                            //disabled={loading}
-                            placeholder="Description"
                         />
                     </div>
 
-                    <div className="form-group">
+
+                    <div className="group-area-price">
+                    <div className="area-price">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Area (sqm)</label>
                         <input
                             className="from-input" 
@@ -90,7 +90,7 @@ export default function BasicInfo({data, completeData, nextStep}) {
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="area-price">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Price per night</label>
                         <input
                             className="from-input" 
@@ -104,6 +104,7 @@ export default function BasicInfo({data, completeData, nextStep}) {
                             placeholder="Price per night"
                             min={0}
                         />
+                    </div>
                     </div>
                 </div>
                 <div className="form-buttons">

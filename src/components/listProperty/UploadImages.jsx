@@ -1,21 +1,7 @@
 import { TbPhotoShare } from "react-icons/tb";
+import { FaCameraRetro } from "react-icons/fa";
 
-export default function UploadImages({data, completeData}){
-
-    /*
-    const handleUploadeMainImage = (e) => {
-        const image = e.target.files[0];
-
-        if(image){
-            completeData({
-                mainImage: {
-                image,
-                preview: URL.createObjectURL(image)
-                }
-            });
-        }
-    };
-    */
+export default function UploadImages({data, completeData}) {
     const handleUploadeMainImage = (e) => {
         const image = e.target.files[0];
 
@@ -32,58 +18,74 @@ export default function UploadImages({data, completeData}){
         if(!image) return;
 
         const viewImages = [...data.otherImage];
-         viewImages[index] = image;
-        /*
-        viewImages[index] = {
-            image,
-            preview: URL.createObjectURL(image)
-        };
-        */
+        viewImages[index] = image;
         console.log(index,image);
         completeData({otherImage: viewImages});
 
         console.log(index,image);
     };
 
+    const removeMainImage = () => {
+        completeData({
+            mainImage:null
+        });
+    };
+
+    const removeImages = (index) => {
+        console.log("Before", data.otherImage);
+        const imagesFiltered = (data.otherImage || []).filter((_, i) => i !== index);
+        console.log("After", imagesFiltered);
+        completeData({
+            otherImage:imagesFiltered
+        });
+    }
+
     return(
         <div className="form-section"> 
             <div className="container-upload-images-main"> 
-                    <div className="upload-image-main"> 
-                        <div className="wrapper-image">
-                            {data.mainImage &&  (
-                            <img
-                                className="view-image"
-                                src={URL.createObjectURL(data.mainImage)}
-                                alt={data.mainImage.name}
-                            />
-                            )}
-                        <button className="delete-button">&times;</button>
-                        </div>
-                       
-                        {!data.mainImage && (
-                            <>
-                                <span className="content-image">Upload at least 5 photos of your property.</span>
-
-                                <TbPhotoShare className="icon-image-main"/>
-                                <div className="file-upload"> 
-                                    <input
-                                        id="mainImageInput"
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleUploadeMainImage}
-                                    />
-                                    <label htmlFor="mainImageInput" className="upload-button">Upload</label>
-                                </div>
-                            </>
+                <div className="upload-image-main"> 
+                    <div className="wrapper-image">
+                        {data.mainImage &&  (
+                        <img
+                            className="view-image"
+                            src={URL.createObjectURL(data.mainImage)}
+                            alt={data.mainImage.name}
+                        />
                         )}
+
+                        {data.mainImage &&
+                            <button 
+                                className="delete-button"
+                                type="button"
+                                onClick={removeMainImage}
+                            >
+                            &times;
+                        </button>
+                        }
                     </div>
+                       
+                    {!data.mainImage && (
+                        <>
+                            <FaCameraRetro className="icon-image-main"/>
+                            <span className="content-image">Upload at least 5 photos of your property.</span>
+                            <div className="file-upload"> 
+                                <input
+                                    id="mainImageInput"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleUploadeMainImage}
+                                />
+                                <label htmlFor="mainImageInput" className="upload-button">Upload</label>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
 
             <div className="container-others-images">   
-                {Array.from({ length: 4 }).map((_, containerIndex) => (   
+                {Array.from({ length: 4 }).map((img, containerIndex) => (   
                     <div className="container-upload-images-next" key={containerIndex}> 
-
                         <div className="upload-image-next"> 
                             {data.otherImage[containerIndex] && (
                                 <img
@@ -93,11 +95,21 @@ export default function UploadImages({data, completeData}){
                                    
                                 />
                             )}
+                            {data.otherImage[containerIndex] &&
+                                <button containerIndex
+                                className="delete-button"
+                                type="button"
+                                onClick={() => removeImages(containerIndex)}
+                            >
+                                &times;
+                            </button>
+                            }
+                             
 
                            
                           {!data.otherImage[containerIndex] && ( 
                                 <> 
-                                    <TbPhotoShare className="icon-image-next"/>
+                                    <FaCameraRetro className="icon-image-next"/>
                                     <div className="file-upload"> 
                                         <input
                                             id={`otherImagesInput-${containerIndex}`}

@@ -24,7 +24,7 @@ export default function Footer() {
                 <div>
                     <h3 className="title">Company</h3>
                     <ul className="list">
-                        <li><Link to="/home">About us</Link></li>
+                        <li><Link to="/about">About us</Link></li>
                         <li><Link to="/">Blog</Link></li>
                         <li><Link to="/">Careers</Link></li>
                     </ul>

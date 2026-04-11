@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import { mintKycForUser } from "../services/backend/UsersService";
 import { useNavigate } from "react-router-dom";
-//import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 export default function KYCFormPage() {
     const navigate = useNavigate();
@@ -81,7 +80,7 @@ export default function KYCFormPage() {
         </div>
             <div className="kyc-form-wrapper"> 
             <form onSubmit={handleSubmit} className="kyc-form">
-                {error && <div className="kyc-error">{error}</div>}
+                {error && <div className="description-error">{error}</div>}
                 
                 <div className="kyc-form-group">
                     <label className="kyc-label" htmlFor="username">Username</label>
@@ -243,7 +242,12 @@ export default function KYCFormPage() {
                     onClick={handleSubmit}
                 >
                 
-                    {loading ? 'Submitting...' : 'Submit'}
+                    {loading ? (
+                        <div className="spinner">
+                            <ClipLoader loading={loading} size={40} />
+                        </div>
+                    ):
+                     'Submit'}
                 </button>
             </form>
             </div>

@@ -6,9 +6,9 @@ import { RxRulerSquare } from "react-icons/rx";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAllApartments, getFilteredApartments } from "../../services/backend/ApartmentService";
-import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
 import ChartBar from "../ChartBar";
-
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 export default function PropertiesImages({filterProperties}) {
     const [properties, setProperties] = useState([]);
@@ -69,89 +69,100 @@ export default function PropertiesImages({filterProperties}) {
       
     }, [filterProperties]);
 
-    if (loading) return <p>Se încarcă proprietățile...</p>;
-    if (error) return <p>Eroare: {error}</p>;
+    
+    if (error) 
+    return (
+        <div className="error-info">
+            <IoMdWarning className="icon-error"/> 
+            <p className="description-error">{error}!</p>
+        </div>
+    );
 
     return (
         <div > 
-
-        <div className="propertiesImages-container">
-            { infoChartBar.length > 0 &&
-                <div>
-                    <ChartBar info={infoChartBar} />
-                </div>  
-            }
-        </div>
-
-        <div className="propertiesImages-container"> 
-        {
-            properties?.slice(0, nrProperties).map((property) => (
-                <div className="property-card" key={property?.idApartment}>
-                    <div className="image-container">
-                        <img src={property?.imageMain} alt={property?.title}/>
-                    </div>     
-
-                    <div className="image-container-details">
-                        <div className="details"> 
-                            <div className="property-details">
-                                <h1 className="name-property">{property?.title}</h1>
-                                <h2 className="price">{property?.pricePerNight} ETH / night</h2>
-                                
-                                <div className="location"> 
-                                    <FaLocationDot className= "icon-location"/>
-                                    <p className="address">{property?.street}, {property?.city}, {property?.country}</p>
-                                </div>
-                            </div>    
-
-                            <div className="property-amenities">
-                                <div className="bedrooms">
-                                    <IoBed className="icon"/>
-                                    <p>{property?.bedrooms} Bedrooms</p>
-                                </div>
-
-                                <div className="bathrooms">
-                                    <FaBath className="icon"/>
-                                    <p>{property?.bathrooms} Bathrooms</p>
-                                </div>
-
-                                <div className="area">
-                                    <RxRulerSquare className="icon"/>
-                                    <p>{property?.area}m²</p>
-                                </div>
-                            </div> 
-                        </div> 
-
-                        {property?.blockchainAddress?.toLowerCase() === (localStorage.getItem("walletAddress"))?.toLowerCase() ?
-                            (   <div className="check-availability">
-                                     <button>Your Property</button>
-                                </div>  
-                            
-                            )
-                            : ( <div className="check-availability">
-                                    <Link to={`/properties/property/${property?.idApartment}`}>
-                                        <button>Check Availability</button>
-                                    </Link>
-                                </div>  
-                            )
-                        }
-                    </div> 
-                </div>    
-            ))
-        }
-           <div className="button-load-results">
-                {nrProperties < properties?.length ? (
-                    <button
-                        className="button-load-more"
-                        onClick={() => setNrProperties(prev => prev + 3)}
-                    >
-                         View more results
-                     </button>
-                ) :(
-                                        
-                <p>End of results list.</p>
-                )}
+            <div className="propertiesImages-container">
+                { infoChartBar.length > 0 &&
+                    <div>
+                        <ChartBar info={infoChartBar} />
+                    </div>  
+                }
             </div>
-      </div>  
-    </div>
+
+            {loading ? (
+                <div className="spinner">
+                    <ClipLoader loading={loading} size={40} />
+                </div>
+            ):(
+                <div className="propertiesImages-container"> 
+                {
+                    properties?.slice(0, nrProperties).map((property) => (
+                        <div className="property-card" key={property?.idApartment}>
+                            <div className="image-container">
+                                <img src={property?.imageMain} alt={property?.title}/>
+                            </div>     
+
+                            <div className="image-container-details">
+                                <div className="details"> 
+                                    <div className="property-details">
+                                        <h1 className="name-property">{property?.title}</h1>
+                                        <h2 className="price">{property?.pricePerNight} ETH / night</h2>
+                                        
+                                        <div className="location"> 
+                                            <FaLocationDot className= "icon-location"/>
+                                            <p className="address">{property?.street}, {property?.city}, {property?.country}</p>
+                                        </div>
+                                    </div>    
+
+                                    <div className="property-amenities">
+                                        <div className="bedrooms">
+                                            <IoBed className="icon"/>
+                                            <p>{property?.bedrooms} Bedrooms</p>
+                                        </div>
+
+                                        <div className="bathrooms">
+                                            <FaBath className="icon"/>
+                                            <p>{property?.bathrooms} Bathrooms</p>
+                                        </div>
+
+                                        <div className="area">
+                                            <RxRulerSquare className="icon"/>
+                                            <p>{property?.area}m²</p>
+                                        </div>
+                                    </div> 
+                                </div> 
+
+                                {property?.blockchainAddress?.toLowerCase() === (localStorage.getItem("walletAddress"))?.toLowerCase() ?
+                                    (   <div className="check-availability">
+                                            <button>Your Property</button>
+                                        </div>  
+                                    
+                                    )
+                                    : ( <div className="check-availability">
+                                            <Link to={`/properties/property/${property?.idApartment}`}>
+                                                <button>Check Availability</button>
+                                            </Link>
+                                        </div>  
+                                    )
+                                }
+                            </div> 
+                        </div>    
+                    ))
+                }
+                <div className="button-load-results">
+                        {nrProperties < properties?.length ? (
+                            <button
+                                className="button-load-more"
+                                onClick={() => setNrProperties(prev => prev + 3)}
+                            >
+                                View more results
+                            </button>
+                        ) :(
+                                                
+                        <p>End of results list.</p>
+                        )}
+                    </div>
+                </div>
+                )}
+        </div>
     );
 }

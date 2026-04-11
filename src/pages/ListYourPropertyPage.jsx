@@ -13,10 +13,11 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { LuHourglass } from "react-icons/lu";
 import { FaCoins } from "react-icons/fa";
-import { GiLockedFortress } from "react-icons/gi";
 import { FaLockOpen } from "react-icons/fa6";
 import { MdOutlineSell } from "react-icons/md";
 import { ethers } from "ethers";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
@@ -64,7 +65,7 @@ export default function ListYourPropertyPage() {
             hourCheckOutFrom: "10:00",
             hourCheckOutUntil: "13:00",
             mainImage: null,
-            otherImage: [null, null, null, null]
+            otherImage: []
             //mapLocation:''
     });
 
@@ -246,7 +247,12 @@ export default function ListYourPropertyPage() {
 
     return(
         <form>  
-        {error && <div className="kyc-error">{error}</div>}
+        {error && <div className="error-info">
+            <IoMdWarning className="icon-error"/> 
+            <p className="description-error">{error}!</p>
+        </div>
+        }
+
         {step === 1 && ( 
             <div className="form-container">
                 <div className="form-step active">
@@ -336,7 +342,12 @@ export default function ListYourPropertyPage() {
                             onClick={handleSubmit}
                             disabled={loading}    
                         >
-                            {loading ? "Listing..." : "Listing"}
+                            {loading ?
+                            (
+                                <div className="spinner">
+                                    <ClipLoader loading={loading} size={40} />
+                                </div>
+                            ) : "Listing"}
                         </button>
                     </div>
                 </div>

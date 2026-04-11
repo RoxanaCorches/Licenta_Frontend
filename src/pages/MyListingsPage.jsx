@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
 import { delistNftProperty } from "../services/blockchain/MarketplaceService";
@@ -11,6 +10,8 @@ import { LuHourglass } from "react-icons/lu";
 import { FaCoins } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState(null);
@@ -63,7 +64,6 @@ export default function MyListingsPage() {
 
             try {
                 setStatusBlockchain("delist_nft");
-                
 
                 const txDelist = await delistNftProperty(tokenId);
                 setStatusBlockchain("delisting_nft");
@@ -105,14 +105,24 @@ export default function MyListingsPage() {
         return `${hour}:${minutes} ${amPm}`;
     }
 
-     if(error){
-        return <div>{error}</div>
+   
+    if (error) {
+        return (
+            <div className="error-info">
+                <IoMdWarning className="icon-error"/> 
+                <p className="description-error">{error}!</p>
+            </div>
+        );
     }
 
-     if(loading){
-        return <div>{loading}</div>
+     if(loading) {
+        return (
+            <div className="spinner">
+                    <ClipLoader loading={loading} size={40} />
+            </div>
+        );
     }
-    
+
     return (
         <div>
             <div className="wrapper-yourAccount">
@@ -155,11 +165,14 @@ export default function MyListingsPage() {
                                                     <p>{apartment.pricePerNight} ETH</p>
                                                 </div>
 
-                                                <button 
+
+                                               <button 
                                                         className="button-delist"
                                                         onClick={() => handleDelistProperty(apartment)}>
                                                         Delist
                                                 </button>
+                                                
+                                                
                                             </div>
                                         </div>
                                     </div>

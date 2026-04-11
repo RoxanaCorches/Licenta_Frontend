@@ -1,11 +1,7 @@
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { FiSend } from "react-icons/fi";
 import { IoCopy } from "react-icons/io5";
-import { FaArrowTrendDown } from "react-icons/fa6";
-import { FaArrowTrendUp } from "react-icons/fa6";
-import { BsDownload } from "react-icons/bs";
 import { BiSolidDownload } from "react-icons/bi";
 import { FaCheck } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -13,6 +9,8 @@ import { getProviderAndSigner } from "../services/blockchain/WalletService";
 import { useWallet } from "../hooks/WalletContext";
 import { getUserById } from "../services/backend/UsersService";
 import { getRentalsForUserById } from "../services/backend/RentalService";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 
 export default function MyWalletPage() {
@@ -167,9 +165,21 @@ const handleSubmitWithdraw = () => {
             loadInfoRental();
         }, [account]);
 
-      if(error){
-        return <div>{error}</div>
-    }
+    if (error) 
+        return (
+            <div className="error-info">
+                <IoMdWarning className="icon-error"/> 
+                <p className="description-error">{error}!</p>
+            </div>
+    );
+
+    if(loading) {
+        return(
+            <div className="spinner">
+                <ClipLoader loading={loading} size={40} />
+            </div>
+        );
+    };
 
     return (
         <div>

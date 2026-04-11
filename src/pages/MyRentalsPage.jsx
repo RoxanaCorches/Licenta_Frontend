@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
@@ -9,10 +8,11 @@ import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
 import { cancelRental, checkIn, checkOut } from "../services/blockchain/MarketplaceService";
 import { createReview } from "../services/backend/ReviewService";
-import { FaRegCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
-import { LuHourglass } from "react-icons/lu";
 import { FaLockOpen } from "react-icons/fa6";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
+
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
@@ -27,7 +27,7 @@ export default function MyRentalsPage() {
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [errorCheckIn, sertErrorCheckIn] = useState(null);
+    const [errorCheckIn, setErrorCheckIn] = useState(null);
 
     const [statusBlockchain, setStatusBlockchain] = useState("idle");
 
@@ -158,7 +158,7 @@ export default function MyRentalsPage() {
             console.error("Invalid apartment info!", apartment);
             return;
         } 
-        console.log("Cancel reantal for rental:", rentalId, tokenId );
+        console.log("Cancel reantal:", rentalId, tokenId );
     
         try {
             setStatusBlockchain("cancel_rental");
@@ -182,6 +182,7 @@ export default function MyRentalsPage() {
             setTimeout(() => {
                 setStatusBlockchain("idle");        
             }, 2000);
+
             } catch(err){
                  console.log(err);
                  setStatusBlockchain("error_cancel_rental");
@@ -212,6 +213,7 @@ export default function MyRentalsPage() {
                     )
                 );
 
+                setActive("progress");
                 setStatusBlockchain("success_checkIn_rental");
 
                 setTimeout(() => {
@@ -219,7 +221,7 @@ export default function MyRentalsPage() {
                 }, 2000);
 
                 } catch(err){
-                    sertErrorCheckIn(err.message);
+                    setErrorCheckIn(err.message);
                     console.log("Error from check-in:", err.message);
                     setStatusBlockchain("error_checkIn_rental");
                 }
@@ -256,20 +258,62 @@ export default function MyRentalsPage() {
                 }, 2000);
 
                 } catch(err){
-                    sertErrorCheckIn(err.message);
+                    setErrorCheckIn(err.message);
                     console.log("Error from check-out:", err.message);
                     setStatusBlockchain("error_checkOut_rental");
                 }
         };
 
-        
+        const isDayForCheckIn = (currentDate, dateForCheckIn) => {
+            const today =
+                currentDate.getFullYear() === dateForCheckIn.getFullYear() &&
+                currentDate.getMonth() === dateForCheckIn.getMonth() && 
+                currentDate.getDate() === dateForCheckIn.getDate();
+            return today;
+        }
+
+        const isDayForCheckOut = (currentDate, dateForCheckOut) => {
+            const today =
+                currentDate.getFullYear() === dateForCheckOut.getFullYear() &&
+                currentDate.getMonth() === dateForCheckOut.getMonth() && 
+                currentDate.getDate() === dateForCheckOut.getDate();
+            return today;
+        }
+
+        const isValidCancel = (currentDate, dateForCheckIn) => {
+            const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+            const checkIn = new Date(dateForCheckIn.getFullYear(), dateForCheckIn.getMonth(), dateForCheckIn.getDate());
+            return today < checkIn;
+        }
+
+         const validCancel = (rental) => {
+            const currentDate = new Date();
+            console.log("Current date:", currentDate);
+            const startDateCheckIn = new Date(rental.startDate + "T00:00:00");
+            console.log("Date for checkin", startDateCheckIn);
+
+            const today = isValidCancel(currentDate, startDateCheckIn);
+            //const  today = currentDate < startDateCheckIn;
+            console.log("You can cancel rental:", today);
+            //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
+            //const hourForCheckIn = startDateCheckIn.getHours();
+            //console.log("Hour for checkIn:", hourForCheckIn);
+           
+            //const hourCheckInStart = currentDate.getHours() >= hourForCheckIn;
+
+            //console.log(currentDate.getHours());
+            //console.log("hourCheckInStart", hourCheckInStart);
+
+            return rental.status === "UPCOMING" && today;
+        }
+
         const validCheckIn = (rental) => {
             const currentDate = new Date();
             console.log("Current date:", currentDate);
             const startDateCheckIn = new Date(rental.startDate);
             console.log("Date for checkin", startDateCheckIn);
 
-            const today = currentDate === startDateCheckIn;
+            const today = isDayForCheckIn(currentDate, startDateCheckIn);
             console.log("You can checkIn:", today);
             //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
             //const hourForCheckIn = startDateCheckIn.getHours();
@@ -286,10 +330,10 @@ export default function MyRentalsPage() {
         const validCheckOut = (rental) => {
             const currentDate = new Date();
             console.log("Current date:", currentDate);
-            const endDateCheckIn = new Date(rental.endDate);
-            console.log("Date for checkin", endDateCheckIn);
+            const startDateCheckOut = new Date(rental.endDate);
+            console.log("Date for check", startDateCheckOut);
 
-            const today = currentDate === endDateCheckIn;
+            const today = isDayForCheckOut(currentDate, startDateCheckOut);
             console.log("You can checkOut:", today);
             //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
            // const hourForCheckIn = startDateCheckIn.getHours();
@@ -302,6 +346,8 @@ export default function MyRentalsPage() {
 
             return rental.status === "IN_PROGRESS" && today;
         }
+
+        
 
         const transactionStatus = {
             cancel_rental: {
@@ -414,9 +460,14 @@ export default function MyRentalsPage() {
         */
        
 
-     if(error) {
-        return <div>{error}</div>
-    }
+    
+    if (error) 
+        return (
+            <div className="error-info">
+                <IoMdWarning className="icon-error"/> 
+                <p className="description-error">{error}!</p>
+            </div>
+    );
 
     return (
         <div>
@@ -491,12 +542,15 @@ export default function MyRentalsPage() {
 
                                                     { active === "upcoming" && (
                                                         <div className="buttons-status-rentals"> 
-                                                            <button 
-                                                                className="button-review"
-                                                                onClick={() => handleCancelRental(rental)}
-                                                            >
+                                                            { validCancel(rental) && (
+                                                                <button 
+                                                                    className="button-review"
+                                                                    onClick={() => handleCancelRental(rental)}
+                                                                >
                                                                 Cancel
                                                             </button>
+                                                            )}
+                                                            
 
                                                             { validCheckIn(rental) && (
                                                                 <button 
@@ -512,15 +566,15 @@ export default function MyRentalsPage() {
 
                                                     { active === "progress" && (
                                                         <div className="buttons-status-rentals"> 
-                                                        { validCheckOut(rental) && (
-                                                             <button 
-                                                                className="button-review"
-                                                                onClick={() => handleCheckOutRental(rental)}
-                                                            >
-                                                                 Check-out
-                                                            </button>
-                                                            )
-                                                        }
+                                                            { validCheckOut(rental) && (
+                                                                <button 
+                                                                    className="button-review"
+                                                                    onClick={() => handleCheckOutRental(rental)}
+                                                                >
+                                                                    Check-out
+                                                                </button>
+                                                                )
+                                                            }
                                                         </div>
                                                     )}
                                                     
@@ -609,7 +663,12 @@ export default function MyRentalsPage() {
                                             onClick={submitReview} 
                                             disabled={loading}
                                         >
-                                            {loading ? 'Submitting...' : 'Submit'}
+                                            {loading ? 
+                                            (
+                                                <div className="spinner">
+                                                    <ClipLoader loading={loading} size={40} />
+                                                </div>
+                                            ):'Submit'}
                                         </button>
                                     </div>
                                 </div>

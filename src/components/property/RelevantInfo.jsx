@@ -19,6 +19,10 @@ import { useWallet } from "../../hooks/WalletContext";
 import { getReviewsForApartment } from "../../services/backend/ReviewService";
 import { FaStar } from "react-icons/fa6";
 import { IoIosStarOutline } from "react-icons/io";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
+import { GiLaurelCrown } from "react-icons/gi";
+
 
 export default function RelevantInfo() {
     const [property, setProperty] = useState(null);
@@ -113,11 +117,25 @@ export default function RelevantInfo() {
 
     const averageRating = reviews?.length > 0 ? calculateRting(reviews) : "No reviews yet";
 
-    if (loading) return <p>Se încarcă proprietățile...</p>;
-    if (error) return <p>Eroare: {error}</p>;
+    if (error) 
+    return (
+        <div className="error-info">
+            <IoMdWarning className="icon-error"/> 
+            <p className="description-error">{error}!</p>
+        </div>
+    );
     
     return(
        <div className="info-container"> 
+       
+        {loading ? (
+                        <div className="spinner">
+                            <ClipLoader loading={loading} size={40} />
+                        </div>
+                    ): (
+
+                    <div>
+
             <div className="info-header">
                 <div className="header">
                     <h2 className="title">{property?.title}</h2>
@@ -234,14 +252,14 @@ export default function RelevantInfo() {
 
         {reviews?.length > 0 ? (
             <div className="place-amenities">
-                <h2 className="title">Reviews - {reviews?.length} reviews</h2>
-                <p>Rating: {averageRating}</p>
-
-                <p className="rating-stars">
-                    {[...Array(5)].map((_, i) =>
-                    i < averageRating && <FaStar key={i} /> 
-                    )}
-                </p>
+                <div className="header-review">
+                    <div className="rating">
+                        <GiLaurelCrown className="icon-review"/>
+                        <p className="average-rating">{averageRating}</p>
+                        <GiLaurelCrown className="icon-review"/>
+                    </div>
+                    <p className="title-review">{reviews?.length} reviews</p>
+                </div>
 
                 <div className="">
                     {reviews?.length > 0 ? (
@@ -354,7 +372,9 @@ export default function RelevantInfo() {
                         </div>
                     </div>
                 </div>
-            </div>        
+            </div>  
+            </div>
+            )}
        </div>
     );
 }

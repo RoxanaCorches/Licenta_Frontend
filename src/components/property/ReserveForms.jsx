@@ -11,6 +11,8 @@ import { FaHourglassHalf } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 import { LuHourglass } from "react-icons/lu";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 export default function ReserveForms() {
     const navigate = useNavigate();
@@ -173,9 +175,23 @@ export default function ReserveForms() {
                  setProcessingPayment(false);
             }
         }
-            
+         
+    if (error) 
+        return (
+            <div className="error-info">
+                <IoMdWarning className="icon-error"/> 
+                <p className="description-error">{error}!</p>
+            </div>
+        );
+
     return(
         <form onSubmit={handleSubmitReserve}> 
+        {loading ? (
+                <div className="spinner">
+                    <ClipLoader loading={loading} size={40} />
+                </div>
+        ): (
+
         <div className="container-reserve">
             {step === 1 && ( 
             <div className="contact-info"> 
@@ -251,7 +267,7 @@ export default function ReserveForms() {
                         <p className="price">Total: {nrNights * property.pricePerNight} ETH</p>
                         <button 
                             type="submit" 
-                            className="botton-payment-eth"
+                            className="button-payment-eth"
                             disabled={loading || !walletAddress}
                         >
                             Pay with ETH
@@ -349,6 +365,7 @@ export default function ReserveForms() {
             )}
 
         </div>
+        )}
         </form>
        
     );

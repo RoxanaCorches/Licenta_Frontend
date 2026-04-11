@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
-import { FaCheckCircle } from "react-icons/fa";
-import { TbCancel } from "react-icons/tb";
 import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
 import { FaStar } from "react-icons/fa6";
 import { IoIosStarOutline } from "react-icons/io";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 export default function MyReviewPage() {
     const [active, setActive] = useState('received');
@@ -74,13 +73,21 @@ export default function MyReviewPage() {
 
     const showReview = active === 'received' ? reviewReceived : reviewGiven;
 
-   if(error){
-        return <div>{error}</div>
-    }
+    if (error) 
+        return (
+            <div className="error-info">
+                <IoMdWarning className="icon-error"/> 
+                <p className="description-error">{error}!</p>
+            </div>
+        );
 
-     if(loading){
-        return <div>{loading}</div>
-    }
+     if(loading) {
+        return(  
+            <div className="spinner">
+                <ClipLoader loading={loading} size={40} />
+            </div>
+        )}
+        
     return (
         <div>
             <div className="wrapper-yourAccount">

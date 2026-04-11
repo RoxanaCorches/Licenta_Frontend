@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import Sidebar from "../components/listProperty/SideBar";
 import { GrUploadOption } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
 import { getUserById, updateUser } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
-import  Footer  from "../components/Footer";
+import { ClipLoader } from "react-spinners";
+import { IoMdWarning } from "react-icons/io";
 
 export default function MyAccountPage() {
     const [image, setImage] = useState(null);
@@ -86,9 +86,14 @@ export default function MyAccountPage() {
         }
     };
  
-    if(error){
-        return <div>{error}</div>
-    }
+    
+if (error) 
+    return (
+        <div className="error-info">
+            <IoMdWarning className="icon-error"/> 
+            <p className="description-error">{error}!</p>
+        </div>
+);
     return (
         <div>
             <div className="wrapper-yourAccount">
@@ -296,7 +301,12 @@ export default function MyAccountPage() {
                                         onClick={handleUpdate} 
                                         disabled={loading}
                                     >
-                                        {loading ? 'Submitting...' : 'Submit'}
+                                        {loading ? 
+                                         ( <div className="spinner">
+                                                <ClipLoader loading={loading} size={40} />
+                                            </div>
+                                         ) : 'Submit'
+                                        }
                                     </button>
                                 </div>
 

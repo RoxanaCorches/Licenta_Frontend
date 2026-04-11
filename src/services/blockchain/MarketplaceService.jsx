@@ -47,7 +47,7 @@ export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) 
             tokenId,
             startDate,
             endDate,
-            { value: priceWei, gasLimit: 500_000  }
+            { value: priceWei, gasLimit: 400000  }
         );
 
     } catch(err) {
@@ -106,7 +106,7 @@ export const checkIn = async (tokenId) => {
         throw new Error(message);
     }
 
-    const txCheckIn = await contract.checkIn(tokenId);
+    const txCheckIn = await contract.checkIn(tokenId,  { gasLimit: 400000 });
     return txCheckIn;
 };
 
@@ -126,6 +126,6 @@ export const checkOut = async (tokenId) => {
         throw new Error(message);
     }
 
-    const txCheckOut = await contract.checkOut(tokenId);
+    const txCheckOut = await contract.checkOut(tokenId, { gasLimit: 400000 });
     return txCheckOut;
 };
