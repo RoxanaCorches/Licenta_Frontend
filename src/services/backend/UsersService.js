@@ -63,4 +63,22 @@ export async function updateUser(userId,updateUser) {
 }
 
 
+export async function uploadImage(id, image) {
+    const info = new FormData();
+   
+    info.append("file", image);
+    const response = await fetch(`${API}/updateImageProfile/${id}`, {
+        method: "PATCH",
+        body: info,
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to upload image!")
+    }
+
+    const data = await response.text();
+    return data;
+}
+
+
 

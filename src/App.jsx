@@ -14,6 +14,7 @@ import MyReviewPage from "./pages/MyReviewPage";
 import { RentalProvider } from "./hooks/RentalContext";
 import Layout from "./components/Layout";
 import About from "./pages/About";
+import SupportPage from "./pages/SupportPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/properties/property/:idApartment" element={<PropertyInfo />} />
           <Route path="/properties/property/:idApartment/reserve" element={<ReservePage />} />
           <Route path="/listYourProperty" element={<ListYourPropertyPage />} />
+          <Route path="/support" element={<SupportPage />} />
           <Route path="/myAccount" element={<MyAccountPage />} />
           <Route path="/myRentals" element={<MyRentalsPage />} />
           <Route path="/myListings" element={<MyListingsPage />} />

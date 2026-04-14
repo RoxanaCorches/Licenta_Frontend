@@ -12,6 +12,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
 import { MdRateReview } from "react-icons/md";
 import { IoWalletOutline } from "react-icons/io5";
+import { LuMessageCircle } from "react-icons/lu";
 
 export default function Navbar() {
     const { account, connectWallet, disconnectWallet } = useWallet();
@@ -82,6 +83,18 @@ export default function Navbar() {
                         >
                             <FaBuildingCircleArrowRight  className="navbar-icon" />
                             <span>Properties</span>
+                        </NavLink>
+                    </li>
+
+                    <li className="navbar-item">
+                        <NavLink 
+                            to="/support" 
+                            className = {({ isActive }) => 
+                                `navbar-link ${isActive ? 'active' : ''}`
+                            }
+                        >
+                            <LuMessageCircle   className="navbar-icon" />
+                            <span>Support</span>
                         </NavLink>
                     </li>
                 </ul>

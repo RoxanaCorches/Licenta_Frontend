@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { GrUploadOption } from "react-icons/gr";
 import { FaEdit } from "react-icons/fa";
-import { getUserById, updateUser } from "../services/backend/UsersService";
+import { getUserById, updateUser, uploadImage } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
@@ -30,14 +30,20 @@ export default function MyAccountPage() {
     //console.log("userId", idUser);
     
 
-    const handleUploadeImage = (e) => {
+    const handleUploadeImage = async (e) => {
         const image = e.target.files[0];
     
-        if(image){
-            setImage({
-                image,
-                preview: URL.createObjectURL(image)
-            });
+        if(!image) return;
+
+        try{
+            setLoading(true);
+            setImage(URL.createObjectURL(image));
+            await uploadImage(user.idUser, image);
+            console.log("image profile", user.profileImage)
+        } catch(err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -102,15 +108,15 @@ if (error)
                 <div className="main-container">
                     <div className="top">
                         <div className="image-upload-wrapper"> 
-                            {image &&  (
+                            {user.profileImage &&  (
                                 <img
                                     className="preview-image"
-                                    src={image.preview}
+                                    src={`data:image/png;base64,${user.profileImage}`}
                                     alt="preview"
                                 />
                             )}
                         
-                        {!image && (
+                        {!user.profileImage && (
                             <>
                                 <input
                                     id="image"

@@ -6,7 +6,7 @@ export default function PropertyInfo() {
     return(
        <div className="properties-container">
                    <div className="properties-content">
-                       <SearchProperty /> 
+                     
                        <RelevantInfo  />
                    </div>
                </div>

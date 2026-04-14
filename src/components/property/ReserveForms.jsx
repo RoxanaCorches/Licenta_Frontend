@@ -13,14 +13,15 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { LuHourglass } from "react-icons/lu";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
+import { MdOutlineSell } from "react-icons/md";
 
 export default function ReserveForms() {
     const navigate = useNavigate();
 
     const { connectWallet }  = useContext(WalletContext) ;
     const { account } = useWallet();
-    const { checkIn, checkOut, nrNights } = useContext(RentalContext);
-    const {idApartment} = useParams();
+    const { checkIn, checkOut, setCheckIn, setCheckOut, nrNights } = useContext(RentalContext);
+    const { idApartment } = useParams();
 
     const [property, setProperty] = useState(null);
     const [tokenId, setTokenId] = useState(null);
@@ -30,6 +31,8 @@ export default function ReserveForms() {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    //const [blockchainStatus, setBlockchainStatus] = useState("idle");
 
 
     const [data, setData] = useState({
@@ -76,8 +79,6 @@ export default function ReserveForms() {
         navigate(`/properties/property/${idApartment}`);
     }
 
- 
-
     const handleSubmitReserve = async (e) => {
             e.preventDefault();
             setError('');
@@ -121,18 +122,10 @@ export default function ReserveForms() {
                 
                 const startDate = Math.floor(new Date(checkIn).getTime() / 1000);
                 const endDate = Math.floor(new Date(checkOut).getTime() / 1000);
-                //
-                //const startDate = toLocalTimestamp(checkIn);
-                //const endDate = toLocalTimestamp(checkOut);
-
-                //const valueStartDate = ethers.BigNumber.from(startDate.toString());
-                //const valueEndDate = ethers.BigNumber.from(endDate.toString());
-
-               
+                
 
                 console.log("StartDate:", startDate);
                 console.log("EndDate:", endDate);
-
 
                 const totalPriceInEth = nrNights * property.pricePerNight;
                 console.log("totalPriceInEth:", totalPriceInEth);
@@ -147,10 +140,15 @@ export default function ReserveForms() {
                     return;
                 }
 
-                //console.log("Price in wei:", priceWei);
+                //setBlockchainStatus("book_property");
                 const tx = await rentNftProperty(tokenId, startDate, endDate, totalPriceInEth.toString());
                 console.log("tx:", tx);
 
+                //setBlockchainStatus("booking_property");
+
+                //await new Promise(r => setTimeout(r, 100));
+
+                //await tx.wait();
 
                 infoRental.transactionHash = tx.transactionHash;
                 const createdRental = (tx.reservationDate).toISOString();
@@ -160,8 +158,12 @@ export default function ReserveForms() {
                 console.log("transactionHash in db:", infoRental.transactionHash);
                 await createRental(infoRental);
 
+                //setBlockchainStatus("success_property");
+
                 setRentalConfirmed(true);
                 setProcessingPayment(false);
+                setCheckIn("");
+                setCheckOut("");
               
                 setTimeout(() => {
                      navigate("/myRentals");
@@ -171,6 +173,10 @@ export default function ReserveForms() {
                 setError(`${error.message}`);
                 alert(error.message);
                 setProcessingPayment(false);
+                setCheckIn("");
+                setCheckOut("");
+
+                 //setBlockchainStatus("error_property");
             } finally {
                  setProcessingPayment(false);
             }
@@ -300,12 +306,12 @@ export default function ReserveForms() {
                 <div className="history-content">
                     <div className="info">
                         <p>Check-In:</p>
-                        <p>{checkIn?.toLocaleDateString()} </p>
+                        <p>{new Date(checkIn)?.toLocaleDateString()} </p>
                     </div>
 
                     <div className="info">
                         <p>Check-Out:</p>
-                        <p>{checkOut?.toLocaleDateString()} </p>
+                        <p>{new Date(checkOut)?.toLocaleDateString()} </p>
                     </div>
 
                     <div className="info">
@@ -363,7 +369,6 @@ export default function ReserveForms() {
                     </div>
                 </div>
             )}
-
         </div>
         )}
         </form>

@@ -81,7 +81,7 @@ export default function RelevantInfo() {
 
     
     useEffect(() => {
-        const loadInfoUser = async () => {
+        const loadInfoReview = async () => {
             try {
                 setLoading(true);
                 const data = await getReviewsForApartment(idApartment);
@@ -90,10 +90,10 @@ export default function RelevantInfo() {
             } catch (err) {
                 setError(err.message);
             } finally {
-                    setLoading(false);
+                setLoading(false);
             }
         };
-            loadInfoUser();
+            loadInfoReview();
     }, [idApartment]);
 
     function convertTime(time) {
@@ -170,8 +170,9 @@ export default function RelevantInfo() {
                     .filter(img => img) 
                     .map((img, index) => (
                         <img
+
                         key={index}
-                        src={`http://localhost:8080${img}`}
+                        src={`data:image/png;base64,${img}`}
                         alt={property?.title || "Apartament"}
                         />
                     ))}
