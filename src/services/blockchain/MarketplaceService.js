@@ -24,6 +24,27 @@ export const delistNftProperty = async (tokenId) => {
     return txDelist;
 };
 
+export const updatePrice = async (tokenId, newPrice) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const txUpdatePrice = await contract.updatePricePerDay(tokenId, newPrice);
+
+    return txUpdatePrice;
+};
+
+export const updateHours = async (tokenId, newHours) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const txUpdateHours = await contract.updateHoursToCheckIn(tokenId, newHours);
+
+    return txUpdateHours;
+};
+
+
 export const verifyAvailability = async (tokenId, startDate, endDate) => {
     const { signer } = await getProviderAndSigner();
 

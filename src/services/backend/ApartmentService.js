@@ -72,6 +72,26 @@ export async function createApartment(addApartment, images) {
     return data;
 }
 
+export async function updatePriceApartment(idApartment, updateApartment) {
+    const response = await fetch(`${API}/updateApartment/${idApartment}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        body: JSON.stringify(updateApartment),
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to update apartment!")
+    }
+
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : null;
+    return data;
+}
+
+
 export async function deleteApartment(apartmentId) {
     const response = await fetch(`${API}/deleteApartment/${apartmentId}`, {
         method: "DELETE",

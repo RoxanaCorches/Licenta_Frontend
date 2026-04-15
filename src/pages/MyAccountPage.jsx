@@ -93,13 +93,14 @@ export default function MyAccountPage() {
     };
  
     
-if (error) 
-    return (
-        <div className="error-info">
-            <IoMdWarning className="icon-error"/> 
-            <p className="description-error">{error}!</p>
-        </div>
-);
+    if (error) 
+        return (
+            <div className="error-info">
+                <IoMdWarning className="icon-error"/> 
+                <p className="description-error">{error}!</p>
+            </div>
+    );
+    
     return (
         <div>
             <div className="wrapper-yourAccount">

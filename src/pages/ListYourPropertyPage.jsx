@@ -81,6 +81,14 @@ export default function ListYourPropertyPage() {
         navigate(`/listYourProperty`);
     }
     
+    const convertHours = (checkInFrom, checkInUntil) => {
+        let hoursForCheckIn = (Number(checkInFrom.split(":")[0])) - (Number(checkInUntil.split(":")[0]));
+        if(hoursForCheckIn < 0) {
+            hoursForCheckIn += 24;
+        }
+        return hoursForCheckIn;
+    }
+
     const handleSubmit = async (e) => {
             e.preventDefault();
             setError('');
@@ -192,7 +200,7 @@ export default function ListYourPropertyPage() {
                 const priceWei = ethers.utils.parseEther(String(data.price || "0"));
                 //const checkInHour = Number(data.hourCheckInFrom.split(":")[0]);
 
-                const hoursForCheckIn = (Number(data.hourCheckInUntil.split(":")[0])) - (Number(data.hourCheckInFrom.split(":")[0]));
+                const hoursForCheckIn = convertHours(data.hourCheckInUntil, data.hourCheckInFrom);
 
                 const hoursCheckIn = hoursForCheckIn * 3600;
                 console.log("Hours for chech-in for blockchain:", hoursCheckIn);
@@ -203,11 +211,9 @@ export default function ListYourPropertyPage() {
                 console.log("tokenId:", tokenId.toString?.() ?? String(tokenId));
                 console.log("priceWei:", priceWei.toString());
 
-                // --- List NFT on marketplace ---
                 console.log("Approving marketplace...");
 
                 setStatusBlockchain("approve_wallet");
-                // așteaptă confirmarea
                 const txApprove  =  await approveMarketplace();; 
                 setStatusBlockchain("approving_wallet");
 
@@ -411,7 +417,7 @@ export default function ListYourPropertyPage() {
                 <div className="modal-reservation">
                     <LuHourglass  className="icon-reservation-status hourglass"/>
                         <h2>Listing Property...</h2>
-                        <p><LuHourglass />The listing transaction is being confirmed on the blockchain.</p>
+                        <p>The listing transaction is being confirmed on the blockchain.</p>
                     </div>
             </div>
         )}
