@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
-import { delistNftProperty, updateHours, updatePrice } from "../services/blockchain/MarketplaceService";
-import { deleteApartment, updatePriceApartment } from "../services/backend/ApartmentService";
+import { delistNftProperty, updatePriceAndHours } from "../services/blockchain/MarketplaceService";
+import { deleteApartment, updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -89,53 +89,38 @@ export default function MyListingsPage() {
         }, 2000);
     }
 
-
-    const convertHours = (checkInFrom, checkInUntil) => {
-        let hoursForCheckIn = (Number(checkInFrom.split(":")[0])) - (Number(checkInUntil.split(":")[0]));
-        if(hoursForCheckIn < 0) {
-            hoursForCheckIn += 24;
-        }
-        return hoursForCheckIn;
-    }
-
     const handleUpdate = async() => {
-        console.log("Update apartment:", selectedProperty);
-
-        console.log("Update apartment form modal:", openModal);
         const {idApartment, tokenId } = selectedProperty;
-
-        console.log("Update apartment:", idApartment, tokenId );
 
         if (!idApartment || !tokenId) {
             console.error("Invalid apartment info!", selectedProperty);
             return;
         } 
-        console.log("Update apartment:", idApartment, tokenId );
-
         try {
             setStatusBlockchain("update_info");
 
-            const txUpdatePrice = await updatePrice(selectedProperty.tokenId, newPrice);
+            const hoursIn = parseInt(editData.checkInFrom.split(":")[0]);
+            const hoursOut = parseInt(editData.checkInUntil.split(":")[0]);
 
-            const hoursForCheckIn = convertHours(editData.checkInUntil, editData.checkInFrom);
-            const newHours = hoursForCheckIn * 3600;
+            const txUpdate = await updatePriceAndHours(selectedProperty.tokenId, newPrice, hoursIn, hoursOut);
+            
             console.log("editData.checkInFrom", editData.checkInFrom);
             console.log("editData.checkInUntil", editData.checkInUntil);
-            console.log("Hours:", hoursForCheckIn);
-            console.log("Hours for blockchain:", newHours);
+            
+            console.log("hoursIn", hoursIn);
+            console.log("hoursOut", hoursOut);
 
-            const txUpdateHours = await updateHours(selectedProperty.tokenId, newHours);
             setStatusBlockchain("updating_info");
 
             await new Promise(r => setTimeout(r, 2000));
 
-            await txUpdatePrice.wait();
-            await txUpdateHours.wait();
+            await txUpdate.wait();
 
-            await updatePriceApartment(idApartment, 
-                {pricePerNight: Number(newPrice),
-                 checkInFrom: editData.checkInFrom,
-                 checkInUntil: editData.checkInUntil
+            await updatePriceAndHoursApartment(idApartment, 
+                {
+                pricePerNight: Number(newPrice),
+                checkInFrom: editData.checkInFrom,
+                checkInUntil: editData.checkInUntil
             });
 
             const data = await getUserById(account);

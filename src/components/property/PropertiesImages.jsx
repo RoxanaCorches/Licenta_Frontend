@@ -38,7 +38,6 @@ export default function PropertiesImages({filterProperties}) {
                     console.log("cele filtrate");
                  }
                     
-                    //setProperties(data);
                     const showData = dataFiltered && dataFiltered.length > 0 ? dataFiltered : (filterProperties ? [] : data);
                     
                     setProperties(showData);

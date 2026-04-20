@@ -2,22 +2,6 @@ import { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
 export default function HouseRules({data, completeData, prevStep, nextStep}) {
-    /*
-    const [data, setData] = useState({
-                pet: '',
-                smoking: '',
-                parties: '',
-            });
-    */
-    //hours
-    /*
-    const [hourCheckInFrom, setHourCheckInFrom] = useState("15:00");
-    const [hourCheckInUntil, setHourCheckInUntil] = useState("18:00");
-
-    const [hourCheckOutFrom, setHourCheckOutFrom] = useState("15:00");
-    const [hourCheckOutUntil, setHourCheckOutUntil] = useState("18:00");
-*/
-    //panel
     const [panelCheckInFrom, setPanelCheckInFrom] = useState(false);
     const [panelCheckInUntil, setPanelCheckInUntil] = useState(false);
 
@@ -45,23 +29,6 @@ export default function HouseRules({data, completeData, prevStep, nextStep}) {
         setPanelCheckOutUntil(!panelCheckOutUntil);
     };
         
-            //const [loading] = useState(false);
-            //const [error, setError] = useState('');
-    
-
-            /*
-        const handleChangePet = (e) => {
-            completeData(prev => ({...prev, pet: e.target.value}));
-        }
-
-        const handleChangeSmoking = (e) => {
-            completeData(prev => ({...prev, smoking: e.target.value}));
-        }
-
-        const handleChangeParties = (e) => {
-            completeData(prev => ({...prev, parties: e.target.value}));
-        }
-            */
         const handleChange = (e) => {
             const {name, type, value, checked} = e.target;
             completeData({[name]: type === "checkbox" ? checked : value});

@@ -72,7 +72,7 @@ export async function createApartment(addApartment, images) {
     return data;
 }
 
-export async function updatePriceApartment(idApartment, updateApartment) {
+export async function updatePriceAndHoursApartment(idApartment, updateApartment) {
     const response = await fetch(`${API}/updateApartment/${idApartment}`, {
         method: "PUT",
         headers: {

@@ -38,7 +38,7 @@ export default function StartPage() {
               type="button"
               onClick={() => handleProperties()}
           >
-            Browser Properties
+            Browse Properties
           </button>
 
           <button
@@ -67,7 +67,7 @@ export default function StartPage() {
           <div className="card">
             <RiGlobalLine className="icon"/>
             <p className="card-title">Global Booking</p>
-            <p className="card-description">Explore and book properties anywhre in the world with crypto payments.</p>
+            <p className="card-description">Explore and book properties anywhere in the world with crypto payments.</p>
           </div>
 
           <div className="card">

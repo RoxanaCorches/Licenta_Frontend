@@ -1,6 +1,5 @@
 import img1 from "../assets/5.jpg";
 import img2 from "../assets/10.jpg";
-import img3 from "../assets/1.jpg";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 
@@ -54,27 +53,38 @@ export default function About() {
                 </div>
             </div>
 
-         <div className="about-content">
-                <div className="content-left">
-                    <h1>How it works</h1>
-                    
-                        <p></p>
+        
+            <div className="main-container-start-page">
+                <div className="startpage-container"> 
+                <p className="h1-startpage">How It Works</p>
+                <p className="description-startpage">Get started in 4 simple steps</p>
+                </div>
 
-                    
+                <div className="cards-information">
+                <div className="card">
+                
+                    <p className="card-title">1. Connect Wallet</p>
+                    <p className="card-description">Connect with your crypto wallet.</p>
                 </div>
-                <div className="content-right"> 
-                    {loading && (
-                        <div className="spinner">
-                            <ClipLoader loading={loading} size={40} />
-                        </div>
-                    )}  
-                   <img 
-                        src={img3} 
-                        alt="NameImage"
-                        onLoad={() =>setLoading(false)}
-                    />
+
+                <div className="card">
+                
+                    <p className="card-title">2. Browse Properties</p>
+                    <p className="card-description">Explore properties anywhere in the world.</p>
                 </div>
-        </div>
+
+                <div className="card">
+                    <p className="card-title">3. Book & Pay</p>
+                    <p className="card-description">Book and pay with crypto wallet.</p>
+                </div>
+
+                <div className="card">
+                    <p className="card-title">4. Enjoy Your Stay</p>
+                    <p className="card-description">Relax. Enjoy your perfect adventure.</p>
+                </div>
+                </div>
+            </div>
+                
         </div>
     );
 }

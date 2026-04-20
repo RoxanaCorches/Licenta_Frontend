@@ -21,10 +21,7 @@ import { IoMdWarning } from "react-icons/io";
 
 export default function ListYourPropertyPage() {
     const [step, setStep] = useState(1);
-
     const [statusBlockchain, setStatusBlockchain] = useState("start");
-    //const totalSteps = 5;
-    //const progress = (step / totalSteps) * 100; 
 
     const [data, setData] = useState({
             propertyType: "apartment",
@@ -81,11 +78,8 @@ export default function ListYourPropertyPage() {
         navigate(`/listYourProperty`);
     }
     
-    const convertHours = (checkInFrom, checkInUntil) => {
-        let hoursForCheckIn = (Number(checkInFrom.split(":")[0])) - (Number(checkInUntil.split(":")[0]));
-        if(hoursForCheckIn < 0) {
-            hoursForCheckIn += 24;
-        }
+    const convertHours = (checkInFrom) => {
+        const hoursForCheckIn = parseInt(checkInFrom.split(":")[0]);
         return hoursForCheckIn;
     }
 
@@ -200,13 +194,18 @@ export default function ListYourPropertyPage() {
                 const priceWei = ethers.utils.parseEther(String(data.price || "0"));
                 //const checkInHour = Number(data.hourCheckInFrom.split(":")[0]);
 
-                const hoursForCheckIn = convertHours(data.hourCheckInUntil, data.hourCheckInFrom);
+                //const hoursForCheckIn = convertHours(data.hourCheckInUntil, data.hourCheckInFrom);
 
-                const hoursCheckIn = hoursForCheckIn * 3600;
-                console.log("Hours for chech-in for blockchain:", hoursCheckIn);
+                const hoursIn = convertHours(data.hourCheckInFrom);
+                const hoursOut = convertHours(data.hourCheckInUntil);
+                console.log("HoursIn:", hoursIn);
+                console.log("HoursOut:", hoursOut);
+
+                //const hoursCheckIn = hoursForCheckIn * 3600;
+                //console.log("Hours for chech-in for blockchain:", hoursCheckIn);
                 
 
-                console.log("Hours for check-in:", hoursForCheckIn); 
+                //console.log("Hours for check-in:", hoursForCheckIn); 
 
                 console.log("tokenId:", tokenId.toString?.() ?? String(tokenId));
                 console.log("priceWei:", priceWei.toString());
@@ -224,7 +223,7 @@ export default function ListYourPropertyPage() {
                 console.log("Marketplace approved.");
 
                 setStatusBlockchain("list_nft");
-                const  txList  = await listNftProperty(tokenId, priceWei, hoursCheckIn);
+                const  txList  = await listNftProperty(tokenId, priceWei, hoursIn, hoursOut);
                 setStatusBlockchain("listing_nft");
                 await new Promise(r => setTimeout(r, 2000));
 

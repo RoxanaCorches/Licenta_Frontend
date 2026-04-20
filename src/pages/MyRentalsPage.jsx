@@ -12,6 +12,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaLockOpen } from "react-icons/fa6";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
+import { CgNametag } from "react-icons/cg";
 
 
 export default function MyRentalsPage() {
@@ -57,7 +58,7 @@ export default function MyRentalsPage() {
                     return;
                 }
                 const idUser = dataUser.idUser;
-
+                
                 console.log("id user for rentals:", idUser);
 
                 const data = await getRentalsForUserById(idUser);
@@ -65,6 +66,7 @@ export default function MyRentalsPage() {
                 
                 const myRentals = data.filter(r => r.userId === idUser); 
                 console.log("data.userId", myRentals);
+                
                 setRentals(myRentals);
                 console.log("Info for rentals:", myRentals);
                 
@@ -78,28 +80,12 @@ export default function MyRentalsPage() {
     }, [account]);
 
     const handleTryAgain =  () => {
-        //console.log("Da");
         setTimeout(() => {
                 setActive("upcoming");
                 setStatusBlockchain("idle");
         }, 2000);
     }
 
-    /*
-    const handleFeedback = () => {
-        try{
-            setLoading(true);
-            setCompleteFeedback(false);
-            setFeedback("");
-            setHoverStars(1);
-            setRating(1);
-        }catch(error) {
-            setError(error.message);
-        }finally {
-            setLoading(false);
-        }
-    };
-    */
     const handleReview = async (apartment) => {
         setSelectedRental(apartment);
         setCompleteFeedback(true);
@@ -107,17 +93,6 @@ export default function MyRentalsPage() {
 
     const submitReview = async () => {
         if (!selectedRental) return;
-            //console.log("Create review for apartment:", apartment);
-           // const {rentalId, userId } = apartment;
-            //console.log("Id ul rezervarii pt care se lasa review", rentalId);
-           // console.log("Id ul user ului care lasa review", userId);
-/*
-            if (!rentalId || !userId) {
-                console.error("Invalid apartment info!", apartment);
-                return;
-            } 
-            console.log("Create review for rental, user:", rentalId, userId );
-*/
          try{
             setLoading(true);
             const addReviewInfo = {
@@ -264,6 +239,7 @@ export default function MyRentalsPage() {
                 }
         };
 
+        /*
         const isDayForCheckIn = (currentDate, dateForCheckIn) => {
             const today =
                 currentDate.getFullYear() === dateForCheckIn.getFullYear() &&
@@ -279,6 +255,15 @@ export default function MyRentalsPage() {
                 currentDate.getDate() === dateForCheckOut.getDate();
             return today;
         }
+        */
+
+        const isCurrentDay = (currentDate, dateForCheck) => {
+            const today =
+                currentDate.getFullYear() === dateForCheck.getFullYear() &&
+                currentDate.getMonth() === dateForCheck.getMonth() && 
+                currentDate.getDate() === dateForCheck.getDate();
+            return today;
+        }
 
         const isValidCancel = (currentDate, dateForCheckIn) => {
             const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
@@ -288,66 +273,45 @@ export default function MyRentalsPage() {
 
          const validCancel = (rental) => {
             const currentDate = new Date();
-            console.log("Current date:", currentDate);
-            const startDateCheckIn = new Date(rental.startDate + "T00:00:00");
-            console.log("Date for checkin", startDateCheckIn);
+            console.log("(CANCEL)Current date:", currentDate);
+            const startDateCheckIn = new Date(`${rental.startDate}T${rental.checkInFrom}`);
+            console.log("(CANCEL)Date for check-in", startDateCheckIn);
 
             const today = isValidCancel(currentDate, startDateCheckIn);
-            //const  today = currentDate < startDateCheckIn;
-            console.log("You can cancel rental:", today);
-            //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
-            //const hourForCheckIn = startDateCheckIn.getHours();
-            //console.log("Hour for checkIn:", hourForCheckIn);
            
-            //const hourCheckInStart = currentDate.getHours() >= hourForCheckIn;
-
-            //console.log(currentDate.getHours());
-            //console.log("hourCheckInStart", hourCheckInStart);
+            console.log("You can cancel rental:", today);
 
             return rental.status === "UPCOMING" && today;
         }
 
         const validCheckIn = (rental) => {
             const currentDate = new Date();
-            console.log("Current date:", currentDate);
-            const startDateCheckIn = new Date(rental.startDate);
-            console.log("Date for checkin", startDateCheckIn);
+            console.log("(CHECK-IN)Current date for check-in:", currentDate);
+            const startDateCheckIn = new Date(`${rental.startDate}T${rental.checkInFrom}`);
+            const endDateCheckIn = new Date(`${rental.startDate}T${rental.checkInUntil}`);
+            console.log("(CHECK-IN)Start date for checkin", startDateCheckIn);
+            console.log("(CHECK-IN)End date for checkin", endDateCheckIn);
 
-            const today = isDayForCheckIn(currentDate, startDateCheckIn);
+            const today = isCurrentDay(currentDate, startDateCheckIn);
             console.log("You can checkIn:", today);
-            //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
-            //const hourForCheckIn = startDateCheckIn.getHours();
-            //console.log("Hour for checkIn:", hourForCheckIn);
-           
-            //const hourCheckInStart = currentDate.getHours() >= hourForCheckIn;
 
-            //console.log(currentDate.getHours());
-            //console.log("hourCheckInStart", hourCheckInStart);
+            const canCheckIn = currentDate >= startDateCheckIn && currentDate <= endDateCheckIn;
+            console.log(canCheckIn);
 
-            return rental.status === "UPCOMING" && today;
+            return rental.status === "UPCOMING" && today && canCheckIn;
         }
 
         const validCheckOut = (rental) => {
             const currentDate = new Date();
-            console.log("Current date:", currentDate);
-            const startDateCheckOut = new Date(rental.endDate);
-            console.log("Date for check", startDateCheckOut);
+            console.log("(CHECK-OUT)Current date:", currentDate);
+            const startDateCheckOut = new Date(`${rental.endDate}T${rental.checkOutFrom}`);
+            console.log("(CHECK-OUT)Date for check-out", startDateCheckOut);
 
-            const today = isDayForCheckOut(currentDate, startDateCheckOut);
+            const today = isCurrentDay(currentDate, startDateCheckOut);
             console.log("You can checkOut:", today);
-            //const hourForCheckIn = Number(rental?.startDateCheckIn?.split(":")[0]);
-           // const hourForCheckIn = startDateCheckIn.getHours();
-            //console.log("Hour for checkIn:", hourForCheckIn);
-           
-            //const hourCheckInStart = currentDate.getHours() >= hourForCheckIn;
-
-            //console.log(currentDate.getHours());
-            //console.log("hourCheckInStart", hourCheckInStart);
 
             return rental.status === "IN_PROGRESS" && today;
         }
-
-        
 
         const transactionStatus = {
             cancel_rental: {
@@ -396,26 +360,6 @@ export default function MyRentalsPage() {
             }
         }
 
-        /*
-        const transactionStatusError = {
-            error_cancel_rental: {
-                title: "Something went wrong...",
-                description: 
-            },
-
-            error_checkIn_rental: {
-                title: "Something went wrong...",
-                description: 
-            },
-
-            error_checkOut_rental: {
-                title: "Something went wrong...",
-                description: 
-            }
-
-        }
-        */
-
     const BlockchainStatusTransaction = ({status}) => {
         if(!status || !transactionStatus[status])
             return null;
@@ -433,34 +377,6 @@ export default function MyRentalsPage() {
         );
     }
 
-    /*
-    const BlockchainStatusErrorTransaction = ({status}) => {
-        if(!status || !transactionStatusError[status])
-            return null;
-
-        const {title, description} = statusBlockchain[status];
-
-        return( 
-            <div className="edit-container">
-                <div className="modal-reservation">
-                    <IoMdCloseCircle  className="icon-reservation-status canceled"/>
-                    <h2>{title}</h2>
-                    <p>{description}</p>
-                    <button 
-                        className="try-again"
-                        type="button"
-                        onClick = {() => handleTryAgain()}
-                    >
-                        Try again
-                    </button>
-                </div>
-            </div>
-        );
-    }
-        */
-       
-
-    
     if (error) 
         return (
             <div className="error-info">
@@ -525,7 +441,8 @@ export default function MyRentalsPage() {
                                                        
                                                    
                                                     <div className="check"> 
-                                                         <p>{new Date (rental.startDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - {new Date(rental.endDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
+                                                        <p>{new Date (rental.startDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - {new Date(rental.endDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
+                                                        
                                                     </div>
                               
                                                     <div className="check"> 
@@ -551,15 +468,16 @@ export default function MyRentalsPage() {
                                                             </button>
                                                             )}
                                                             
-
-                                                            { validCheckIn(rental) && (
+                                                            { validCheckIn(rental) && 
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckInRental(rental)}
                                                                 >
                                                                     Check-in
                                                                 </button>
-                                                            )}
+                                                            }
+                                                                
+                                                            
                                                            
                                                         </div>
                                                     ) }
@@ -573,8 +491,8 @@ export default function MyRentalsPage() {
                                                                 >
                                                                     Check-out
                                                                 </button>
-                                                                )
-                                                            }
+                                                            )}
+                                                            
                                                         </div>
                                                     )}
                                                     

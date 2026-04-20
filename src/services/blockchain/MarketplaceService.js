@@ -4,12 +4,14 @@ import { getProviderAndSigner } from "./WalletService";
 import { ethers } from "ethers";
 
 
-export const listNftProperty = async (tokenId, price, hoursForCheckIn) => {
+export const listNftProperty = async (tokenId, price, hoursIn, hoursOut) => {
     const { signer } = await getProviderAndSigner();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
-    const txList = await contract.listNftOnMarketplace(tokenId, price, hoursForCheckIn);
+    const txList = await contract.listNftOnMarketplace(tokenId, price, hoursIn, hoursOut,
+        { gasLimit: 400000  }
+    );
 
     return txList;
 };
@@ -24,6 +26,7 @@ export const delistNftProperty = async (tokenId) => {
     return txDelist;
 };
 
+/*
 export const updatePrice = async (tokenId, newPrice) => {
     const { signer } = await getProviderAndSigner();
 
@@ -34,6 +37,20 @@ export const updatePrice = async (tokenId, newPrice) => {
     return txUpdatePrice;
 };
 
+export const updateHours = async (tokenId, start, end) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const txUpdateHours = await contract.updateHoursToCheckIn(tokenId, start, end,
+        { gasLimit: 400000  }
+    );
+
+    return txUpdateHours;
+};
+
+*/
+/*
 export const updateHours = async (tokenId, newHours) => {
     const { signer } = await getProviderAndSigner();
 
@@ -42,6 +59,19 @@ export const updateHours = async (tokenId, newHours) => {
     const txUpdateHours = await contract.updateHoursToCheckIn(tokenId, newHours);
 
     return txUpdateHours;
+};
+*/
+
+export const updatePriceAndHours = async (tokenId, newPrice, startHours, endHours) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+
+    const txUpdate = await contract.updatePriceAndHours(tokenId, newPrice, startHours, endHours,
+         { gasLimit: 400000  }
+    );
+
+    return txUpdate;
 };
 
 

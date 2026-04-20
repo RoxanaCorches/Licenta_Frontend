@@ -25,6 +25,7 @@ export default function ReserveForms() {
 
     const [property, setProperty] = useState(null);
     const [tokenId, setTokenId] = useState(null);
+    
     const [rentalConfirmed, setRentalConfirmed] = useState(false);
     const [processingPayment, setProcessingPayment] = useState(false);
 
@@ -64,6 +65,8 @@ export default function ReserveForms() {
                 setProperty(data);
                 setTokenId(data.tokenId);
                 console.log("Token id:", data.tokenId);
+                console.log(data.checkInFrom);
+                console.log(data.checkInUntil);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -117,8 +120,13 @@ export default function ReserveForms() {
     
                 console.log("Token id:", tokenId);
 
+                
+
                 //const startDate = checkIn.toISOString().split("T")[0];
                 //const endDate = checkOut.toISOString().split("T")[0];
+
+                console.log("checkIn:", checkIn);
+                //console.log("check-in:",Math.floor(new Date(infoRental.startDate).getTime() / 1000) )
                 
                 const startDate = Math.floor(new Date(checkIn).getTime() / 1000);
                 const endDate = Math.floor(new Date(checkOut).getTime() / 1000);
@@ -258,7 +266,7 @@ export default function ReserveForms() {
                     <div className="form-group">
                         {!walletAddress ?  (<button 
                                                 type="button" 
-                                                className="botton-payment"
+                                                className="button-payment-eth"
                                                 onClick={connectWallet}
                                             >
                                                     Connect Wallet
