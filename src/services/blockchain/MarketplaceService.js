@@ -141,13 +141,13 @@ export const cancelRental = async (tokenId) => {
     return txCancel;
 };
 
-export const checkIn = async (tokenId) => {
+export const checkInBlockchain = async (tokenId, startDate) => {
     const { signer } = await getProviderAndSigner();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
     try {
-        await contract.callStatic.checkIn(tokenId);
+        await contract.callStatic.checkIn(tokenId, startDate);
     } catch(err) {
         const message =
         err.reason ||
@@ -157,11 +157,11 @@ export const checkIn = async (tokenId) => {
         throw new Error(message);
     }
 
-    const txCheckIn = await contract.checkIn(tokenId,  { gasLimit: 400000 });
+    const txCheckIn = await contract.checkIn(tokenId, startDate,  { gasLimit: 400000 });
     return txCheckIn;
 };
 
-export const checkOut = async (tokenId) => {
+export const checkOutBlockchain = async (tokenId) => {
     const { signer } = await getProviderAndSigner();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);

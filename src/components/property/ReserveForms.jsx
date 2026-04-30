@@ -104,7 +104,7 @@ export default function ReserveForms() {
                     setProcessingPayment(true);
                     return;
                 }
-        
+        // 1777755600     1777766400
                 const infoRental = {
                     firstName:data.firstName,
                     lastName:data.lastName,
@@ -117,7 +117,7 @@ export default function ReserveForms() {
                     apartmentId: idApartment,
                     transactionHash: ''
                 };
-    
+   
                 console.log("Token id:", tokenId);
 
                 
@@ -148,6 +148,13 @@ export default function ReserveForms() {
                     return;
                 }
 
+
+                console.log("TOKEN ID sent to rent:", tokenId);
+                console.log("START DATE sent to rent:", startDate);
+                console.log("END DATE sent to rent:", endDate);
+
+                console.log("Start local:", new Date(startDate * 1000).toString());
+                console.log("End local:", new Date(endDate * 1000).toString());
                 //setBlockchainStatus("book_property");
                 const tx = await rentNftProperty(tokenId, startDate, endDate, totalPriceInEth.toString());
                 console.log("tx:", tx);

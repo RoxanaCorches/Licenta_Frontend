@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
@@ -6,14 +6,14 @@ import { FaStar } from "react-icons/fa";
 import {cancelRentalFromBackend, checkInRentalFromBackend, checkOutRentalFromBackend, getRentalsForUserById } from "../services/backend/RentalService";
 import { getUserById } from "../services/backend/UsersService";
 import { useWallet } from "../hooks/WalletContext";
-import { cancelRental, checkIn, checkOut } from "../services/blockchain/MarketplaceService";
+import { cancelRental, checkInBlockchain, checkOutBlockchain } from "../services/blockchain/MarketplaceService";
 import { createReview } from "../services/backend/ReviewService";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaLockOpen } from "react-icons/fa6";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
 import { CgNametag } from "react-icons/cg";
-
+import { RentalContext } from "../hooks/RentalContext";
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
@@ -33,6 +33,8 @@ export default function MyRentalsPage() {
     const [statusBlockchain, setStatusBlockchain] = useState("idle");
 
     const { account } = useWallet();
+
+    const { checkIn } = useContext(RentalContext);
 
     const rentalsStatus = rentals?.filter(rental => {
         if(active === "upcoming") return rental.status === "UPCOMING";
@@ -69,6 +71,8 @@ export default function MyRentalsPage() {
                 
                 setRentals(myRentals);
                 console.log("Info for rentals:", myRentals);
+
+                console.log(myRentals.startDate);
                 
             } catch (err) {
                 setError(err.message);
@@ -119,6 +123,10 @@ export default function MyRentalsPage() {
             setLoading(false);
     }
     }
+
+    
+
+
 
     const handleCancelRental =  async (apartment) => {
         console.log("Cancel rantal for apartment:", apartment);
@@ -174,7 +182,12 @@ export default function MyRentalsPage() {
 
             try {
                 setStatusBlockchain("checkIn_rental");
-                const txCheckIn =  await checkIn(tokenId);
+                console.log("checkin", apartment.startDate);
+                
+                //const startDate = Math.floor(new Date(`${apartment.startDate}T${apartment.checkInFrom}`).getTime() / 1000);
+                const startDate = Math.floor(new Date(`${apartment.startDate}T00:00:00`).getTime() / 1000);
+                console.log("startDate:", startDate);
+                const txCheckIn =  await checkInBlockchain(tokenId, startDate);
                 setStatusBlockchain("checking_in_rental");
 
                 await new Promise(r => setTimeout(r, 2000));
@@ -212,7 +225,7 @@ export default function MyRentalsPage() {
 
             try {
                 setStatusBlockchain("checkOut_rental");
-                const txCheckOut =  await checkOut(tokenId);
+                const txCheckOut =  await checkOutBlockchain(tokenId);
                 setStatusBlockchain("checking_out_rental");
 
                 await new Promise(r => setTimeout(r, 2000));
@@ -438,7 +451,6 @@ export default function MyRentalsPage() {
                               
                                                 <div className="rental-information">
                                                     <p className="rental-name">{rental.title} - {rental.city}, {rental.country}</p>
-                                                       
                                                    
                                                     <div className="check"> 
                                                         <p>{new Date (rental.startDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} - {new Date(rental.endDate).toLocaleDateString("en-US",{ year:"numeric", month:"short", day:"numeric"})} </p>
@@ -468,15 +480,13 @@ export default function MyRentalsPage() {
                                                             </button>
                                                             )}
                                                             
-                                                            { validCheckIn(rental) && 
+                                                            
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckInRental(rental)}
                                                                 >
                                                                     Check-in
                                                                 </button>
-                                                            }
-                                                                
                                                             
                                                            
                                                         </div>
@@ -484,14 +494,14 @@ export default function MyRentalsPage() {
 
                                                     { active === "progress" && (
                                                         <div className="buttons-status-rentals"> 
-                                                            { validCheckOut(rental) && (
+                                                           
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckOutRental(rental)}
                                                                 >
                                                                     Check-out
                                                                 </button>
-                                                            )}
+                                                          
                                                             
                                                         </div>
                                                     )}
@@ -619,7 +629,7 @@ export default function MyRentalsPage() {
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
-                        <p>{errorCheckIn}!</p>
+                        <p>{errorCheckIn}</p>
                         <button 
                             className="try-again"
                             type="button"
@@ -636,6 +646,7 @@ export default function MyRentalsPage() {
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
+                         <p>{errorCheckIn}!</p>
                         
                         <button 
                             className="try-again"
