@@ -17,6 +17,7 @@ import { LuMessageCircle } from "react-icons/lu";
 export default function Navbar() {
     const { account, connectWallet, disconnectWallet } = useWallet();
     const [panelInfo, setPanelInfo] = useState(false);
+    const [panelProperty, setPanelProperty] = useState(false);
 
     //const walletAddress = account || localStorage.getItem("walletAddress");
     const walletAddress = account;
@@ -27,6 +28,10 @@ export default function Navbar() {
         setPanelInfo(!panelInfo);
     };
 
+    const dropdownPanelProperty = (e) => {
+        e.preventDefault();
+        setPanelProperty(!panelProperty);
+    };
     
     const logout = () => {
     disconnectWallet();
@@ -51,28 +56,40 @@ export default function Navbar() {
                         </NavLink>
                     </li>
 
-                     <li className="navbar-item">
-                        {walletAddress ? (
-                        <NavLink 
-                            to="/listYourProperty" 
-                            className = {({ isActive }) => 
-                                `navbar-link ${isActive ? 'active' : ''}`
-                            }
-                        >
-                            <FaHome className="navbar-icon"/>
-                            <span>List your property</span>
-                        </NavLink>
+                    <div className="navbar-item">
+                            {walletAddress ? (
+                                <div className="container-wrapper-info"> 
+                                <div className="navbar-container-info"> 
+                                    <span onClick = {dropdownPanelProperty} className="navbar-button-active">
+                                         <FaHome className="navbar-icon"/>
+                                         List your property</span>
+                                </div>
+
+                                {panelProperty && (
+                                    <div className="search-panel-info">
+                                        <NavLink to="/listNewProperty" className="navbar-link-option">
+                                            <FaUser className="navbar-icon"/>
+                                            <span>List new property</span>
+                                        </NavLink>    
+
+                                        <NavLink to="/listExistingProperty" className="navbar-link-option">
+                                            <FaUser className="navbar-icon"/>
+                                            <span>List existing property</span>
+                                        </NavLink>   
+                                    </div>    
+                                )}
+                                </div>
                         ) : (<NavLink 
                             to="/about" 
                             className = {({ isActive }) => 
                                 `navbar-link ${isActive ? 'active' : ''}`
                             }
-                        >
-                            <FaHome className="navbar-icon" />
-                            <span>About</span>
-                        </NavLink>
-                    )}
-                    </li>
+                            >
+                                <FaHome className="navbar-icon" />
+                                <span>About</span>
+                            </NavLink>
+                        )}
+                    </div>
 
                     <li className="navbar-item">
                         <NavLink 

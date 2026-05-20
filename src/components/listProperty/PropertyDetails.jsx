@@ -1,5 +1,10 @@
 export default function PropertyDetails({data, completeData, prevStep, nextStep}){
 
+    const isValid = data.guests !== "" &&
+                    data.bedrooms !== "" &&
+                    data.bathrooms !== "";
+                   
+
     return(
         <div className="form-section"> 
                     <div className="form-section-options"> 
@@ -34,7 +39,12 @@ export default function PropertyDetails({data, completeData, prevStep, nextStep}
 
                 <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={prevStep}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
+                        <button 
+                            type="button" 
+                            className="form-next-button" 
+                            onClick={nextStep}
+                            disabled={!isValid}
+                        >Next</button>
                     </div>
                 </div>
     );

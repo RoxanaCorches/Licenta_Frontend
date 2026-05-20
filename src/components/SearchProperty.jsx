@@ -12,8 +12,8 @@ import LocationFilter from "./LocationFilter";
 export default function SearchProperty ({onSearchProperties}){
     const [panelLocation, setPanelLocation] = useState(false);
     const [panelDate, setPanelDate] = useState(false);
-    const [checkIn, setCheckIn] = useState();
-    const [checkOut, setCheckOut] = useState();
+    const [checkIn, setCheckIn] = useState(null);
+    const [checkOut, setCheckOut] = useState(null);
     const [panelMembers, setPanelMembers] = useState(false);
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
@@ -56,6 +56,12 @@ export default function SearchProperty ({onSearchProperties}){
         rooms
        });
     };
+
+    const isValid = location.trim() !== "" &&
+                    checkIn  !== null &&
+                    checkOut !== null &&
+                    guests >= 2 && 
+                    rooms >= 1;
     
     return(
         <div className="search-container"> 
@@ -213,6 +219,7 @@ export default function SearchProperty ({onSearchProperties}){
             <button 
                 className="button-search"
                 onClick={handleSearchProperties}
+                disabled={!isValid}
             >
                 Search
             </button>

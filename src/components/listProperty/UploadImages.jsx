@@ -2,6 +2,7 @@ import { TbPhotoShare } from "react-icons/tb";
 import { FaCameraRetro } from "react-icons/fa";
 
 export default function UploadImages({data, completeData}) {
+
     const handleUploadeMainImage = (e) => {
         const image = e.target.files[0];
 

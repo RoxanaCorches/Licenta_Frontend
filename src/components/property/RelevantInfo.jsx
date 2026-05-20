@@ -3,7 +3,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 import { FaUsers } from "react-icons/fa";
 import Calendar from "../Calendar";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { getApartmentById } from "../../services/backend/ApartmentService";
 import { MdOutlinePets } from "react-icons/md";
@@ -35,6 +35,8 @@ export default function RelevantInfo() {
 
     const { account } = useWallet();
     const { checkIn, checkOut, nrNights } = useContext(RentalContext);
+
+    const navigate = useNavigate();
 
     const listAmenities = [
         { key: "tv", label: "TV" },
@@ -114,6 +116,12 @@ export default function RelevantInfo() {
 
         return  average;
     }
+
+    const totalPrice = nrNights * property?.pricePerNight;
+    const validReserve = nrNights > 0 && 
+                         property?.pricePerNight &&
+                         totalPrice > 0;
+
 
     const averageRating = reviews?.length > 0 ? calculateRting(reviews) : "No reviews yet";
 
@@ -236,15 +244,24 @@ export default function RelevantInfo() {
                                     </p>
 
                                     <p className="dates">{property?.pricePerNight} ETH × {nrNights} nights  </p>
-                                    <p className="total-price"> <span> Total</span> {nrNights * property?.pricePerNight} ETH</p>
+                                    { validReserve && (
+                                        <p className="total-price"> <span> Total</span> {totalPrice} ETH</p>
+                                    )}
                                 </div>
                             )}
                         </div>
 
                         <div className="reserve-button">
-                            <Link to={`/properties/property/${idApartment}/reserve`}>
-                                <button>Reserve now</button>
-                            </Link>
+                            <button
+                                onClick={() => {
+                                    if(validReserve) {
+                                        navigate(`/properties/property/${idApartment}/reserve`);
+                                    }
+                                }}
+                                disabled={!validReserve}
+                             >  
+                                Reserve now
+                            </button>
                         </div>
                         
                     </div>

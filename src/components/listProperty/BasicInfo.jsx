@@ -7,6 +7,12 @@ export default function BasicInfo({data, completeData, nextStep}) {
             completeData({[name]: type === "checkbox" ? checked : value});
         };
 
+    const isValid = data.propertyType.trim() !== "" &&
+                    data.listingTitle.trim() !== "" &&
+                    data.description.trim() !== "" &&
+                    data.area.trim() !== "" &&
+                    data.price.trim() !== "";
+                    
     return(
      <div> 
         <div className="form-section"> 
@@ -108,7 +114,14 @@ export default function BasicInfo({data, completeData, nextStep}) {
                     </div>
                 </div>
                 <div className="form-buttons">
-                        <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
+                        <button 
+                            type="button" 
+                            className="form-next-button" 
+                            onClick={nextStep}
+                            disabled={!isValid}
+                        >
+                            Next
+                        </button>
                 </div>
     </div>
     );

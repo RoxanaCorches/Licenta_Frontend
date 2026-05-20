@@ -18,8 +18,7 @@ import { MdOutlineSell } from "react-icons/md";
 import { ethers } from "ethers";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
-
-export default function ListYourPropertyPage() {
+export default function ListNewPropertyPage() {
     const [step, setStep] = useState(1);
     const [statusBlockchain, setStatusBlockchain] = useState("start");
 
@@ -54,9 +53,9 @@ export default function ListYourPropertyPage() {
             skiOut:false,
             lakeAccess:false,
             beachAccess:false,
-            pet: false,
-            smoking: false,
-            parties: false,
+            pet: null,
+            smoking: null,
+            parties: null,
             hourCheckInFrom: "15:00",
             hourCheckInUntil: "18:00",
             hourCheckOutFrom: "10:00",
@@ -250,6 +249,10 @@ export default function ListYourPropertyPage() {
             }
         }
 
+        const isValidListing = data.mainImage !== null &&
+                                data.otherImage.length >= 2;
+                                
+
     return(
         <form>  
         {error && <div className="error-info">
@@ -345,7 +348,7 @@ export default function ListYourPropertyPage() {
                             type="button" 
                             className="form-next-button" 
                             onClick={handleSubmit}
-                            disabled={loading}    
+                            disabled={!isValidListing}    
                         >
                             {loading ?
                             (

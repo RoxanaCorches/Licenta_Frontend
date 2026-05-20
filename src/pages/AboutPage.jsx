@@ -3,7 +3,7 @@ import img2 from "../assets/10.jpg";
 import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 
-export default function About() {
+export default function AboutPage() {
 
     const [loading, setLoading] = useState(true);
     return(

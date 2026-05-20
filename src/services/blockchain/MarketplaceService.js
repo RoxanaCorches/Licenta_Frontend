@@ -3,7 +3,17 @@ import  MarketplaceAbi  from "../../blockchain/abi/MarketplaceAbi.json";
 import { getProviderAndSigner } from "./WalletService";
 import { ethers } from "ethers";
 
+/*
+export const getMarketplaceContract = async () => {
+  const { signer } = await getProviderAndSigner();
 
+  return new ethers.Contract(
+    MARKETPLACEADDRESS,
+    MarketplaceAbi,
+    signer
+  );
+};
+*/
 export const listNftProperty = async (tokenId, price, hoursIn, hoursOut) => {
     const { signer } = await getProviderAndSigner();
 

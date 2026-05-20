@@ -9,36 +9,7 @@ import { GiPoolTableCorner, GiGrandPiano  } from "react-icons/gi";
 
 
 export default function Facilities({data, completeData, prevStep, nextStep}) {
-    /*
-         const [data, setData] =useState({
-            tv: '',
-            wifi: '',
-            airConditioning: '',
-            kitchen:'',
-            washer:'',
-            pool:'',
-            hotTub:'',
-            bbqGrill:'',
-            poolTable:'',
-            indoorFireplace:'',
-            piano:'',
-            lakeAccess:'',
-            beachAccess:'',
-            skiOut:'',
-            balcony:'',
-            gardenView:'',
-            terrace:''
-        });
-    */
-        //const [loading] = useState(false);
-        //const [error, setError] = useState('');
-         /*
-        const handleChange = (e) => {
-            const { name, value} = e.target;
-            setData(prev => ({...prev, [name]: value}));
-        };
 
-         */  
         const handleChange = (e) => {
             const {name, value, type, checked} = e.target;
             completeData({ [name]: type === 'checkbox' ? checked : value});
@@ -305,7 +276,13 @@ export default function Facilities({data, completeData, prevStep, nextStep}) {
         </div>
         <div className="form-buttons">
             <button type="button" className="form-prev-button" onClick={prevStep}>Previous</button>
-            <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
+            <button 
+                type="button" 
+                className="form-next-button" 
+                onClick={nextStep}
+                >
+                    Next
+                </button>
         </div>
     </div>
     );

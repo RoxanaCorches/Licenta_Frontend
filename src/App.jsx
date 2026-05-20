@@ -3,7 +3,7 @@ import StartPage from './pages/StartPage';
 import PropertiesPage from "./pages/PropertiesPage"
 import { ConnectWallet } from "./components/ConnectWallet";
 import KYCFormPage from "./pages/KYCFormPage";
-import ListYourPropertyPage from "./pages/ListYourPropertyPage";
+import ListNewPropertyPage from "./pages/ListNewPropertyPage";
 import MyAccountPage from "./pages/MyAccountPage";
 import MyRentalsPage from "./pages/MyRentalsPage";
 import MyWalletPage from "./pages/MyWalletPage";
@@ -13,8 +13,9 @@ import MyListingsPage from "./pages/MyListingsPage";
 import MyReviewPage from "./pages/MyReviewPage";
 import { RentalProvider } from "./hooks/RentalContext";
 import Layout from "./components/Layout";
-import About from "./pages/About";
+import About from "./pages/AboutPage";
 import SupportPage from "./pages/SupportPage";
+//import ListExistingPropertyPage from "./pages/ListExistingProperty";
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
           <Route path="/properties" element={<PropertiesPage />} />
           <Route path="/properties/property/:idApartment" element={<PropertyInfo />} />
           <Route path="/properties/property/:idApartment/reserve" element={<ReservePage />} />
-          <Route path="/listYourProperty" element={<ListYourPropertyPage />} />
+          <Route path="/listNewProperty" element={<ListNewPropertyPage />} />
+         
           <Route path="/support" element={<SupportPage />} />
           <Route path="/myAccount" element={<MyAccountPage />} />
           <Route path="/myRentals" element={<MyRentalsPage />} />
@@ -37,7 +39,6 @@ function App() {
           <Route path="/myWallet" element={<MyWalletPage />} />
           <Route path="/myReviews" element={<MyReviewPage />} />
         </Route>
-        
     </Routes>
     </BrowserRouter>
     </ConnectWallet>

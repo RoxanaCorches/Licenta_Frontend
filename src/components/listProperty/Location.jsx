@@ -12,6 +12,12 @@ export default function Location({data, completeData, prevStep, nextStep}){
                 completeData({ [name]: value});
             };
 
+            const isValid = data.country.trim() !== "" &&
+                    data.numberFloor.trim() !== "" &&
+                    data.street.trim() !== "" &&
+                    data.city.trim() !== "" &&
+                    data.zipCode.trim() !== "";
+
             return(
             <div className="form-section"> 
                     <div className="form-group">
@@ -110,7 +116,14 @@ export default function Location({data, completeData, prevStep, nextStep}){
 
                      <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={prevStep}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
+                        <button 
+                            type="button" 
+                            className="form-next-button" 
+                            onClick={nextStep}
+                            disabled={!isValid}
+                        >
+                            Next
+                        </button>
                     </div>           
 
                 </div>

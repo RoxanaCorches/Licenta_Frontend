@@ -33,7 +33,11 @@ export default function HouseRules({data, completeData, prevStep, nextStep}) {
             const {name, type, value, checked} = e.target;
             completeData({[name]: type === "checkbox" ? checked : value});
         }
-        
+
+    const isValid = data.pet !== null &&
+                    data.smoking !== null &&
+                    data.parties !== null;
+                    
     return(
         <div className="form-section"> 
             <div className="form-section-options"> 
@@ -240,7 +244,14 @@ export default function HouseRules({data, completeData, prevStep, nextStep}) {
 
                     <div className="form-buttons">
                         <button type="button" className="form-prev-button" onClick={prevStep}>Previous</button>
-                        <button type="button" className="form-next-button" onClick={nextStep}>Next</button>
+                        <button 
+                            type="button" 
+                            className="form-next-button" 
+                            onClick={nextStep}
+                            disabled={!isValid}
+                        >
+                            Next
+                        </button>
                     </div>
             </div>
     );

@@ -82,6 +82,10 @@ export default function ReserveForms() {
         navigate(`/properties/property/${idApartment}`);
     }
 
+    const isValid = data.firstName.trim() !== "" &&
+                    data.lastName.trim() !== "" &&
+                    data.phoneNumber.trim() !== "";
+
     const handleSubmitReserve = async (e) => {
             e.preventDefault();
             setError('');
@@ -104,7 +108,6 @@ export default function ReserveForms() {
                     setProcessingPayment(true);
                     return;
                 }
-        // 1777755600     1777766400
                 const infoRental = {
                     firstName:data.firstName,
                     lastName:data.lastName,
@@ -196,7 +199,7 @@ export default function ReserveForms() {
                  setProcessingPayment(false);
             }
         }
-         
+         /*
     if (error) 
         return (
             <div className="error-info">
@@ -204,7 +207,7 @@ export default function ReserveForms() {
                 <p className="description-error">{error}!</p>
             </div>
         );
-
+*/
     return(
         <form onSubmit={handleSubmitReserve}> 
         {loading ? (
@@ -261,7 +264,14 @@ export default function ReserveForms() {
                     </div>
                 </div>
                 <div className="form-buttons">
-                        <button type="button" className="form-next-button" onClick={() => setStep(2)}>Next</button>
+                        <button 
+                            type="button" 
+                            className="form-next-button" 
+                            onClick={() => setStep(2)} 
+                            disabled={!isValid}
+                        >
+                            Next
+                        </button>
                 </div>
             </div>
             )}
@@ -368,7 +378,6 @@ export default function ReserveForms() {
                             onClick = {() => handleTryAgain(property.idApartment)}
                         >
                             Try again
-
                         </button>
                     </div>
                 </div>

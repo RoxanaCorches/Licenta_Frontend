@@ -3,37 +3,29 @@ import { MARKETPLACEADDRESS, PROPERTYNFTADDRESS } from "../../blockchain/config/
 import  PropertyNftAbi  from "../../blockchain/abi/PropertyNftAbi.json";
 import { getProviderAndSigner } from "./WalletService";
 
+/*
+export const getNftContract = async () => {
+  const { signer } = await getProviderAndSigner();
+
+  return new ethers.Contract(
+    PROPERTYNFTADDRESS,
+    PropertyNftAbi,
+    signer
+  );
+};
+*/
+
 export const mintNftProperty = async (metadataUrl) => {
     const { signer } = await getProviderAndSigner();
     const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
     const walletAddress = await signer.getAddress();
 
-    // --- trimite tranzacția de mint ---
     const txMint = await contract.mint(walletAddress, metadataUrl, {
-        gasLimit: 500_000 // sau un număr mai mare dacă știi că mint-ul e costisitor
+        gasLimit: 500_000 
     })
     console.log("Mint tx hash:", txMint.hash);
-
-    // --- așteaptă confirmarea tranzacției ---
-    //const receipt = await txMint.wait();
-    //console.log("Transaction confirmed:", receipt.transactionHash);
-
-    // --- extrage tokenId din event-ul Minted ---
-    /*
-    let tokenId = null;
-    console.log("Events:", receipt.events);
-    for (const event of receipt.events) {
-        if (event.event === "Minted") {
-            tokenId = event.args.tokenId;
-            break;
-        }
-    }
-
-    if (!tokenId) throw new Error("Nu am găsit tokenId în event-ul Minted");
-
-    return {txMint, tokenId, metadataUrl };
-    */
-   return txMint;
+    
+    return txMint;
 };
 
 export const approveMarketplace = async () => {
@@ -43,8 +35,6 @@ export const approveMarketplace = async () => {
 
     const txApprove = await contract.setApprovalForAll(MARKETPLACEADDRESS, true);
     console.log("Approval tx hash:", txApprove.hash);
-
-    //await txApprove.wait();
 
     return txApprove;
 };

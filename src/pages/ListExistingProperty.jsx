@@ -1,8 +1,9 @@
+/*
 import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
-import { delistNftProperty, updatePriceAndHours } from "../services/blockchain/MarketplaceService";
-import { deleteApartment, updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
+import { delistNftProperty, getMarketplaceContract } from "../services/blockchain/MarketplaceService";
+import { deleteApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -12,8 +13,10 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
+import { ethers } from "ethers";
 
-export default function MyListingsPage() {
+
+export default function ListExistingPropertyPage() {
     const [myListings, setMyListings] = useState([]);
     const [nrListings, setNrListings] = useState(3);
     const [selectedProperty, setSelectedProperty] = useState(null);
@@ -49,101 +52,39 @@ export default function MyListingsPage() {
     })
 
 
-    const openModal = (apartment) => {
-        setSelectedProperty(apartment);
-    setEditData({
-        
-        checkInFrom: apartment.checkInFrom,
-        checkInUntil: apartment.checkInUntil,
-        
-    });
-    console.log("CHECK IN FROM:", apartment.checkInFrom);
+   
+useEffect(() => {
+  if (!account) {
+    console.log("Waiting for wallet...");
+    return;
+  }
 
-    setEditInfo(true);
-    };
+  const load = async () => {
+    console.log("Loading for account:", account);
 
-    
+    const marketplaceContract = await getMarketplaceContract();
+    const data = await getUserById(account);
 
-    useEffect(() => {
-        if(!account) return;
-        const loadInfoUser = async () => {
-            try {
-                setLoading(true);
-                const data = await getUserById(account);
-                setMyListings(data);
-                console.log(myListings);
-                console.log("Info:", data);
-                console.log("My listings:", data.apartmentList);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadInfoUser();
-    }, [account]);
+    console.log("DATA:", data);
 
-     const handleTryAgain =  () => {
-        setTimeout(() => {
-            setStatusBlockchain("idle");
-        }, 2000);
-    }
+    const enriched = await Promise.all(
+      data.apartmentList.map(async (item) => {
+        const tokenId = Number(item.tokenId);
 
-    const handleUpdate = async() => {
-        const {idApartment, tokenId } = selectedProperty;
+        if (!tokenId) return { ...item, isListed: false };
 
-        if (!idApartment || !tokenId) {
-            console.error("Invalid apartment info!", selectedProperty);
-            return;
-        } 
-        try {
-            setStatusBlockchain("update_info");
+        const isListed = await marketplaceContract.isNftListed(tokenId);
 
-            const hoursIn = parseInt(editData.checkInFrom.split(":")[0]);
-            const hoursOut = parseInt(editData.checkInUntil.split(":")[0]);
+        return { ...item, isListed };
+      })
+    );
 
-            const txUpdate = await updatePriceAndHours(selectedProperty.tokenId, newPrice, hoursIn, hoursOut);
-            
-            console.log("editData.checkInFrom", editData.checkInFrom);
-            console.log("editData.checkInUntil", editData.checkInUntil);
-            
-            console.log("hoursIn", hoursIn);
-            console.log("hoursOut", hoursOut);
+    setMyListings(enriched.filter(p => !p.isListed));
+ 
+  };
 
-            setStatusBlockchain("updating_info");
-
-            await new Promise(r => setTimeout(r, 2000));
-
-            await txUpdate.wait();
-
-            await updatePriceAndHoursApartment(idApartment, 
-                {
-                pricePerNight: Number(newPrice),
-                checkInFrom: editData.checkInFrom,
-                checkInUntil: editData.checkInUntil
-            });
-
-            const data = await getUserById(account);
-
-            setMyListings(data);
-
-            setStatusBlockchain("success_update_info");
-
-            setNewPrice("");
-            setEditInfo(false);
-
-            setTimeout(() => {
-                navigate("/myListings");
-                setStatusBlockchain("idle");
-            }, 2000);
-
-        } catch(err){
-            console.log(err);
-            setStatusBlockchain("error_update_info");
-            setNewPrice("");
-            setEditInfo(false);
-        }
-    };
+  load();
+}, [account]);
 
     const handleDelistProperty = async (apartment) => {
             console.log("Delete apartment:", apartment);
@@ -217,12 +158,12 @@ export default function MyListingsPage() {
     return (
         <div>
             <div className="wrapper-yourAccount">
-                <Sidebar />
+              
                 <div className="main-container">
                     <div className="bottom">
                         <div >
                             <div className="bottom-title">
-                                <h2>My listings</h2>
+                                <h2>My Properties</h2>
                             </div>
 
                             <div className="rentals-content">
@@ -257,19 +198,9 @@ export default function MyListingsPage() {
                                                         <div className="buttons-status-rentals"> 
                                                                 <button 
                                                                     className="button-review"
-                                                                    onClick={() => {
-                                                                        setEditInfo(true);
-                                                                        setSelectedProperty(apartment);
-                                                                        openModal(apartment);
-                                                                    }}    
-                                                                >
-                                                                    Update
-                                                                </button>
-                                                                <button 
-                                                                    className="button-review"
                                                                     onClick={() => handleDelistProperty(apartment)}
                                                                 >
-                                                                    Delist
+                                                                    List
                                                                 </button>
                                                         </div>
                                                     </div>
@@ -506,3 +437,5 @@ export default function MyListingsPage() {
      </div>   
     );
 }
+
+*/

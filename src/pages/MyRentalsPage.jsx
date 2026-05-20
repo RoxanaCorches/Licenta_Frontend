@@ -25,6 +25,8 @@ export default function MyRentalsPage() {
     const [hoverStars, setHoverStars] = useState(0);
     const [rating, setRating] = useState(1);
     const [feedback, setFeedback] = useState("");
+
+    const [reviewedRentals, setReviewedRentals] = useState([]);
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -111,6 +113,7 @@ export default function MyRentalsPage() {
        
             console.log(selectedRental)
             await createReview(addReviewInfo);
+            setReviewedRentals(prev => [...prev, selectedRental.rentalId]);
 
             alert("Review posted!")
             setCompleteFeedback(false);
@@ -123,10 +126,6 @@ export default function MyRentalsPage() {
             setLoading(false);
     }
     }
-
-    
-
-
 
     const handleCancelRental =  async (apartment) => {
         console.log("Cancel rantal for apartment:", apartment);
@@ -480,41 +479,39 @@ export default function MyRentalsPage() {
                                                             </button>
                                                             )}
                                                             
-                                                            
+                                                            { validCheckIn(rental) && (
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckInRental(rental)}
                                                                 >
                                                                     Check-in
                                                                 </button>
-                                                            
-                                                           
+                                                            )}
                                                         </div>
                                                     ) }
 
                                                     { active === "progress" && (
                                                         <div className="buttons-status-rentals"> 
-                                                           
+                                                           { validCheckOut(rental) && (
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckOutRental(rental)}
                                                                 >
                                                                     Check-out
                                                                 </button>
-                                                          
-                                                            
+                                                           )}
                                                         </div>
                                                     )}
                                                     
                                                     { active === "completed" && 
                                                         (
-                                                            <button 
-                                                                className="button-review"
-                                                                onClick={() => handleReview(rental)}
-                                                                disabled={loading}
-                                                            >   
-                                                                Review
-                                                            </button>
+                                                            <button
+                                                            className="button-review"
+                                                            onClick={() => handleReview(rental)}
+                                                            disabled={loading || reviewedRentals.includes(rental.rentalId)}
+                                                            >
+                                                            {reviewedRentals.includes(rental.rentalId) ? "Reviewed" : "Review"}
+                                                        </button>
                                                         ) 
                                                     }
                                                     </div>

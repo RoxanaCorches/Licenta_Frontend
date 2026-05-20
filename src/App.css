@@ -559,6 +559,11 @@ color: rgb(12, 1, 1);
   transform: translateY(0);
 }
 
+.button-search:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
 .propertiesImages-container {
   margin-left: 30px;
   margin-right: 30px;
@@ -772,6 +777,11 @@ color: rgb(12, 1, 1);
 .reserve-button button:hover {
   background: linear-gradient(135deg, #641ae4 0%, #965cfb 100%);
   cursor: pointer;
+}
+
+.reserve-button button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .info-images {
@@ -1295,6 +1305,10 @@ color: rgb(12, 1, 1);
   border: none;
 }
 
+.form-next-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 
 .form-prev-button {
   background: white;
