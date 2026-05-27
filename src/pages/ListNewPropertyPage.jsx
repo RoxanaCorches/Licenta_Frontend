@@ -74,7 +74,7 @@ export default function ListNewPropertyPage() {
     };
 
     const handleTryAgain =  () => {
-        navigate(`/listYourProperty`);
+        navigate(`/listNewProperty`);
     }
     
     const convertHours = (checkInFrom) => {
@@ -83,12 +83,15 @@ export default function ListNewPropertyPage() {
     }
 
     const handleSubmit = async (e) => {
+        let receipt = null;
+        let tokenId = null; 
+        try{
             e.preventDefault();
             setError('');
             setLoading(true);
             console.log("Form:", data);
 
-            try{
+            
                 const images = [];
                 if(data.mainImage)
                     images.push(data.mainImage);
@@ -152,44 +155,49 @@ export default function ListNewPropertyPage() {
                     image4: imageName[4],
                 };
             
-               
-                let response = await createApartment(addInfoApartment, images);
-                const metadataUrl = response.metadataUrl;
-                console.log("MetadataUrl:", metadataUrl);
-                const idApartment = response.idApartment;
+             
+                    let response = await createApartment(addInfoApartment, images);
+                    const metadataUrl = response.metadataUrl;
+                    console.log("MetadataUrl:", metadataUrl);
+                    const idApartment = response.idApartment;
+                  try {
+                    setStatusBlockchain("mint_nft");
+                    //const { tokenId } = await mintNftProperty(metadataUrl);
+                    const  txMint  = await mintNftProperty(metadataUrl);
+                    setStatusBlockchain("minting_nft");
 
-                setStatusBlockchain("mint_nft");
-                //const { tokenId } = await mintNftProperty(metadataUrl);
-                const  txMint  = await mintNftProperty(metadataUrl);
-                setStatusBlockchain("minting_nft");
+                    await new Promise(r => setTimeout(r, 100));
 
-                await new Promise(r => setTimeout(r, 100));
-
-                const receipt = await txMint.wait();
-                //console.log("Transaction confirmed:", receipt.transactionHash);
-
-                // --- extrage tokenId din event-ul Minted ---
+                     receipt = await txMint.wait();
+               } catch(errorMint) {
+                    console.log(errorMint);
+                    setStatusBlockchain("error_nft");
+                    setLoading(false);
+               }
                 
-                let tokenId = null;
-                console.log("Events:", receipt.events);
-                for (const event of receipt.events) {
-                    if (event.event === "Minted") {
-                        tokenId = event.args.tokenId;
-                        break;
+               try{
+                    
+                    console.log("Events:", receipt.events);
+                    for (const event of receipt.events || []) {
+                        if (event.event === "Minted") {
+                            tokenId = event.args.tokenId;
+                            break;
+                        }
                     }
+
+                    if (!tokenId) throw new Error("Nu am găsit tokenId în event-ul Minted");
+
+                    //alert("NFT property minted!");
+                    console.log("Apartment created, tokenId:", tokenId, "Metadata URL:", metadataUrl);
+
+                    const saveApartmentComplet = {
+                        ...addInfoApartment, metadataUrl, tokenId: tokenId?.toString(), idApartment: idApartment,
+                    };
+
+                    await createApartment(saveApartmentComplet, images);
+                } catch(error) {
+                    console.log(error);
                 }
-                //await txMint.wait();
-
-                if (!tokenId) throw new Error("Nu am găsit tokenId în event-ul Minted");
-
-                //alert("NFT property minted!");
-                console.log("Apartment created, tokenId:", tokenId, "Metadata URL:", metadataUrl);
-
-                const saveApartmentComplet = {
-                    ...addInfoApartment, metadataUrl, tokenId: tokenId.toString(), idApartment: idApartment,
-                };
-
-                await createApartment(saveApartmentComplet, images);
                 const priceWei = ethers.utils.parseEther(String(data.price || "0"));
                 //const checkInHour = Number(data.hourCheckInFrom.split(":")[0]);
 
@@ -209,50 +217,67 @@ export default function ListNewPropertyPage() {
                 console.log("tokenId:", tokenId.toString?.() ?? String(tokenId));
                 console.log("priceWei:", priceWei.toString());
 
-                console.log("Approving marketplace...");
+                try{
+                    console.log("Approving marketplace...");
 
-                setStatusBlockchain("approve_wallet");
-                const txApprove  =  await approveMarketplace();; 
-                setStatusBlockchain("approving_wallet");
+                    setStatusBlockchain("approve_wallet");
+                    const txApprove  =  await approveMarketplace();; 
+                    setStatusBlockchain("approving_wallet");
 
-                await new Promise(r => setTimeout(r, 2000));
+                    await new Promise(r => setTimeout(r, 2000));
 
-                await txApprove.wait();
+                    await txApprove.wait();
 
-                console.log("Marketplace approved.");
+                    console.log("Marketplace approved.");
 
-                setStatusBlockchain("list_nft");
-                const  txList  = await listNftProperty(tokenId, priceWei, hoursIn, hoursOut);
-                setStatusBlockchain("listing_nft");
-                await new Promise(r => setTimeout(r, 2000));
+                } catch(approveError) {
+                    console.log("Approve failed:", approveError);
+                    alert("Approve failed!");
+                    setTimeout(() => {
+                        navigate("/listExistingProperty", { replace: true });
+                    }, 2000);
+                    return;
+                }
 
-                await txList.wait();
-                
+                try{
+                    setStatusBlockchain("list_nft");
+                    const  txList  = await listNftProperty(tokenId, priceWei, hoursIn, hoursOut);
+                    setStatusBlockchain("listing_nft");
 
-                setStatusBlockchain("success_nft");
+                    await new Promise(r => setTimeout(r, 2000));
 
-                console.log("NFT listed successfully!");
+                    await txList.wait();
 
-                //alert("Apartment listed!");
+                    setStatusBlockchain("success_nft");
 
-                setTimeout(() => {
-                     navigate("/myListings");
-                }, 5000);
+                    console.log("NFT listed successfully!");
 
-            } catch (error) {
-                console.error("Error in handleSubmit:", error);
-                setError(`Error create apartment: ${error.message}`);
-                alert(`Error: ${error.message}`);
-                setStatusBlockchain("error_nft");
-            } finally {
-                setLoading(false);
-            }
+                    setTimeout(() => {
+                        navigate("/myListings");
+                    }, 5000);
+
+                } catch (listError) {
+                    console.log("Error to list nft!", listError);
+                    alert("Error to list nft!");
+                    setTimeout(() => {
+                        navigate("/listExistingProperty", { replace: true });
+                    }, 2000);
+                    return;
+                }
+
+            }catch (error) {
+                    console.error("Error in handleSubmit:", error);
+                    
+                    //alert(`Error: ${error.message}`);
+                    setStatusBlockchain("error_nft");
+                } finally {
+                    setLoading(false);
+                }
         }
 
         const isValidListing = data.mainImage !== null &&
                                 data.otherImage.length >= 2;
                                 
-
     return(
         <form>  
         {error && <div className="error-info">

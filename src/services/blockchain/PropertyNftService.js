@@ -28,6 +28,13 @@ export const mintNftProperty = async (metadataUrl) => {
     return txMint;
 };
 
+export const getOwner = async (tokenId) => {
+    const { signer } = await getProviderAndSigner();
+    const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
+    const owner = await contract.ownerOf(tokenId);
+    return owner;
+}
+
 export const approveMarketplace = async () => {
     const { signer } = await getProviderAndSigner();
 

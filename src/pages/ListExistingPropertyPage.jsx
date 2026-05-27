@@ -1,9 +1,6 @@
-/*
 import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
-import { getUserById } from "../services/backend/UsersService";
-import { delistNftProperty, getMarketplaceContract } from "../services/blockchain/MarketplaceService";
-import { deleteApartment } from "../services/backend/ApartmentService";
+import { checkIsListed, listNftProperty } from "../services/blockchain/MarketplaceService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -13,13 +10,19 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
+import { FaLockOpen } from "react-icons/fa6";
+import { MdOutlineSell } from "react-icons/md";
+import { getUserById } from "../services/backend/UsersService";
 import { ethers } from "ethers";
+import { approveMarketplace } from "../services/blockchain/PropertyNftService";
+import { updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
 
 
 export default function ListExistingPropertyPage() {
-    const [myListings, setMyListings] = useState([]);
+    const [myProperties, setMyProperties] = useState([]);
     const [nrListings, setNrListings] = useState(3);
     const [selectedProperty, setSelectedProperty] = useState(null);
+    const [selectedTokenId, setSelectedTokenId] = useState(null);
 
     const [statusBlockchain, setStatusBlockchain] = useState("idle");
 
@@ -35,7 +38,6 @@ export default function ListExistingPropertyPage() {
     const [panelCheckInFrom, setPanelCheckInFrom] = useState(false);
     const [panelCheckInUntil, setPanelCheckInUntil] = useState(false);
 
-    
     const dropdownPanelCheckInFrom = (e) => {
         e.preventDefault();
         setPanelCheckInFrom(!panelCheckInFrom);
@@ -46,88 +48,207 @@ export default function ListExistingPropertyPage() {
         setPanelCheckInUntil(!panelCheckInUntil);
     };
 
+    const openModal = (apartment) => {
+        setSelectedProperty(apartment);
+        setEditData({
+            
+            checkInFrom: apartment.checkInFrom,
+            checkInUntil: apartment.checkInUntil,
+            
+        });
+    setEditInfo(true);
+    };
+
     const [editData, setEditData] = useState({
         checkInFrom: "",
         checkInUntil: "",
     })
 
+     const convertHours = (checkInFrom) => {
+        const hoursForCheckIn = parseInt(checkInFrom?.split(":")[0]);
+        return hoursForCheckIn;
+    }
 
-   
-useEffect(() => {
-  if (!account) {
-    console.log("Waiting for wallet...");
-    return;
-  }
+   useEffect(() => {
+    if (!account) return;
 
-  const load = async () => {
-    console.log("Loading for account:", account);
+    const showCreatedProperties = async () => {
+        try {
+            setLoading(true);
 
-    const marketplaceContract = await getMarketplaceContract();
-    const data = await getUserById(account);
+            const data = await getUserById(account);
 
-    console.log("DATA:", data);
+            console.log("Show properties list", data.apartmentList);
 
-    const enriched = await Promise.all(
-      data.apartmentList.map(async (item) => {
-        const tokenId = Number(item.tokenId);
+            const properties = data.apartmentList || [];
 
-        if (!tokenId) return { ...item, isListed: false };
+            const propertiesCreated = [];
 
-        const isListed = await marketplaceContract.isNftListed(tokenId);
+            for (const property of properties) {
+                if (!property.tokenId) {
+                    continue;
+                }
 
-        return { ...item, isListed };
-      })
-    );
+                const nftIsListed = await checkIsListed(property.tokenId);
 
-    setMyListings(enriched.filter(p => !p.isListed));
- 
-  };
+                console.log("tokenId:", property.tokenId, "isListed:", nftIsListed);
 
-  load();
+                if (!nftIsListed) {
+                    propertiesCreated.push(property);
+                }
+            }
+
+            setMyProperties(propertiesCreated);
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    showCreatedProperties();
 }, [account]);
 
-    const handleDelistProperty = async (apartment) => {
-            console.log("Delete apartment:", apartment);
-            const {idApartment, tokenId } = apartment;
-
-            if (!idApartment || !tokenId) {
-                console.error("Invalid apartment info!", apartment);
-                return;
-            } 
-            console.log("Delete apartment:", idApartment, tokenId );
-
-            try {
-                setStatusBlockchain("delist_nft");
-
-                const txDelist = await delistNftProperty(tokenId);
-                setStatusBlockchain("delisting_nft");
-
-                await new Promise(r => setTimeout(r, 2000));
-
-                await txDelist.wait();
-
-                console.log("Delist from marketplace");
-                await deleteApartment(idApartment);
-
-                console.log("Delete form database");
-              
-                setMyListings((prev) => ({
-                    ...prev, 
-                    apartmentList: prev.apartmentList.filter(
-                        (apartment) => apartment.idApartment !== idApartment
-                    ),}
-                ));
-
-                setStatusBlockchain("success_nft");
-                setTimeout(() => {
-                     navigate("/myListings");
-                    setStatusBlockchain("idle");
-                }, 2000);
-            }catch(err){
-                console.log(err);
-                setStatusBlockchain("error_delist_nft");
-            }
+     const handleTryAgain =  () => {
+        setTimeout(() => {
+            setStatusBlockchain("idle");
+        }, 2000);
     }
+
+
+    const handleUpdate = async (apartment) => {
+        const { idApartment, tokenId } = apartment;
+
+        if (!idApartment || !tokenId) {
+            console.error("Invalid apartment info!", apartment);
+            return null;
+        }
+
+        try {
+            await updatePriceAndHoursApartment(idApartment, {
+            pricePerNight: Number(newPrice),
+            checkInFrom: editData.checkInFrom,
+            checkInUntil: editData.checkInUntil,
+        });
+
+            const updatedApartment = {
+                ...apartment, 
+                ...{
+                    pricePerNight: Number(newPrice),
+                    checkInFrom: editData.checkInFrom,
+                    checkInUntil: editData.checkInUntil,
+                }
+            };
+
+            setMyProperties((prev) => {
+                const safePrev = Array.isArray(prev) ? prev : [];
+
+                return safePrev.map((item) =>
+                    String(item.tokenId) === String(tokenId)
+                        ? updatedApartment
+                        : item
+                );
+            });
+
+            return updatedApartment;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    };
+
+
+    const handleListProperty = async (apartment) => {
+        try{
+            setLoading(true);
+            setSelectedTokenId(apartment.tokenId);
+            const updatedApartment = await handleUpdate(apartment);
+
+            if (!updatedApartment) {
+                alert("Update failed!");
+                setLoading(false);
+                setSelectedTokenId(null);
+                return;
+            }
+             const priceWei = ethers.utils.parseEther(String(Number(newPrice)|| "0"));
+
+                const hoursIn = convertHours(editData.checkInFrom);
+                const hoursOut = convertHours(editData?.checkInUntil);
+                console.log("HoursIn:", hoursIn);
+                console.log("HoursOut:", hoursOut);
+
+                console.log("tokenId:", apartment.tokenId.toString?.() ?? String(apartment.tokenId));
+                console.log("priceWei:", priceWei.toString());
+                console.log("Approving marketplace...");
+
+                try{
+                    setStatusBlockchain("approve_wallet");
+                    const txApprove  =  await approveMarketplace();
+                
+                    setStatusBlockchain("approving_wallet");
+
+                    await new Promise(r => setTimeout(r, 2000));
+
+                    await txApprove.wait();
+
+                    console.log("Marketplace approved.");
+                } catch(approveError) {
+                    console.log(approveError);
+                    //alert("Approve failed!");
+                    setStatusBlockchain("error_nft");
+                    setEditInfo(false);
+                    setSelectedProperty(null);
+                    setSelectedTokenId(null);
+                    setLoading(false);
+                    setNewPrice("");
+                    return;
+                }
+
+                try{
+                    setStatusBlockchain("list_nft");
+                    const  txList  = await listNftProperty(apartment.tokenId, priceWei, hoursIn, hoursOut);
+                    setStatusBlockchain("listing_nft");
+                    await new Promise(r => setTimeout(r, 2000));
+
+                    await txList.wait();
+
+                    setStatusBlockchain("success_nft");
+
+                    console.log("NFT listed successfully!");
+
+                    setMyProperties((prev) => {
+                        const safePrev = Array.isArray(prev) ? prev : [];
+
+                        return safePrev.filter(
+                            (item) => String(item.tokenId) !== String(apartment.tokenId)
+                        );
+                    });
+
+                setTimeout(() => {
+                    navigate("/myListings", { replace: true });
+                }, 2000);
+
+            } catch(listError) {
+                console.log(listError);
+                alert("Listing failed!");
+                setStatusBlockchain("error_nft");
+                setEditInfo(false);
+                setSelectedProperty(null);
+                setSelectedTokenId(null);
+                setLoading(false);
+                setNewPrice("");
+                return;
+            }
+        } catch (error) {
+                console.error("Error in handleSubmit:", error);
+                setError(`Error create apartment: ${error.message}`);
+                alert(`Error: ${error.message}`);
+                setStatusBlockchain("error_nft");
+            } finally {
+                setLoading(false);
+            }
+        }
 
     function convertTime(time) {
         const [hours, minutes] = time.split(":");
@@ -147,14 +268,6 @@ useEffect(() => {
         );
     }
 
-     if(loading) {
-        return (
-            <div className="spinner">
-                    <ClipLoader loading={loading} size={40} />
-            </div>
-        );
-    }
-
     return (
         <div>
             <div className="wrapper-yourAccount">
@@ -163,13 +276,13 @@ useEffect(() => {
                     <div className="bottom">
                         <div >
                             <div className="bottom-title">
-                                <h2>My Properties</h2>
+                                <h2>My properties</h2>
                             </div>
 
                             <div className="rentals-content">
-                               {myListings.apartmentList?.length > 0 ? (
+                               {myProperties?.length > 0 ? (
                                     <div className="apartmnets-container">
-                                    {myListings.apartmentList?.slice(0, nrListings).map((apartment, index) => (
+                                    {myProperties?.slice(0, nrListings).map((apartment, index) => (
                                     <div className="rental-card-wrapper" key={apartment.tokenId || index}>
                                         <div className="rental-card">
                                             <div className="rental-image">
@@ -196,11 +309,16 @@ useEffect(() => {
                                                 <p className="rental-price">{apartment.pricePerNight ?? ""} ETH</p>
                                                     <div className="buttons-status">
                                                         <div className="buttons-status-rentals"> 
-                                                                <button 
+                                                               <button 
+                                                                 disabled={selectedTokenId === apartment.tokenId}
                                                                     className="button-review"
-                                                                    onClick={() => handleDelistProperty(apartment)}
+                                                                    onClick={() => {
+                                                                        setEditInfo(true);
+                                                                        setSelectedProperty(apartment);
+                                                                        openModal(apartment);
+                                                                    }}    
                                                                 >
-                                                                    List
+                                                                   {selectedTokenId === apartment.tokenId ? "Listing..." : "List"}
                                                                 </button>
                                                         </div>
                                                     </div>
@@ -281,10 +399,8 @@ useEffect(() => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                    
-                                                        
 
-                                                        <div className="modal-edit-buttons">
+                                                                 <div className="modal-edit-buttons">
                                                             <button className="cancel" onClick={() => setEditInfo(false)}>
                                                                 Cancel
                                                             </button>
@@ -292,14 +408,13 @@ useEffect(() => {
                                                             <button  
                                                                 className="submit" 
                                                                 key={apartment.idApartment}
-                                                                onClick={() => handleUpdate(apartment)} 
-                                                                disabled={loading}
+                                                                onClick={() => handleListProperty(apartment)} 
+                                                                disabled={selectedTokenId === apartment.tokenId}
                                                             >
-                                                                {loading ? 
-                                                                    ( <div className="spinner">
-                                                                            <ClipLoader loading={loading} size={40} />
-                                                                        </div>
-                                                                    ) : 'Submit'
+                                                                 {selectedTokenId === apartment.tokenId ? 
+                                                                    "Listing..."
+                                                                    : 
+                                                                     'List Property'
                                                                 }
                                                             </button>
                                                         </div>
@@ -312,7 +427,7 @@ useEffect(() => {
                                     ))}
 
                                     <div className="button-load-results">
-                                        {nrListings < myListings.apartmentList.length ? (
+                                        {nrListings < myProperties?.length ? (
                                             <button
                                                 className="button-load-more"
                                                 onClick={() => setNrListings(prev => prev + 3)}
@@ -329,7 +444,7 @@ useEffect(() => {
                                 ) : (
                                     <div className="no-rentals">
                                         <img src="src\assets\suitcase.png" alt="No rentals" />
-                                        <p>No listings found.</p>
+                                        <p>No properties found.</p>
                                     </div>    
                                )}
                             </div>
@@ -338,39 +453,58 @@ useEffect(() => {
                 </div>
             </div>
 
-        {statusBlockchain === "delist_nft" && (
+
+        {statusBlockchain === "approve_wallet" && (
             <div className="edit-container">
                 <div className="modal-reservation">
-                    <FaCoins className="icon-reservation-status hourglass"/>
-                    <h2>Delist Property NFT</h2>
-                    <p>Please confirm the transaction in your wallet to delist your property NFT!</p>
+                    <FaLockOpen className="icon-reservation-status hourglass"/>
+                        <h2>Approve Marketplace</h2>
+                        <p>Please confirm the transaction in your wallet so the marketplace can manage your NFT.</p>
                 </div>
             </div>
         )}
         
-        
-        {statusBlockchain === "delisting_nft" && (
+        {statusBlockchain === "approving_wallet" && (
             <div className="edit-container">
                 <div className="modal-reservation">
                     <LuHourglass className="icon-reservation-status hourglass"/>
-                    <h2>Delisting Property NFT...</h2>
-                    <p>Your property NFT is being delisting from marketplace</p>
+                    <h2>Approving Marketplace...</h2>
+                    <p>The approval transaction is being processed on the blockchain.</p>
                 </div>
             </div>
         )}
-
+        
+        {statusBlockchain === "list_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <MdOutlineSell className="icon-reservation-status hourglass"/>
+                        <h2>List Property</h2>
+                        <p>Please confirm the listing transaction in your wallet to make your property available.</p>
+                </div>
+            </div>
+        )}
+        
+        {statusBlockchain === "listing_nft" && (
+            <div className="edit-container">
+                <div className="modal-reservation">
+                    <LuHourglass  className="icon-reservation-status hourglass"/>
+                    <h2>Listing Property...</h2>
+                    <p>The listing transaction is being confirmed on the blockchain.</p>
+                </div>
+            </div>
+        )}
 
         {statusBlockchain === "success_nft" && (
             <div className="edit-container">
                 <div className="modal-reservation">
                     <FaRegCheckCircle className="icon-reservation-status confirmed"/>
-                    <h2>Property Delisted Successfully!</h2>
-                    <p>Your property NFT has been successfully delisted from the marketplace.</p>
+                    <h2>Property Listed Successfully!</h2>
+                    <p>Your property NFT has been successfully listed on the marketplace.</p>
                 </div>
             </div>
         )}
-        
-        {statusBlockchain === "error_delist_nft" && (
+
+        {statusBlockchain === "error_nft" && (
             <div className="edit-container">
                 <div className="modal-reservation">
                     <IoMdCloseCircle  className="icon-reservation-status canceled"/>
@@ -385,57 +519,6 @@ useEffect(() => {
                 </div>
             </div>
         )}
-
-
-        {statusBlockchain === "update_info" && (
-            <div className="edit-container">
-                <div className="modal-reservation">
-                    <FaCoins className="icon-reservation-status hourglass"/>
-                    <h2>Update Property NFT</h2>
-                    <p>Please confirm the transaction in your wallet to update your property NFT!</p>
-                </div>
-            </div>
-        )}
-        
-        
-        {statusBlockchain === "updating_info" && (
-            <div className="edit-container">
-                <div className="modal-reservation">
-                    <LuHourglass className="icon-reservation-status hourglass"/>
-                    <h2>Updating Property NFT...</h2>
-                    <p>Your property NFT is being updating on marketplace</p>
-                </div>
-            </div>
-        )}
-
-
-        {statusBlockchain === "success_update_info" && (
-            <div className="edit-container">
-                <div className="modal-reservation">
-                    <FaRegCheckCircle className="icon-reservation-status confirmed"/>
-                    <h2>Property Updated Successfully!</h2>
-                    <p>Your property NFT has been successfully updated on the marketplace.</p>
-                </div>
-            </div>
-        )}
-        
-        {statusBlockchain === "error_update_info" && (
-            <div className="edit-container">
-                <div className="modal-reservation">
-                    <IoMdCloseCircle  className="icon-reservation-status canceled"/>
-                    <h2>Something went wrong...</h2>
-                    <button 
-                            className="try-again"
-                            type="button"
-                            onClick = {() => handleTryAgain()}
-                        >
-                        Try again
-                    </button>
-                </div>
-            </div>
-        )}
      </div>   
     );
 }
-
-*/

@@ -15,6 +15,7 @@ import { RentalProvider } from "./hooks/RentalContext";
 import Layout from "./components/Layout";
 import About from "./pages/AboutPage";
 import SupportPage from "./pages/SupportPage";
+import ListExistingPropertyPage from "./pages/ListExistingPropertyPage";
 //import ListExistingPropertyPage from "./pages/ListExistingProperty";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/properties/property/:idApartment" element={<PropertyInfo />} />
           <Route path="/properties/property/:idApartment/reserve" element={<ReservePage />} />
           <Route path="/listNewProperty" element={<ListNewPropertyPage />} />
+          <Route path="/listExistingProperty" element={<ListExistingPropertyPage />} />
          
           <Route path="/support" element={<SupportPage />} />
           <Route path="/myAccount" element={<MyAccountPage />} />

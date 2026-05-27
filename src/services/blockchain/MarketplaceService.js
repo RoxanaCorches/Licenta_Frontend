@@ -36,6 +36,14 @@ export const delistNftProperty = async (tokenId) => {
     return txDelist;
 };
 
+export const checkIsListed = async (tokenId) => {
+    const { signer } = await getProviderAndSigner();
+
+    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
+    const isListed = await contract.isNftListed(tokenId);
+    return isListed;
+}
+
 /*
 export const updatePrice = async (tokenId, newPrice) => {
     const { signer } = await getProviderAndSigner();

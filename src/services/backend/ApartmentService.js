@@ -72,6 +72,25 @@ export async function createApartment(addApartment, images) {
     return data;
 }
 
+export async function convertPriceApartment(pricePerNight) {
+    const response = await fetch(`${API}/convertPrice`, {
+        method: "POST",
+         headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            pricePerNight: Number(pricePerNight)
+        }),
+    });
+
+    if(!response.ok) {
+        throw new Error("Error to convert price apartment!")
+    }
+
+    const data = await response.json();
+    return data;
+}
+
 export async function updatePriceAndHoursApartment(idApartment, updateApartment) {
     const response = await fetch(`${API}/updateApartment/${idApartment}`, {
         method: "PUT",

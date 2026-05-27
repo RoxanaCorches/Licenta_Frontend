@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
-import { delistNftProperty, updatePriceAndHours } from "../services/blockchain/MarketplaceService";
+import { checkIsListed, delistNftProperty, updatePriceAndHours } from "../services/blockchain/MarketplaceService";
 import { deleteApartment, updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
@@ -48,7 +48,6 @@ export default function MyListingsPage() {
         checkInUntil: "",
     })
 
-
     const openModal = (apartment) => {
         setSelectedProperty(apartment);
     setEditData({
@@ -61,26 +60,46 @@ export default function MyListingsPage() {
 
     setEditInfo(true);
     };
-
     
-
     useEffect(() => {
-        if(!account) return;
-        const loadInfoUser = async () => {
+        if (!account) return;
+
+        const showListedProperties = async () => {
             try {
                 setLoading(true);
+
                 const data = await getUserById(account);
-                setMyListings(data);
-                console.log(myListings);
-                console.log("Info:", data);
-                console.log("My listings:", data.apartmentList);
+
+                console.log("Show properties list:", data.apartmentList);
+
+                const properties = data.apartmentList || [];
+
+                const propertiesListed = [];
+
+                for (const property of properties) {
+                    if (!property.tokenId) {
+                        continue;
+                    }
+
+                    const nftIsListed = await checkIsListed(property.tokenId);
+
+                    console.log("tokenId:", property.tokenId, "isListed:", nftIsListed);
+
+                    if (nftIsListed) {
+                        propertiesListed.push(property);
+                    }
+                }
+
+                setMyListings(propertiesListed);
+
             } catch (err) {
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
-        };
-        loadInfoUser();
+         };
+
+    showListedProperties();
     }, [account]);
 
      const handleTryAgain =  () => {
@@ -170,12 +189,13 @@ export default function MyListingsPage() {
 
                 console.log("Delete form database");
               
-                setMyListings((prev) => ({
-                    ...prev, 
-                    apartmentList: prev.apartmentList.filter(
-                        (apartment) => apartment.idApartment !== idApartment
-                    ),}
-                ));
+                setMyListings((prev) => {
+                    const safePrev = Array.isArray(prev) ? prev : [];
+
+                    return safePrev.filter(
+                        (item) => String(item.tokenId) !== String(apartment.tokenId)
+                    );
+                });
 
                 setStatusBlockchain("success_nft");
                 setTimeout(() => {
@@ -226,9 +246,9 @@ export default function MyListingsPage() {
                             </div>
 
                             <div className="rentals-content">
-                               {myListings.apartmentList?.length > 0 ? (
+                               {myListings?.length > 0 ? (
                                     <div className="apartmnets-container">
-                                    {myListings.apartmentList?.slice(0, nrListings).map((apartment, index) => (
+                                    {myListings?.slice(0, nrListings).map((apartment, index) => (
                                     <div className="rental-card-wrapper" key={apartment.tokenId || index}>
                                         <div className="rental-card">
                                             <div className="rental-image">
@@ -381,7 +401,7 @@ export default function MyListingsPage() {
                                     ))}
 
                                     <div className="button-load-results">
-                                        {nrListings < myListings.apartmentList.length ? (
+                                        {nrListings < myListings?.length ? (
                                             <button
                                                 className="button-load-more"
                                                 onClick={() => setNrListings(prev => prev + 3)}

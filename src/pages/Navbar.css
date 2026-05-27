@@ -28,7 +28,8 @@
   gap: 10px;
 }
 
-.navbar-link {
+.navbar-link, 
+.navbar-link-title {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -46,7 +47,8 @@
   transition: transform 0.4s ease;
 }
 
-.navbar-link:hover {
+.navbar-link:hover,
+.navbar-link-title:hover {
   color: rgb(172, 172, 172);
   transform: translateY(-3px);
 }

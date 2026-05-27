@@ -5,8 +5,18 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoWallet } from "react-icons/io5";
 import { MdRateReview } from "react-icons/md";
+import { useWallet } from "../../hooks/WalletContext";
 
 export default function Sidebar() {
+    const { disconnectWallet } = useWallet();
+      const logout = () => {
+        disconnectWallet();
+        localStorage.setItem("walletDisconnected", true);
+        localStorage.removeItem("userId");
+        sessionStorage.clear();
+        window.location.replace("/");
+    };
+
     return(
                 <div className="sidebar">
                     <NavLink to="/myAccount" className="sidebar-link-option">
@@ -34,15 +44,15 @@ export default function Sidebar() {
                         <span>Reviews</span>
                     </NavLink>
 
-                    <NavLink to="/settings" className="sidebar-link-option">
-                        <IoMdSettings className="sidebar-icon" />
-                        <span>Settings</span>
-                    </NavLink>
-
-                    <NavLink to="/" className="sidebar-link-option">
+                    <NavLink 
+                        to="/" 
+                        className="sidebar-link-option"
+                        onClick={logout}
+                    >
                         <RiLogoutCircleRFill className="sidebar-icon" />
                         <span>Logout</span>
                     </NavLink>
+
                 </div>
     );
 }

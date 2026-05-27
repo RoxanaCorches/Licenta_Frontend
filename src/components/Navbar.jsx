@@ -34,13 +34,13 @@ export default function Navbar() {
     };
     
     const logout = () => {
-    disconnectWallet();
-    localStorage.setItem("walletDisconnected", true);
-    //localStorage.clear();
-    localStorage.removeItem("userId");
-    //localStorage.removeItem("walletAddress");
-    sessionStorage.clear();
-    window.location.replace("/");
+        disconnectWallet();
+        localStorage.setItem("walletDisconnected", true);
+        //localStorage.clear();
+        localStorage.removeItem("userId");
+        //localStorage.removeItem("walletAddress");
+        sessionStorage.clear();
+        window.location.replace("/");
     };
     
     return (
@@ -49,7 +49,7 @@ export default function Navbar() {
                 <ul className="navbar-menu">
                     <li className="navbar-item">
                         <NavLink to="/" className = {({ isActive }) => 
-                                `navbar-link ${isActive ? 'active' : ''}`
+                                `navbar-link-title ${isActive ? 'active' : ''}`
                         }>
                             <FaHome className="navbar-icon"/>
                             <span>Booking</span>
@@ -152,11 +152,6 @@ export default function Navbar() {
                                             <span>Reviews</span>
                                         </NavLink>
 
-                                        <NavLink to="/settings" className="navbar-link-option">
-                                            <IoMdSettings className="navbar-icon" />
-                                            <span>Settings</span>
-                                        </NavLink>
-                                            
                                         <NavLink 
                                             to="/" 
                                             className="navbar-link-option"

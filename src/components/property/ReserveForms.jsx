@@ -115,7 +115,7 @@ export default function ReserveForms() {
                     startDate: checkIn.toLocaleDateString('en-CA'),
                     endDate:checkOut.toLocaleDateString('en-CA'),
                     rentalDate: '',
-                    totalPrice:nrNights * property.pricePerNight,
+                    totalPrice:nrNights * property?.pricePerNight,
                     userId:idUser,
                     apartmentId: idApartment,
                     transactionHash: ''
@@ -138,7 +138,7 @@ export default function ReserveForms() {
                 console.log("StartDate:", startDate);
                 console.log("EndDate:", endDate);
 
-                const totalPriceInEth = nrNights * property.pricePerNight;
+                const totalPriceInEth = nrNights * property?.pricePerNight;
                 console.log("totalPriceInEth:", totalPriceInEth);
 
                 //const priceWei = ethers.utils.parseEther(totalPriceInEth.toString());
