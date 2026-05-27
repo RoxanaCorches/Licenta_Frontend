@@ -7,7 +7,7 @@ export default function Footer() {
            <div className="footer-container">
             <div className="footer-columns">
                 <div>
-                    <h2 className="title-app">Titlu Aplicatie</h2>
+                    <h2 className="title-app">BlockStay</h2>
                     <p className="description">Descentralized property booking powered by blockchain technology.</p>
                 </div>
 
@@ -41,7 +41,7 @@ export default function Footer() {
                 </div>
 
                 <div className="copyright">
-                    <p>&copy; 2026 nume. All rights reserved.</p>
+                    <p>&copy; 2026 BlockStay. All rights reserved.</p>
                 </div>
            </div>
         </footer>

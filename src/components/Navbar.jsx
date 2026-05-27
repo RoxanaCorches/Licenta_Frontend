@@ -13,6 +13,8 @@ import { IoWallet } from "react-icons/io5";
 import { MdRateReview } from "react-icons/md";
 import { IoWalletOutline } from "react-icons/io5";
 import { LuMessageCircle } from "react-icons/lu";
+import { MdAddHome } from "react-icons/md";
+import { IoIosHome } from "react-icons/io";
 
 export default function Navbar() {
     const { account, connectWallet, disconnectWallet } = useWallet();
@@ -51,8 +53,8 @@ export default function Navbar() {
                         <NavLink to="/" className = {({ isActive }) => 
                                 `navbar-link-title ${isActive ? 'active' : ''}`
                         }>
-                            <FaHome className="navbar-icon"/>
-                            <span>Booking</span>
+                            
+                            <span>BlockStay</span>
                         </NavLink>
                     </li>
 
@@ -68,12 +70,12 @@ export default function Navbar() {
                                 {panelProperty && (
                                     <div className="search-panel-info">
                                         <NavLink to="/listNewProperty" className="navbar-link-option">
-                                            <FaUser className="navbar-icon"/>
+                                            <MdAddHome className="navbar-icon"/>
                                             <span>List new property</span>
                                         </NavLink>    
 
                                         <NavLink to="/listExistingProperty" className="navbar-link-option">
-                                            <FaUser className="navbar-icon"/>
+                                            <IoIosHome className="navbar-icon"/>
                                             <span>List existing property</span>
                                         </NavLink>   
                                     </div>    
