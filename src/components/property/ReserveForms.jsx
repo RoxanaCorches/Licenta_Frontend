@@ -189,7 +189,7 @@ export default function ReserveForms() {
                
             } catch(error) { 
                 setError(`${error.message}`);
-                alert(error.message);
+                //alert("Errro to complete reservation!");
                 setProcessingPayment(false);
                 setCheckIn("");
                 setCheckOut("");
@@ -372,6 +372,7 @@ export default function ReserveForms() {
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
+                        <p>{error}</p>
                         <button 
                             className="try-again"
                             type="botton"

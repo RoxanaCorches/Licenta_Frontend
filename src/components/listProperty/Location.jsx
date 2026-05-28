@@ -3,13 +3,66 @@ import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 
 export default function Location({data, completeData, prevStep, nextStep}){
             const [location, setLocation] = useState(null);
-        
+            
             const [loading] = useState(false);
-            //const [error, setError] = useState('');
         
             const handleChange = (e) => {
             const { name, value } = e.target;
                 completeData({ [name]: value});
+            };
+
+            const handleClick = (e) => {
+                const selectedLocation = {
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng()
+                };
+                setLocation(selectedLocation);
+
+                const geocoder = new window.google.maps.Geocoder();
+
+                geocoder.geocode({ location: selectedLocation }, (response) => {
+                    console.log("Geocoder results:", response);
+
+                    const result = response[0];
+
+                    let country = "";
+                    let address = "";
+                    let nrStreet = "";
+                    let city = "";
+                    let zipcode = "";
+
+                    result.address_components.forEach((component) => {
+                        if (component.types.includes("country")) {
+                            country = component.long_name;
+                        }
+
+                        if (component.types.includes("route")) {
+                            address = component.long_name;
+                        }
+
+                        if (component.types.includes("street_number")) {
+                            nrStreet = component.long_name;
+                        }
+
+                        if ((component.types.includes("locality"))) {
+                                    city = component.long_name;
+                        }
+
+                        if (component.types.includes("postal_code")) {
+                            zipcode = component.long_name;
+                        }
+                    });
+
+                    const fullAddress = address + " " + nrStreet;
+
+                    completeData({
+                        ...data,
+                        country: country,
+                        street: fullAddress,
+                        city: city,
+                        zipCode:zipcode
+                    });
+                });
             };
 
             const isValid = data.country.trim() !== "" &&
@@ -98,17 +151,15 @@ export default function Location({data, completeData, prevStep, nextStep}){
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Map location</label>
-                        <LoadScript googleMapsApiKey="AIzaSyBt1WeQk6szrvRyZAYnzXpTFsyS60EInOs" >
+                        <LoadScript googleMapsApiKey="AIzaSyDBQhtLmyCNqUConAuVxw2MwHjIF1ok6Iw" >
                         <GoogleMap
                             mapContainerStyle={{width: "100%", height: "400px"}}
                             center={{lat: 46.7833561, lng: 23.5341118}}
                             zoom={10}
-                            onClick={(e) => {
-                                setLocation({lat: e.latLng.lat(),
-                                            lng: e.latLng.lng()});
-                            }}
+                            onClick={handleClick}
                         >
                             {location && <Marker position={location}/>}
+                            
                         </GoogleMap>
                         </LoadScript>
                         

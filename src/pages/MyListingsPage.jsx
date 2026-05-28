@@ -142,9 +142,16 @@ export default function MyListingsPage() {
                 checkInUntil: editData.checkInUntil
             });
 
-            const data = await getUserById(account);
-
-            setMyListings(data);
+            setMyListings((prev) =>
+                prev.map((properties) =>
+                    properties.apartmentId === selectedProperty.apartmentId
+                    ? { ...properties, 
+                        pricePerNight: newPrice,
+                        checkInFrom: editData.checkInFrom,
+                        checkInUntil: editData.checkInUntil 
+                    } : properties
+                )
+            );
 
             setStatusBlockchain("success_update_info");
 

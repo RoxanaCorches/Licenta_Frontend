@@ -15,7 +15,7 @@ export default function Footer() {
                     <h3 className="title">Platform</h3>
                     <ul className="list">
                         <li><Link to="/properties">Browser Properties</Link></li>
-                        <li><Link to="/listYourProperty">List Property</Link></li>
+                        <li><Link to="/listNewProperty">List Property</Link></li>
                         <li><Link to="/myRentals">My Rentals</Link></li>
                         <li><Link to="/myListings">My Listings</Link></li>
                     </ul>
@@ -34,7 +34,7 @@ export default function Footer() {
                     <h3 className="title">Legal</h3>
                     <ul className="list">
                         <li><Link to="/">Terms</Link></li>
-                        <li><Link to="/">Privacy</Link></li>
+                        <li><Link to="/about">Privacy</Link></li>
                         <li><Link to="/">Contact</Link></li>
                     </ul>
                 </div>

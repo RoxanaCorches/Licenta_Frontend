@@ -369,7 +369,7 @@ const handleSubmitWithdraw = () => {
                                                      {(rental.status === "UPCOMING"  || rental.status === "COMPLETED") &&
                                                         <div className="name-hotel-date">
                                                             <div className="price-for-rental">
-                                                                <p className="price-payment"> - {rental.totalPrice}</p>
+                                                                <p className="price-payment"> - {(rental.totalPrice).toFixed(4)}</p>
                                                                 <p>ETH</p>
                                                             </div>
                                                             <p className="status">{rental.status.charAt(0).toUpperCase() 
@@ -379,7 +379,7 @@ const handleSubmitWithdraw = () => {
 
                                                     {rental.status === "CANCELLED" &&
                                                         <div className="price-for-rental">
-                                                            <p className="price-refund"> + {(90 * rental.totalPrice) / 100}</p>
+                                                            <p className="price-refund"> + {((90 * rental.totalPrice) / 100).toFixed(4)}</p>
                                                             <p>ETH</p>
                                                         </div>
                                                     }

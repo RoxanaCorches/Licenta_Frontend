@@ -14,6 +14,8 @@ import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
 import { CgNametag } from "react-icons/cg";
 import { RentalContext } from "../hooks/RentalContext";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { LuHourglass } from "react-icons/lu";
 
 export default function MyRentalsPage() {
     const [active, setActive] = useState('upcoming');
@@ -87,8 +89,8 @@ export default function MyRentalsPage() {
 
     const handleTryAgain =  () => {
         setTimeout(() => {
-                setActive("upcoming");
-                setStatusBlockchain("idle");
+            setActive("upcoming");
+            setStatusBlockchain("idle");
         }, 2000);
     }
 
@@ -106,14 +108,23 @@ export default function MyRentalsPage() {
                 idRental: selectedRental.rentalId,
                 comment: feedback,
                 date: new Date(),
-                rating:rating,
+                rating:rating
             }
 
             console.log(addReviewInfo);
        
             console.log(selectedRental)
             await createReview(addReviewInfo);
-            setReviewedRentals(prev => [...prev, selectedRental.rentalId]);
+            setRentals((prevRentals) =>
+                prevRentals.map((rental) =>
+                    rental.rentalId === selectedRental.rentalId
+                    ? {
+                        ...rental,
+                        existReview: true,
+                        }
+                    : rental
+                )
+                );
 
             alert("Review posted!")
             setCompleteFeedback(false);
@@ -381,7 +392,12 @@ export default function MyRentalsPage() {
         return (
             <div className="edit-container">
                 <div className="modal-reservation">
-                    <FaLockOpen className="icon-reservation-status hourglass"/>
+                {(status === "success_cancel_rental" || 
+                    status === "success_checkIn_rental" || 
+                        status === "success_checkOut_rental") ? 
+                   <FaRegCheckCircle className="icon-reservation-status confirmed"/>
+                    :  
+                    <LuHourglass className="icon-reservation-status hourglass"/>}    
                         <h2>{title}</h2>
                         <p>{description}</p>
                 </div>
@@ -505,12 +521,12 @@ export default function MyRentalsPage() {
                                                     
                                                     { active === "completed" && 
                                                         (
-                                                            <button
+                                                        <button
                                                             className="button-review"
                                                             onClick={() => handleReview(rental)}
-                                                            disabled={loading || reviewedRentals.includes(rental.rentalId)}
-                                                            >
-                                                            {reviewedRentals.includes(rental.rentalId) ? "Reviewed" : "Review"}
+                                                            disabled={rental.existReview}
+                                                        >
+                                                            {rental.existReview ? "Reviewed" : "Review"}
                                                         </button>
                                                         ) 
                                                     }
@@ -604,7 +620,9 @@ export default function MyRentalsPage() {
             </div>  
 
         <BlockchainStatusTransaction status={statusBlockchain} />
-       {statusBlockchain === "error_cancel_rental" && (
+       {(statusBlockchain === "error_cancel_rental"  || 
+            statusBlockchain === "error_checkIn_rental" ||
+            statusBlockchain === "error_checkOut_rental")  && (
                 <div className="edit-container">
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
@@ -621,40 +639,7 @@ export default function MyRentalsPage() {
                 </div>
             )}
 
-            {statusBlockchain === "error_checkIn_rental" && (
-                <div className="edit-container">
-                    <div className="modal-reservation">
-                        <IoMdCloseCircle  className="icon-reservation-status canceled"/>
-                        <h2>Something went wrong...</h2>
-                        <p>{errorCheckIn}</p>
-                        <button 
-                            className="try-again"
-                            type="button"
-                            onClick = {() => handleTryAgain()}
-                        >
-                        Try again
-                        </button>
-                     </div>
-                </div>
-            )}
-
-            {statusBlockchain === "error_checkOut_rental" && (
-                <div className="edit-container">
-                    <div className="modal-reservation">
-                        <IoMdCloseCircle  className="icon-reservation-status canceled"/>
-                        <h2>Something went wrong...</h2>
-                         <p>{errorCheckIn}!</p>
-                        
-                        <button 
-                            className="try-again"
-                            type="button"
-                            onClick = {() => handleTryAgain()}
-                        >
-                        Try again
-                        </button>
-                     </div>
-                </div>
-            )}
+           
         </div> 
     );
 }

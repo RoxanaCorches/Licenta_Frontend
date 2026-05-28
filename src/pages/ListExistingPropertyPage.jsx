@@ -310,7 +310,7 @@ export default function ListExistingPropertyPage() {
                                                     <div className="buttons-status">
                                                         <div className="buttons-status-rentals"> 
                                                                <button 
-                                                                 disabled={selectedTokenId === apartment.tokenId}
+                                                                    disabled={selectedTokenId === apartment.tokenId}
                                                                     className="button-review"
                                                                     onClick={() => {
                                                                         setEditInfo(true);
