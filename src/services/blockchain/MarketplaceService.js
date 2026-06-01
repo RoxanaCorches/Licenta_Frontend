@@ -3,17 +3,6 @@ import  MarketplaceAbi  from "../../blockchain/abi/MarketplaceAbi.json";
 import { getProviderAndSigner } from "./WalletService";
 import { ethers } from "ethers";
 
-/*
-export const getMarketplaceContract = async () => {
-  const { signer } = await getProviderAndSigner();
-
-  return new ethers.Contract(
-    MARKETPLACEADDRESS,
-    MarketplaceAbi,
-    signer
-  );
-};
-*/
 export const listNftProperty = async (tokenId, price, hoursIn, hoursOut) => {
     const { signer } = await getProviderAndSigner();
 
@@ -44,41 +33,6 @@ export const checkIsListed = async (tokenId) => {
     return isListed;
 }
 
-/*
-export const updatePrice = async (tokenId, newPrice) => {
-    const { signer } = await getProviderAndSigner();
-
-    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
-
-    const txUpdatePrice = await contract.updatePricePerDay(tokenId, newPrice);
-
-    return txUpdatePrice;
-};
-
-export const updateHours = async (tokenId, start, end) => {
-    const { signer } = await getProviderAndSigner();
-
-    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
-
-    const txUpdateHours = await contract.updateHoursToCheckIn(tokenId, start, end,
-        { gasLimit: 400000  }
-    );
-
-    return txUpdateHours;
-};
-
-*/
-/*
-export const updateHours = async (tokenId, newHours) => {
-    const { signer } = await getProviderAndSigner();
-
-    const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
-
-    const txUpdateHours = await contract.updateHoursToCheckIn(tokenId, newHours);
-
-    return txUpdateHours;
-};
-*/
 
 export const updatePriceAndHours = async (tokenId, newPrice, startHours, endHours) => {
     const { signer } = await getProviderAndSigner();
@@ -92,7 +46,6 @@ export const updatePriceAndHours = async (tokenId, newPrice, startHours, endHour
     return txUpdate;
 };
 
-
 export const verifyAvailability = async (tokenId, startDate, endDate) => {
     const { signer } = await getProviderAndSigner();
 
@@ -103,20 +56,24 @@ export const verifyAvailability = async (tokenId, startDate, endDate) => {
     return available;
 };
 
-export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) => {
+export const rentNftProperty = async (tokenId, startDate, endDate, nrNights ) => {
     const { signer } = await getProviderAndSigner();
     const { provider } = await getProviderAndSigner();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
-    const priceWei = ethers.utils.parseEther(totalPrice);
+    const priceperNight = await contract.pricePerDay(tokenId);
+    console.log("Price per night from list nft property:", priceperNight.toString());
+
+    const totalPrice = priceperNight.mul(nrNights);
+    console.log("Total price in wei:", totalPrice.toString());
 
     try {
         await contract.callStatic.rent(
             tokenId,
             startDate,
             endDate,
-            { value: priceWei, gasLimit: 400000  }
+            { value: totalPrice, gasLimit: 400000  }
         );
 
     } catch(err) {
@@ -133,7 +90,7 @@ export const rentNftProperty = async (tokenId, startDate, endDate, totalPrice ) 
         tokenId,
         startDate,
         endDate,
-        { value: priceWei, gasLimit: 500_000 }
+        { value: totalPrice, gasLimit: 500000 }
     );
 
     const receip = await tx.wait();

@@ -5,7 +5,7 @@ import PropertyDetails from "../components/listProperty/PropertyDetails";
 import Facilities from "../components/listProperty/Facilities";
 import HouseRules from "../components/listProperty/HouseRules";
 import UploadImages from "../components/listProperty/UploadImages";
-import { createApartment } from "../services/backend/ApartmentService";
+import { convertPriceApartment, createApartment } from "../services/backend/ApartmentService";
 import { useNavigate } from "react-router-dom";
 import { approveMarketplace, mintNftProperty } from "../services/blockchain/PropertyNftService";
 import { listNftProperty } from "../services/blockchain/MarketplaceService";
@@ -62,7 +62,6 @@ export default function ListNewPropertyPage() {
             hourCheckOutUntil: "13:00",
             mainImage: null,
             otherImage: []
-            //mapLocation:''
     });
 
     const [loading, setLoading] = useState(false);
@@ -198,7 +197,13 @@ export default function ListNewPropertyPage() {
                 } catch(error) {
                     console.log(error);
                 }
-                const priceWei = ethers.utils.parseEther(String(data.price || "0"));
+
+                const priceEurEth = await convertPriceApartment(data.price);
+                console.log("Price in eur and eth:", priceEurEth);
+                console.log("Price in eur:", priceEurEth.eurPrice);
+                console.log("Price in eth:", priceEurEth.ethPrice);
+
+                const priceWei = ethers.utils.parseEther(String(priceEurEth.ethPrice || "0"));
                 //const checkInHour = Number(data.hourCheckInFrom.split(":")[0]);
 
                 //const hoursForCheckIn = convertHours(data.hourCheckInUntil, data.hourCheckInFrom);

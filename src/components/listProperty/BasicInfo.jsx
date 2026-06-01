@@ -97,7 +97,7 @@ export default function BasicInfo({data, completeData, nextStep}) {
                     </div>
 
                     <div className="area-price">
-                        <label className="form-label" htmlFor="listindescriptiongTitle">Price per night</label>
+                        <label className="form-label" htmlFor="listindescriptiongTitle">Price per night (EUR)</label>
                         <input
                             className="from-input" 
                             type="number"

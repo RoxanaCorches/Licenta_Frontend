@@ -15,7 +15,7 @@ import { MdOutlineSell } from "react-icons/md";
 import { getUserById } from "../services/backend/UsersService";
 import { ethers } from "ethers";
 import { approveMarketplace } from "../services/blockchain/PropertyNftService";
-import { updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
+import { convertPriceApartment, updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
 
 
 export default function ListExistingPropertyPage() {
@@ -171,7 +171,14 @@ export default function ListExistingPropertyPage() {
                 setSelectedTokenId(null);
                 return;
             }
-             const priceWei = ethers.utils.parseEther(String(Number(newPrice)|| "0"));
+
+            const priceEurEth = await convertPriceApartment(newPrice);
+            console.log("Price in eur and eth:", priceEurEth);
+            console.log("Price in eur:", priceEurEth.eurPrice);
+            console.log("Price in eth:", priceEurEth.ethPrice);
+                        
+            const priceWei = ethers.utils.parseEther(String(priceEurEth.ethPrice || "0"));
+            console.log("priceWei:", priceWei.toString());
 
                 const hoursIn = convertHours(editData.checkInFrom);
                 const hoursOut = convertHours(editData?.checkInUntil);
@@ -179,7 +186,6 @@ export default function ListExistingPropertyPage() {
                 console.log("HoursOut:", hoursOut);
 
                 console.log("tokenId:", apartment.tokenId.toString?.() ?? String(apartment.tokenId));
-                console.log("priceWei:", priceWei.toString());
                 console.log("Approving marketplace...");
 
                 try{
@@ -306,7 +312,7 @@ export default function ListExistingPropertyPage() {
                                             </div>
 
                                             <div  className="rental-feedback">
-                                                <p className="rental-price">{apartment.pricePerNight ?? ""} ETH</p>
+                                                <p className="rental-price">{apartment.pricePerNight ?? ""} EUR</p>
                                                     <div className="buttons-status">
                                                         <div className="buttons-status-rentals"> 
                                                                <button 

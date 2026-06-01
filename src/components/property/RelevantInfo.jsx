@@ -243,9 +243,9 @@ export default function RelevantInfo() {
                                         CHECK-OUT: {checkOut?.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
                                     </p>
 
-                                    <p className="dates">{property?.pricePerNight} ETH × {nrNights} nights  </p>
+                                    <p className="dates">{property?.pricePerNight} EUR × {nrNights} nights  </p>
                                     { validReserve && (
-                                        <p className="total-price"> <span> Total</span> {totalPrice} ETH</p>
+                                        <p className="total-price"> <span> Total</span> {totalPrice} EUR</p>
                                     )}
                                 </div>
                             )}

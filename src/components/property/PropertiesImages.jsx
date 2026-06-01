@@ -104,7 +104,7 @@ export default function PropertiesImages({filterProperties}) {
                                 <div className="details"> 
                                     <div className="property-details">
                                         <h1 className="name-property">{property?.title}</h1>
-                                        <h2 className="price">{property?.pricePerNight} ETH / night</h2>
+                                        <h2 className="price">{property?.pricePerNight} EUR / night</h2>
                                         
                                         <div className="location"> 
                                             <FaLocationDot className= "icon-location"/>

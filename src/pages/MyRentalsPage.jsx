@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { FaCheckCircle } from "react-icons/fa";
 import { TbCancel } from "react-icons/tb";
@@ -28,7 +28,7 @@ export default function MyRentalsPage() {
     const [rating, setRating] = useState(1);
     const [feedback, setFeedback] = useState("");
 
-    const [reviewedRentals, setReviewedRentals] = useState([]);
+    //const [reviewedRentals, setReviewedRentals] = useState([]);
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -38,7 +38,7 @@ export default function MyRentalsPage() {
 
     const { account } = useWallet();
 
-    const { checkIn } = useContext(RentalContext);
+    //const { checkIn } = useContext(RentalContext);
 
     const rentalsStatus = rentals?.filter(rental => {
         if(active === "upcoming") return rental.status === "UPCOMING";
@@ -479,7 +479,7 @@ export default function MyRentalsPage() {
                               
                                                 <div className="rental-feedback">
                                                    
-                                                        <p className="rental-price">{rental.totalPrice} ETH</p>
+                                                        <p className="rental-price">{rental.totalPrice} EUR</p>
                                                     
 
                                                     <div className="buttons-status">
@@ -495,7 +495,7 @@ export default function MyRentalsPage() {
                                                             </button>
                                                             )}
                                                             
-                                                            { validCheckIn(rental) && (
+                                                             { validCheckIn(rental) && (
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckInRental(rental)}
@@ -627,7 +627,8 @@ export default function MyRentalsPage() {
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
-                        
+                        {statusBlockchain === "error_checkIn_rental"  ? (
+                        <p>{errorCheckIn}</p>) : ""}
                         <button 
                             className="try-again"
                             type="button"

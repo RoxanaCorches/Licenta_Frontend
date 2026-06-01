@@ -35,7 +35,6 @@ export default function ReserveForms() {
 
     //const [blockchainStatus, setBlockchainStatus] = useState("idle");
 
-
     const [data, setData] = useState({
                 firstName: '',
                 lastName: '',
@@ -123,13 +122,7 @@ export default function ReserveForms() {
    
                 console.log("Token id:", tokenId);
 
-                
-
-                //const startDate = checkIn.toISOString().split("T")[0];
-                //const endDate = checkOut.toISOString().split("T")[0];
-
                 console.log("checkIn:", checkIn);
-                //console.log("check-in:",Math.floor(new Date(infoRental.startDate).getTime() / 1000) )
                 
                 const startDate = Math.floor(new Date(checkIn).getTime() / 1000);
                 const endDate = Math.floor(new Date(checkOut).getTime() / 1000);
@@ -137,11 +130,6 @@ export default function ReserveForms() {
 
                 console.log("StartDate:", startDate);
                 console.log("EndDate:", endDate);
-
-                const totalPriceInEth = nrNights * property?.pricePerNight;
-                console.log("totalPriceInEth:", totalPriceInEth);
-
-                //const priceWei = ethers.utils.parseEther(totalPriceInEth.toString());
 
                 const available = await verifyAvailability(tokenId, startDate, endDate);
 
@@ -158,15 +146,9 @@ export default function ReserveForms() {
 
                 console.log("Start local:", new Date(startDate * 1000).toString());
                 console.log("End local:", new Date(endDate * 1000).toString());
-                //setBlockchainStatus("book_property");
-                const tx = await rentNftProperty(tokenId, startDate, endDate, totalPriceInEth.toString());
+
+                const tx = await rentNftProperty(tokenId, startDate, endDate, nrNights);
                 console.log("tx:", tx);
-
-                //setBlockchainStatus("booking_property");
-
-                //await new Promise(r => setTimeout(r, 100));
-
-                //await tx.wait();
 
                 infoRental.transactionHash = tx.transactionHash;
                 const createdRental = (tx.reservationDate).toISOString();
@@ -175,8 +157,6 @@ export default function ReserveForms() {
                 console.log("Data la care a fost facuta rezervarea:", createdRental);
                 console.log("transactionHash in db:", infoRental.transactionHash);
                 await createRental(infoRental);
-
-                //setBlockchainStatus("success_property");
 
                 setRentalConfirmed(true);
                 setProcessingPayment(false);
@@ -194,7 +174,6 @@ export default function ReserveForms() {
                 setCheckIn("");
                 setCheckOut("");
 
-                 //setBlockchainStatus("error_property");
             } finally {
                  setProcessingPayment(false);
             }
@@ -294,14 +273,14 @@ export default function ReserveForms() {
                     </div>
 
                     <div className="form-group">
-                        <p className="eth-payment">ETH Payment</p>
-                        <p className="price">Total: {nrNights * property.pricePerNight} ETH</p>
+                        <p className="eth-payment">EUR Payment</p>
+                        <p className="price">Total: {nrNights * property.pricePerNight} EUR</p>
                         <button 
                             type="submit" 
                             className="button-payment-eth"
                             disabled={loading || !walletAddress}
                         >
-                            Pay with ETH
+                            Pay with EUR
                         </button>
                     </div>
 
@@ -346,12 +325,12 @@ export default function ReserveForms() {
 
                     <div className="info">
                         <p>Price details:</p>
-                        <p>{nrNights} nights * {property?.pricePerNight} ETH</p>
+                        <p>{nrNights} nights * {property?.pricePerNight} EUR</p>
                     </div>
 
                     <div className="info"> 
                         <p>Total Price</p>
-                        <p className="total-price">{nrNights * property?.pricePerNight} ETH</p>
+                        <p className="total-price">{nrNights * property?.pricePerNight} EUR</p>
                     </div>
                 </div>
             </div>

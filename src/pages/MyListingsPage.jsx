@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/listProperty/SideBar";
 import { getUserById } from "../services/backend/UsersService";
 import { checkIsListed, delistNftProperty, updatePriceAndHours } from "../services/blockchain/MarketplaceService";
-import { deleteApartment, updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
+import { convertPriceApartment, deleteApartment, updatePriceAndHoursApartment } from "../services/backend/ApartmentService";
 import { IoLocation } from "react-icons/io5";
 import { useWallet } from "../hooks/WalletContext";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -12,6 +12,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { IoMdWarning } from "react-icons/io";
+import { ethers } from "ethers";
 
 export default function MyListingsPage() {
     const [myListings, setMyListings] = useState([]);
@@ -121,7 +122,16 @@ export default function MyListingsPage() {
             const hoursIn = parseInt(editData.checkInFrom.split(":")[0]);
             const hoursOut = parseInt(editData.checkInUntil.split(":")[0]);
 
-            const txUpdate = await updatePriceAndHours(selectedProperty.tokenId, newPrice, hoursIn, hoursOut);
+            const priceEurEth = await convertPriceApartment(newPrice);
+            console.log("Price in eur and eth:", priceEurEth);
+            console.log("Price in eur:", priceEurEth.eurPrice);
+            console.log("Price in eth:", priceEurEth.ethPrice);
+            
+            const priceWei = ethers.utils.parseEther(String(priceEurEth.ethPrice || "0"));
+            console.log("priceWei:", priceWei.toString());
+
+
+            const txUpdate = await updatePriceAndHours(selectedProperty.tokenId, priceWei, hoursIn, hoursOut);
             
             console.log("editData.checkInFrom", editData.checkInFrom);
             console.log("editData.checkInUntil", editData.checkInUntil);
@@ -279,7 +289,7 @@ export default function MyListingsPage() {
                                             </div>
 
                                             <div  className="rental-feedback">
-                                                <p className="rental-price">{apartment.pricePerNight ?? ""} ETH</p>
+                                                <p className="rental-price">{apartment.pricePerNight ?? ""} EUR</p>
                                                     <div className="buttons-status">
                                                         <div className="buttons-status-rentals"> 
                                                                 <button 
