@@ -21,7 +21,6 @@ export default function Navbar() {
     const [panelInfo, setPanelInfo] = useState(false);
     const [panelProperty, setPanelProperty] = useState(false);
 
-    //const walletAddress = account || localStorage.getItem("walletAddress");
     const walletAddress = account;
     console.log("Wallet from kyc:", walletAddress);
 
@@ -38,9 +37,7 @@ export default function Navbar() {
     const logout = () => {
         disconnectWallet();
         localStorage.setItem("walletDisconnected", true);
-        //localStorage.clear();
         localStorage.removeItem("userId");
-        //localStorage.removeItem("walletAddress");
         sessionStorage.clear();
         window.location.replace("/");
     };

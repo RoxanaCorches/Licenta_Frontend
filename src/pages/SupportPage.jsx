@@ -32,9 +32,9 @@ export default function SupportPage({ apartmentId = null }) {
             const data = await sendMessage(message, apartmentId);
 
             const messageChatBot = {
-            role: "chatBot",
-            text: data.answer,
-            time:currentTime
+                role: "chatBot",
+                text: data.answer,
+                time:currentTime
             };
 
             setMessages((prev) => [...prev, messageChatBot]);
@@ -104,10 +104,7 @@ export default function SupportPage({ apartmentId = null }) {
                         >
                             <div className="response">
                                 {message.text}<br/><span>{message.time}</span>
-                            
                             </div>
-                           
-
                         </div>
                         ))}
                         <div ref={newMessageRef}/>

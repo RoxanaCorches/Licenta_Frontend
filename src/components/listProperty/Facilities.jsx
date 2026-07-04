@@ -1,4 +1,3 @@
-//import { useState } from "react";
 import { MdApartment } from "react-icons/md";
 import { FaTv, FaWifi, FaHotTub,FaSkiing,FaUmbrellaBeach  } from "react-icons/fa";
 import { FaKitchenSet, FaHouseFloodWater  } from "react-icons/fa6";
@@ -15,29 +14,6 @@ export default function Facilities({data, completeData, prevStep, nextStep}) {
             completeData({ [name]: type === 'checkbox' ? checked : value});
         };
      
-    
-        /*
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setError('');
-            setLoading(true);
-            console.log("Form:", data);
-    
-            const { propertyType, ListingTitle, description, area} = data;
-            if(!propertyType || !ListingTitle || !description || !area ) {
-                setError("You must complete all fields!");
-                setLoading(false);
-                return;
-            }
-            
-            // Aici poți adăuga logica de trimitere a datelor
-            setTimeout(() => {
-                setLoading(false);
-                // navigate('/properties'); // decomentează când vrei să navighezi
-            }, 1000);
-        }
-*/
-
     return(
      <div> 
         <div className="form-section"> 

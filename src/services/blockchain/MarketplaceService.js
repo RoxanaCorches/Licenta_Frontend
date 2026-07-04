@@ -6,21 +6,30 @@ import { ethers } from "ethers";
 export const listNftProperty = async (tokenId, price, hoursIn, hoursOut) => {
     const { signer } = await getProviderAndSigner();
 
+    const start = performance.now();
+    
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
     const txList = await contract.listNftOnMarketplace(tokenId, price, hoursIn, hoursOut,
         { gasLimit: 400000  }
     );
 
+    const end = performance.now();
+    console.log("Execution time:", (end-start) / 1000,  "sec");
     return txList;
 };
 
 export const delistNftProperty = async (tokenId) => {
     const { signer } = await getProviderAndSigner();
 
+     const start = performance.now();
+
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
     const txDelist = await contract.delistNftFromMarketplace(tokenId);
+
+    const end = performance.now();
+    console.log("Execution time:", (end-start) / 1000,  "sec");
 
     return txDelist;
 };
@@ -59,6 +68,8 @@ export const verifyAvailability = async (tokenId, startDate, endDate) => {
 export const rentNftProperty = async (tokenId, startDate, endDate, nrNights ) => {
     const { signer } = await getProviderAndSigner();
     const { provider } = await getProviderAndSigner();
+
+    const start = performance.now();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
@@ -100,6 +111,9 @@ export const rentNftProperty = async (tokenId, startDate, endDate, nrNights ) =>
     console.log("Transaction:", tx.hash);
     console.log("Rental time:", rentalTime);
 
+    const end = performance.now();
+    console.log("Execution time for rent:", (end-start) / 1000,  "sec");
+
     return {
         transactionHash: tx.hash,
         reservationDate: rentalTime
@@ -109,15 +123,22 @@ export const rentNftProperty = async (tokenId, startDate, endDate, nrNights ) =>
 export const cancelRental = async (tokenId) => {
     const { signer } = await getProviderAndSigner();
 
+    const start = performance.now();
+
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
     const txCancel = await contract.cancel(tokenId);
+
+    const end = performance.now();
+    console.log("Execution time for cancel:", (end-start) / 1000,  "sec");
 
     return txCancel;
 };
 
 export const checkInBlockchain = async (tokenId, startDate) => {
     const { signer } = await getProviderAndSigner();
+
+    const start = performance.now();
 
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
@@ -133,25 +154,33 @@ export const checkInBlockchain = async (tokenId, startDate) => {
     }
 
     const txCheckIn = await contract.checkIn(tokenId, startDate,  { gasLimit: 400000 });
+
+    const end = performance.now();
+    console.log("Execution time for check-in:", (end-start) / 1000,  "sec");
     return txCheckIn;
 };
 
 export const checkOutBlockchain = async (tokenId) => {
     const { signer } = await getProviderAndSigner();
 
+    const start = performance.now();
+
     const contract = new ethers.Contract(MARKETPLACEADDRESS, MarketplaceAbi, signer);
 
     try {
-        await contract.callStatic.checkOut(tokenId);
+        await contract.callStatic.checkout(tokenId);
     } catch(err) {
         const message =
         err.reason ||
-        err.error?.message ||
-        err.data?.message ||
-        "Transaction failed";
+        err.message ||
+        err.data?.message ;
+        
         throw new Error(message);
     }
 
-    const txCheckOut = await contract.checkOut(tokenId, { gasLimit: 400000 });
+    const txCheckOut = await contract.checkout(tokenId, { gasLimit: 400000 });
+    const end = performance.now();
+    console.log("Execution time for check-out:", (end-start) / 1000,  "sec");
+
     return txCheckOut;
 };

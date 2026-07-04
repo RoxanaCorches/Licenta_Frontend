@@ -3,20 +3,10 @@ import { MARKETPLACEADDRESS, PROPERTYNFTADDRESS } from "../../blockchain/config/
 import  PropertyNftAbi  from "../../blockchain/abi/PropertyNftAbi.json";
 import { getProviderAndSigner } from "./WalletService";
 
-/*
-export const getNftContract = async () => {
-  const { signer } = await getProviderAndSigner();
-
-  return new ethers.Contract(
-    PROPERTYNFTADDRESS,
-    PropertyNftAbi,
-    signer
-  );
-};
-*/
-
 export const mintNftProperty = async (metadataUrl) => {
     const { signer } = await getProviderAndSigner();
+
+    const start = performance.now();
     const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
     const walletAddress = await signer.getAddress();
 
@@ -24,7 +14,8 @@ export const mintNftProperty = async (metadataUrl) => {
         gasLimit: 500_000 
     })
     console.log("Mint tx hash:", txMint.hash);
-    
+    const end = performance.now();
+    console.log("Execution time:", (end-start) / 1000,  "sec");
     return txMint;
 };
 
@@ -38,10 +29,13 @@ export const getOwner = async (tokenId) => {
 export const approveMarketplace = async () => {
     const { signer } = await getProviderAndSigner();
 
+     const start = performance.now();
     const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
 
     const txApprove = await contract.setApprovalForAll(MARKETPLACEADDRESS, true);
     console.log("Approval tx hash:", txApprove.hash);
 
+    const end = performance.now();
+    console.log("Execution time:", (end-start) / 1000,  "sec");
     return txApprove;
 };

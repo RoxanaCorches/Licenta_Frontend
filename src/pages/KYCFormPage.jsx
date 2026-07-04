@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { mintKycForUser } from "../services/backend/UsersService";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import CheckIcon from '@mui/icons-material/Check';
 
 export default function KYCFormPage() {
     const navigate = useNavigate();
@@ -21,6 +24,12 @@ export default function KYCFormPage() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const [openAlert, setOpenAlert] = useState({
+        open: false,
+        severity: "success",
+        message: ""
+    });
 
     useEffect(() => {
         const walletAddress = localStorage.getItem("walletAddress") || "";
@@ -60,16 +69,46 @@ export default function KYCFormPage() {
 
         try {
             await mintKycForUser(infoUser);
-            alert("KYC minted!");
-            navigate("/properties");
+            setOpenAlert({
+                open: true,
+                severity: "success",
+                message: "KYC minted successfully!"
+            });
+            setTimeout(() => {
+                 navigate("/properties");
+            }, 2000);
+           
         } catch(error) { 
-            setError(`Error create user: ${error.message}`);
+            console.log(error);
+            setOpenAlert({
+                open: true,
+                severity: "error",
+                message: "User identification error!"
+            });
         } finally {
             setLoading(false);
         }
     }
     
-     return(
+    return(
+        <> 
+            <Snackbar
+                open={openAlert.open}
+                autoHideDuration={2000}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                onClose={() => setOpenAlert((prev) => ({...prev, open: false}))}
+            >
+                <Alert
+                    severity={openAlert.severity}
+                    sx={{ width: "100%" }}
+                    onClose={() => setOpenAlert((prev) => ({...prev, open:false}))}
+                >
+                 {openAlert.message}  
+                </Alert>
+            </Snackbar>
+
+
+            
        <div className="kyc-container">
         <div className="kyc-contents"> 
             <h1 className="kyc-title">
@@ -252,6 +291,7 @@ export default function KYCFormPage() {
             </form>
             </div>
         </div>
+        </>
      );
 
 }

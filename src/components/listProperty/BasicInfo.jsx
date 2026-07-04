@@ -60,7 +60,6 @@ export default function BasicInfo({data, completeData, nextStep}) {
                             value={data.listingTitle}
                             onChange={handleChange}
                             required
-                            //disabled={loading}
                             placeholder="Listing title"
                         />
                     </div>
@@ -90,7 +89,6 @@ export default function BasicInfo({data, completeData, nextStep}) {
                             value={data.area}
                             onChange={handleChange}
                             required
-                            //disabled={loading}
                             placeholder="Area (sqm)"
                             min={0}
                         />
@@ -106,7 +104,6 @@ export default function BasicInfo({data, completeData, nextStep}) {
                             value={data.price}
                             onChange={handleChange}
                             required
-                            //disabled={loading}
                             placeholder="Price per night"
                             min={0}
                         />

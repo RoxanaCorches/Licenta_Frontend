@@ -18,17 +18,11 @@ export default function MyAccountPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-
     const { account } = useWallet();
-    
 
-    //const idUser = localStorage.getItem("userId");
     const walletAddress = localStorage.getItem("walletAddress");
-    //const birthday = localStorage.getItem("birthday");
 
     console.log("account", account);
-    //console.log("userId", idUser);
-    
 
     const handleUploadeImage = async (e) => {
         const image = e.target.files[0];
@@ -49,7 +43,6 @@ export default function MyAccountPage() {
 
 
     useEffect(() => {
-        //if(!idUser) return;
         const loadInfoUser = async () => {
             try {
                 setLoading(true);

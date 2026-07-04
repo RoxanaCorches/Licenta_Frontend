@@ -109,25 +109,6 @@ const handleSubmitWithdraw = () => {
      
     const [rentals, setRentals] = useState(null);
     const { account } = useWallet();
-    /*
-        useEffect(() => {
-                const loadInfoUser = async () => {
-                    try {
-                        setLoading(true);
-                        const data = await getUserById(idUser);
-                        setUser(data);
-                        console.log("Info:", data);
-                    } catch (err) {
-                        setError(err.message);
-                    } finally {
-                        setLoading(false);
-                    }
-                };
-                loadInfoUser();
-            }, [idUser]);
-        */
-    
-        //const idUser = localStorage.getItem("idUserConnected");  
         
         useEffect(() => {
             const loadInfoRental = async () => {

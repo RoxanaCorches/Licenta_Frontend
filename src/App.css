@@ -8,19 +8,6 @@ body {
   min-height: 100vh;
 }
 
-
-
-/*
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #ccc;
-  border-top: 4px solid #000;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 20px auto;
-}
-  */
 .spinner {
   display: flex;
   justify-content: center;
@@ -121,8 +108,6 @@ color: rgb(12, 1, 1);
     #f4e3ff 90%,
     #ceb3fc 100%
   );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
 }
@@ -133,8 +118,8 @@ color: rgb(12, 1, 1);
   margin-top: 0;
   font-size: 20px;
   font-weight: 600;
-  
 }
+
 .description-startpage {
   color: #9d9b9b;
 }
@@ -213,6 +198,7 @@ color: rgb(12, 1, 1);
 .card-description {
   color: #9d9b9b;
 }
+
 .card .icon {
   background-color: #f4e3ff;
   padding: 10px;
@@ -243,90 +229,12 @@ color: rgb(12, 1, 1);
   padding: 20px 40px;
 }
 
-/*
-.startpage-container {
-  background-color: red;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin-left: 4rem;
-}
-
-.h1-startpage {
-  font-size: 4rem;
-  font-weight: 700;
-  max-width: 500px;
-  color: white;
-  margin-top: 1px;
-}
-
-.h3-startpage {
-  font-size: 2rem;
-  font-weight: 700;
-  max-width: 500px;
-  color: white;
-}
-
-.slideshow-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 450px;
-  margin-left: 150px;
-}
-
-.slideshow-images {
-  display: flex;
-  gap: 10px;
-}
-
-.slideshow-image {
-  width: 250px;
-  height: 150px;
-  border-radius: 4px;
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  opacity: 0.7;
-  transform: scale(0.9);
-  transition: all 0.3s ease-in-out;
-}
-
-.slideshow-image.active {
-  opacity: 1;
-  transform: scale(1.1);
-  box-shadow: 0 9px 20px rgba(0, 0, 0, 0.5);
-}
-
-.buttons {
-  display: flex;
-  gap: 50px;
-}
-
-.buttons button {
-  background: rgba(90, 90, 89, 0.1);
-  border: none;
-  outline: none;
-  border-radius: 50%;
-  color: white;
-
-}
-
-.buttons button:hover {
-  background-color: rgb(121, 121, 121);
-  transform: translateY(-3px);
-  transition: all 0.3s ease;
-}
-  */
 
 /* Properties Page */
-
 .main-properties-container {
   display: flex;
   gap: 30px;
 }
-
 
 .properties-container {
   box-sizing: border-box;
@@ -397,7 +305,6 @@ color: rgb(12, 1, 1);
   transform: scale(1.2);
 }
 
-
 .search-panel {
   position: absolute;
   background-color: #f8f9fa;
@@ -410,7 +317,7 @@ color: rgb(12, 1, 1);
   box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
 }
 
- .search-panel-suggestions {
+.search-panel-suggestions {
   position: absolute;
   background-color: #f8f9fa;
   border-radius: 20px;
@@ -607,7 +514,6 @@ color: rgb(12, 1, 1);
   flex-direction: row;
 }
 
-
 .details {
   flex: 2;
   display: flex;
@@ -658,7 +564,6 @@ color: rgb(12, 1, 1);
   font-weight: 500;
   margin-bottom: 10px ;
 }
-
 
 .property-amenities {
   display: flex;
@@ -832,7 +737,6 @@ color: rgb(12, 1, 1);
   margin-bottom: 20px;
 }
 
-
 .place-description,
 .place-amenities,
 .place-policies {
@@ -891,7 +795,6 @@ color: rgb(12, 1, 1);
   margin: 0;
 }
 
-
 .dates-checkIn-checkOut .dates {
   color: #6f6f6f;
   font-size: 1rem;
@@ -942,7 +845,6 @@ color: rgb(12, 1, 1);
   font-size: 1rem;
   font-weight: 500;
 }
-
 
 .container-booking p {
   margin: 0;
@@ -1040,7 +942,6 @@ color: rgb(12, 1, 1);
   margin-right: 0.5rem;
 }
 
-
 .kyc-form-group {
   margin-top: -10px;
   display: flex;
@@ -1074,19 +975,6 @@ color: rgb(12, 1, 1);
   box-shadow: 0 4px 12px rgba(97, 23, 146, 0.35);
 }
 
-/*
-.kyc-error {
-  background-color: rgba(220, 53, 69, 0.9);
-  color: white;
-  padding: 1rem;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-}
-*/
 .kyc-submit-btn {
   background-color: #7f3cf3;
   border: none;
@@ -1120,6 +1008,7 @@ color: rgb(12, 1, 1);
   outline: none;
 }
 
+
 /* LIST PROPERTY PAGE */
 .form-container {
   background-color:#f3f2f7;
@@ -1145,12 +1034,6 @@ color: rgb(12, 1, 1);
   overflow-y: auto;
  
 }
-
-/*
-.form-step.active {
-  display: block;
-}
-*/
 
 .form-step-title {
   text-align: center;
@@ -1219,7 +1102,6 @@ color: rgb(12, 1, 1);
   transform: scale(1.2);
   color: #5c07ef;
 }
-
 
 .form-type-property-option input[type="radio"]:checked+.form-type-property-content {
   background-color: #f6f3fa;
@@ -1346,12 +1228,6 @@ color: rgb(12, 1, 1);
   border-bottom: 2px solid #7d3bee;
 }
 
-/*
-.form-section-options:nth-last-child(2) {
-  border-bottom: none;
-}
-*/
-
 .buttons-plus-minus,
 .buttons-plus-minus:focus {
   display: flex;
@@ -1390,11 +1266,9 @@ color: rgb(12, 1, 1);
   cursor: pointer;
 }
 
-
 .form-type-facility-option input[type="checkbox"] {
   display: none;
 }
-
 
 .form-type-facility-content {
   display: flex;
@@ -1428,26 +1302,12 @@ color: rgb(12, 1, 1);
   color: #621add;
 }
 
-
 .form-type-facility-option input[type="checkbox"]:checked+.form-type-facility-content {
   background-color: #f6f3fa;
   border-color: #5c07ef;
   color: #492e74;
   box-shadow: 0 4px 12px rgba(97, 23, 146, 0.35);
 }
-
-/*
-.progress-bar {
-  background-color: red;
-  width: 100%;
-  height: 20px;
-}
-
-.progress {
-  background-color: #0f0f10;
-  height: 100%;
-}
-  */
 
 /*STEP 4 - RULES */
 .form-rules {
@@ -1575,7 +1435,6 @@ color: rgb(12, 1, 1);
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
 }
 
 .upload-image-next {
@@ -1627,14 +1486,6 @@ color: rgb(12, 1, 1);
   cursor: pointer;
 }
 
-/*
-.wrapper-image {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-  */
-
 .view-image {
   position: absolute;
   object-fit: contain;
@@ -1644,7 +1495,6 @@ color: rgb(12, 1, 1);
   height: 100%;
   z-index: 1;
 }
-
 
 .delete-button {  
   position: absolute;
@@ -1791,16 +1641,6 @@ color: rgb(12, 1, 1);
   justify-content: space-between;
   height: 100%;
 }
-/*
-.main-container .bottom,
-.bottom-left-right {
-  display: flex;
-  justify-content: space-between;
-  background-color: white;
-  height: 100%;
-}
-*/
-
 
 /* EDIT INFO*/
 .button-edit {
@@ -1826,7 +1666,6 @@ color: #621add;
 transition: all 0.4s ease;
 border-color: #621add;
 }
-
 
 .edit-container {
   position: fixed;
@@ -1872,7 +1711,6 @@ border-color: #621add;
   margin-top: 12px;
 }
 
-
 .modal-edit-buttons button {
   padding: 10px 15px;
   border: none;
@@ -1897,7 +1735,6 @@ border-color: #621add;
   outline: none;
 }
 
-
 .main-container .bottom {
   flex-direction: column;
 }
@@ -1909,15 +1746,6 @@ border-color: #621add;
   margin:0rem  2rem;
 }
 
-/*
-.bottom .bottom-title {
-  border-bottom: 1px solid rgb(163, 159, 163);
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #495057;
-  margin:0rem  2rem;
-}
-*/
 .title-review {
   font-size: 1.3rem;
   font-weight: bold;
@@ -1944,46 +1772,6 @@ border-color: #621add;
   padding: 2rem;
   gap:5rem;
 }
-
-/*
-.rentals-filters {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: #e7e0f4;
-  border-radius: 15px;
-  height: 30px;
-  width: 150px;
-  gap: 1rem;
-}
-*/
-
-/*
-.rentals-filters span, 
-.reviews-filters span {
-  margin-left: 10px;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #495057;
-}
-*/
-/*
-.rentals-filters:hover{
-  background-color: #af83fa;
-  cursor: pointer;
-}
-*/
-
-/*
-.rentals-filters.active {
-  background-color: #915bee;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-*/
 
 .rentals-content {
   margin:1rem  2rem;
@@ -2235,10 +2023,9 @@ outline: none;
 .container-deposit-withdraw .input:focus {
   outline: none;
   border: 3px solid #8541fa;
-
 }
 
-.container-deposit-withdraw p{
+.container-deposit-withdraw p {
   color: #7c7878;
   font-size: 1rem;
   font-weight: 400;
@@ -2273,6 +2060,7 @@ outline: none;
   border-bottom: 1px solid rgb(187, 186, 186);
   padding-bottom: 20px;
 }
+
 .button-copy {
   background: none;
   font-size: 1.2rem;
@@ -2295,7 +2083,6 @@ outline: none;
 .transaction-item.last {
   border-bottom: none;
 }
-
 
 .container-copy-address {
   display: flex;
@@ -2327,7 +2114,6 @@ outline: none;
 .icon-deposit {
   color: rgb(78, 234, 78);
 }
-
 
 .icon-withdraw {
   color: red;
@@ -2372,7 +2158,6 @@ outline: none;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  
 }
 
 .price-payment {
@@ -2460,7 +2245,6 @@ outline: none;
   color: #495057;
 }
 
-
 .history-content {
   display: flex;
   flex-direction: column;
@@ -2514,8 +2298,6 @@ outline: none;
     transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(184, 157, 126, 0.4);
 }
-
-
 
 .form-group .wallet-address,
 .form-group  .price {
@@ -2641,7 +2423,6 @@ outline: none;
     border-radius: 3px;
 }
 
-
 .header-review {
   display: flex;
   flex-direction: column;
@@ -2705,7 +2486,6 @@ outline: none;
   padding: 0;
 }
 
-
 .details-rentals .name-renter {
   color: #515050;
   font-size: 1.2rem;
@@ -2739,12 +2519,12 @@ outline: none;
   box-shadow: 0 2px 8px rgba(86, 85, 87, 0.05);
 }
 
-
 .reviews-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
+
 
 /*FOOTER*/
 .footer {
@@ -2807,6 +2587,7 @@ outline: none;
   display: flex;
   justify-content: center;
 }
+
 
 /* ABOUT*/
 .about-container {
@@ -2971,8 +2752,6 @@ background: linear-gradient(
   border-top-right-radius: 10px;
 }
 
-
-
 .message.user {
   align-self: flex-end;
   background: #8d56ec;
@@ -2991,7 +2770,6 @@ background: linear-gradient(
   color: #ebeaea;
   font-size: 15px;
 }
-
 
 .message.chatBot .response span {
   color: #ababab;

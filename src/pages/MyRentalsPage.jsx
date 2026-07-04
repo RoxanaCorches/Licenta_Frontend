@@ -245,10 +245,11 @@ export default function MyRentalsPage() {
                     
                 setRentals(prev => 
                     prev.map(rental => rental.rentalId === rentalId 
-                        ? {...rental, status:"COMPLETTED" } : rental 
+                        ? {...rental, status:"COMPLETED" } : rental 
                     )
                 );
 
+                setActive("completed");
                 setStatusBlockchain("success_checkOut_rental");
 
                 setTimeout(() => {
@@ -495,14 +496,16 @@ export default function MyRentalsPage() {
                                                             </button>
                                                             )}
                                                             
-                                                             { validCheckIn(rental) && (
+                                                            { validCheckIn(rental) && (
                                                                 <button 
                                                                     className="button-review"
                                                                     onClick={() => handleCheckInRental(rental)}
                                                                 >
                                                                     Check-in
                                                                 </button>
-                                                            )}
+                                                              )}
+                                                           
+
                                                         </div>
                                                     ) }
 
@@ -515,7 +518,7 @@ export default function MyRentalsPage() {
                                                                 >
                                                                     Check-out
                                                                 </button>
-                                                           )}
+                                                            )}
                                                         </div>
                                                     )}
                                                     
@@ -644,5 +647,3 @@ export default function MyRentalsPage() {
         </div> 
     );
 }
-
-

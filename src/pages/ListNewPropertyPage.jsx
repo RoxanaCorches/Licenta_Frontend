@@ -272,8 +272,6 @@ export default function ListNewPropertyPage() {
 
             }catch (error) {
                     console.error("Error in handleSubmit:", error);
-                    
-                    //alert(`Error: ${error.message}`);
                     setStatusBlockchain("error_nft");
                 } finally {
                     setLoading(false);

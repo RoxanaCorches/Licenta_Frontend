@@ -1,16 +1,37 @@
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import { RentalContext } from "../hooks/RentalContext";
 import { verifyAvailability } from "../services/blockchain/MarketplaceService";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
 export default function Calendar({ tokenId }) {
     const dateRef = useRef(null);
 
-    const { checkIn, checkOut, setCheckIn, setCheckOut } =
-        useContext(RentalContext);
+    const { checkIn, checkOut, setCheckIn, setCheckOut } = useContext(RentalContext);
+ 
+    const [open, setOpen] = useState(false);
+    
 
     return (
+        <>
+        <Snackbar
+                open={open}
+                autoHideDuration={2000}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                onClose={() => setOpen(false)}
+            >
+                <Alert
+                    onClose={() => setOpen(false)}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    The selected period is busy!
+                </Alert>
+            </Snackbar>
+            
+      
         <div className="search-field">
             <div ref={dateRef}>
                 <div className="search-panel availability">
@@ -53,7 +74,7 @@ export default function Calendar({ tokenId }) {
                                     );
 
                                     if (!available) {
-                                        alert("The selected period is busy!");
+                                        setOpen(true);
                                         setCheckOut(undefined);
                                     }
 
@@ -64,9 +85,9 @@ export default function Calendar({ tokenId }) {
                             }}
                         />
                     </div>
-
                 </div>
             </div>
         </div>
+      </>
     );
 }

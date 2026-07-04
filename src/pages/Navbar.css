@@ -93,7 +93,6 @@
   cursor: pointer;
   color: rgb(172, 172, 172);
   transform: translateY(-3px);
-
 }
 
 .container-wrapper-info {
@@ -121,7 +120,6 @@
   font-size: 1.1rem;
   padding: 8px;
   width: 100%;
-  
 }
 
 .navbar-link-option:hover {

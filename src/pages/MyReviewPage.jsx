@@ -41,14 +41,14 @@ export default function MyReviewPage() {
         }, [account]);
 
 
-        /*
-    const idUserConnected = myReviews.idUser;
-    console.log("Id user curent conectat:", idUserConnected);
-    const reviewReceived = myReviews?.reviewList?.filter(rev => rev.idUser !== idUserConnected);
-    const reviewGiven = myReviews?.reviewList?.filter(rev => rev.idUser === idUserConnected);
+    /*
+        const idUserConnected = myReviews.idUser;
+        console.log("Id user curent conectat:", idUserConnected);
+        const reviewReceived = myReviews?.reviewList?.filter(rev => rev.idUser !== idUserConnected);
+        const reviewGiven = myReviews?.reviewList?.filter(rev => rev.idUser === idUserConnected);
 
-    const showReview = active === 'received' ? reviewReceived : reviewGiven;
-*/
+        const showReview = active === 'received' ? reviewReceived : reviewGiven;
+    */
 
     const idUserConnected = myReviews?.idUser;
     console.log("Id user curent conectat:", idUserConnected);

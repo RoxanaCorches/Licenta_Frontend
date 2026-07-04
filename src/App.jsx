@@ -16,7 +16,6 @@ import Layout from "./components/Layout";
 import About from "./pages/AboutPage";
 import SupportPage from "./pages/SupportPage";
 import ListExistingPropertyPage from "./pages/ListExistingPropertyPage";
-//import ListExistingPropertyPage from "./pages/ListExistingProperty";
 
 function App() {
   return (
@@ -26,7 +25,7 @@ function App() {
     <Routes>
         <Route element={<Layout />} >
           <Route path="/" element={<StartPage />} />
-           <Route path="/about" element={<About />} />
+          <Route path="/about" element={<About />} />
           <Route path="/kyc" element={<KYCFormPage />} />
           <Route path="/properties" element={<PropertiesPage />} />
           <Route path="/properties/property/:idApartment" element={<PropertyInfo />} />
@@ -45,7 +44,6 @@ function App() {
     </BrowserRouter>
     </ConnectWallet>
     </RentalProvider>
-
   );
 }
 
