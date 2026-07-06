@@ -14,12 +14,6 @@ import { IoMdWarning } from "react-icons/io";
 
 
 export default function MyWalletPage() {
-const [panelDeposit, setPanelDeposit] = useState(false);
-const [deposit, setDeposit] = useState("");
-
-const [panelWithdraw, setPanelWithdraw] = useState(false);
-const [withdraw, setWithdraw] = useState("");
-const [walletAddress, setWalletAddress] = useState("");
 
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState(null);
@@ -30,54 +24,6 @@ const [copyWalletAddress, setCopyWalletAddress] = useState(false);
 const [balance, setBalance] = useState("0.0");
 
  const [nrTransactions, setNrTransactions] = useState(5);
-
-const handleSubmitDeposit = () => {
-     try{
-        setLoading(true);
-        setPanelDeposit(false);
-        setDeposit("");
-    }catch(error) {
-        setError(error.message);
-    }finally {
-        setLoading(false);
-    }
-};
-
-const handleSubmitWithdraw = () => {
-     try{
-        setLoading(true);
-        setPanelWithdraw(false);
-        setWithdraw("");
-        setWalletAddress("");
-    }catch(error) {
-        setError(error.message);
-    }finally {
-        setLoading(false);
-    }
-};
-
-     const handleDeposit = () => {
-        try{
-            setLoading(true);
-            setPanelDeposit(true);
-        }catch(error) {
-            setError(error.message);
-        }finally {
-            setLoading(false);
-        }
-    };
-
-    const handleWithdraw = () => {
-        try{
-            setLoading(true);
-            setPanelWithdraw(true);
-        }catch(error) {
-            setError(error.message);
-        }finally {
-            setLoading(false);
-        }
-    };
-
 
     const handleCopyAddress = () => {
         navigator.clipboard.writeText(myWalletAddress);
@@ -176,114 +122,7 @@ const handleSubmitWithdraw = () => {
                             <div className="available-balance">
                                 <p>Available Balance</p>
                                 <p className="balance">{balance} ETH</p>
-                                <div className="buttons-balance">
-                                    <button 
-                                        className="deposit-withdraw"
-                                        onClick={handleDeposit}
-                                    >
-                                        <MdOutlineFileDownload className="icon"/>
-                                        <p>Deposit</p>
-                                    </button>
-
-                                    <button 
-                                        className="deposit-withdraw"
-                                        onClick={handleWithdraw}
-                                    >
-                                        <FiSend  className="icon"/>
-                                        <p>Withdraw</p>
-                                    </button>
-                                </div>
                             </div>
-
-                            {panelDeposit &&
-                                 <div className="edit-container">
-                                    <div className="modal-edit">
-                                         <h2>Deposit to Wallet</h2>
-
-                                    <div className="container-deposit-withdraw">
-                                        <label>Amount (ETH)</label>
-                                    <input
-                                        type="number"
-                                        className="input"
-                                        value={deposit}
-                                        placeholder="0.00"
-                                        onChange={(e) => setDeposit(e.target.value)}
-                                    />
-                                    <p>Send ETH to your wallet address to deposit funds</p>
-                                    </div>
-                                    
-                                
-                                    <div className="modal-edit-buttons">
-                                        <button 
-                                            className="cancel" 
-                                            onClick={
-                                            () => {setPanelDeposit(false)}
-                                            }
-                                        >
-                                        Cancel
-                                        </button>
-                                                                       
-                                         <button  
-                                            className="submit" 
-                                            onClick={handleSubmitDeposit} 
-                                            disabled={loading}
-                                        >
-                                        {loading ? '...' : 'Proceed'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        {panelWithdraw &&
-                                 <div className="edit-container">
-                                    <div className="modal-edit">
-                                         <h2>Withdraw from Wallet</h2>
-
-                                    <div className="container-deposit-withdraw">
-                                        <label>Amount (ETH)</label>
-                                    <input
-                                        type="number"
-                                        className="input"
-                                        value={withdraw}
-                                        placeholder="0.00"
-                                        onChange={(e) => setWithdraw(e.target.value)}
-                                    />
-                                    </div>
-
-                                    <div className="container-deposit-withdraw">
-                                        <label>Recipient Address</label>
-                                    <input
-                                        type="text"
-                                        className="input"
-                                        value={walletAddress}
-                                        placeholder="0x..."
-                                        onChange={(e) => setWalletAddress(e.target.value)}
-                                    />
-                                    </div>
-                                    
-                                
-                                    <div className="modal-edit-buttons">
-                                        <button 
-                                            className="cancel" 
-                                            onClick={
-                                            () => {setPanelWithdraw(false)}
-                                            }
-                                        >
-                                        Cancel
-                                        </button>
-                                                                       
-                                         <button  
-                                            className="submit" 
-                                            onClick={handleSubmitWithdraw} 
-                                            disabled={loading}
-                                        >
-                                        {loading ? 'Withdrawing...' : 'Withdraw'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
 
                         <div className="container-walletAddress">
                                 <p className="title"> Wallet Address</p>

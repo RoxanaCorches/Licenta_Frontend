@@ -345,7 +345,10 @@ export default function ReserveForms() {
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
-                        <p>{error}</p>
+                        {error === "Not enough money." ?
+                            <p>Insufficient funds!</p> : ""
+                        }
+                       
                         <button 
                             className="try-again"
                             type="botton"
@@ -356,7 +359,6 @@ export default function ReserveForms() {
                     </div>
                 </div>
             )}
-
 
             {!processingPayment && rentalConfirmed && (
                 <div className="edit-container">

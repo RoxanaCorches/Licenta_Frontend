@@ -1,6 +1,6 @@
 const API = "http://localhost:8080";
 export async function sendMessage(message, apartmentId = null) {
-    const response = await fetch(`${API}/api/chat/ai`, {
+    const response = await fetch(`${API}/support/chatBot`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
