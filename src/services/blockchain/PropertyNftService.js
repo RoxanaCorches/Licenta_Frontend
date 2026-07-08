@@ -11,7 +11,7 @@ export const mintNftProperty = async (metadataUrl) => {
     const walletAddress = await signer.getAddress();
 
     const txMint = await contract.mint(walletAddress, metadataUrl, {
-        gasLimit: 500_000 
+        gasLimit: 500000 
     })
     console.log("Mint tx hash:", txMint.hash);
     const end = performance.now();
@@ -29,7 +29,7 @@ export const getOwner = async (tokenId) => {
 export const approveMarketplace = async () => {
     const { signer } = await getProviderAndSigner();
 
-     const start = performance.now();
+    const start = performance.now();
     const contract = new ethers.Contract(PROPERTYNFTADDRESS, PropertyNftAbi, signer);
 
     const txApprove = await contract.setApprovalForAll(MARKETPLACEADDRESS, true);

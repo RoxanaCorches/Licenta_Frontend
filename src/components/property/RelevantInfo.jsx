@@ -107,9 +107,9 @@ export default function RelevantInfo() {
         return `${hour}:${minutes} ${amPm}`;
     }
 
-
     const calculateRting = (reviews) => {
         if(!reviews || reviews?.length === 0 ) return 0;
+
         const totalRating = reviews.reduce((acc, rev) => acc + rev.rating, 0);
         const nrReviews = reviews.length;
         const average = (totalRating / nrReviews).toFixed(2);
@@ -121,7 +121,6 @@ export default function RelevantInfo() {
     const validReserve = nrNights > 0 && 
                          property?.pricePerNight &&
                          totalPrice > 0;
-
 
     const averageRating = reviews?.length > 0 ? calculateRting(reviews) : "No reviews yet";
 
@@ -135,7 +134,6 @@ export default function RelevantInfo() {
     
     return(
        <div className="info-container"> 
-       
         {loading ? (
                         <div className="spinner">
                             <ClipLoader loading={loading} size={40} />

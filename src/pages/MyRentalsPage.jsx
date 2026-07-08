@@ -263,24 +263,6 @@ export default function MyRentalsPage() {
                 }
         };
 
-        /*
-        const isDayForCheckIn = (currentDate, dateForCheckIn) => {
-            const today =
-                currentDate.getFullYear() === dateForCheckIn.getFullYear() &&
-                currentDate.getMonth() === dateForCheckIn.getMonth() && 
-                currentDate.getDate() === dateForCheckIn.getDate();
-            return today;
-        }
-
-        const isDayForCheckOut = (currentDate, dateForCheckOut) => {
-            const today =
-                currentDate.getFullYear() === dateForCheckOut.getFullYear() &&
-                currentDate.getMonth() === dateForCheckOut.getMonth() && 
-                currentDate.getDate() === dateForCheckOut.getDate();
-            return today;
-        }
-        */
-
         const isCurrentDay = (currentDate, dateForCheck) => {
             const today =
                 currentDate.getFullYear() === dateForCheck.getFullYear() &&
@@ -503,9 +485,7 @@ export default function MyRentalsPage() {
                                                                 >
                                                                     Check-in
                                                                 </button>
-                                                              )}
-                                                           
-
+                                                            )}  
                                                         </div>
                                                     ) }
 
@@ -630,7 +610,12 @@ export default function MyRentalsPage() {
                     <div className="modal-reservation">
                         <IoMdCloseCircle  className="icon-reservation-status canceled"/>
                         <h2>Something went wrong...</h2>
-                        {statusBlockchain === "error_checkIn_rental"  ? (
+                        {(statusBlockchain === "error_checkIn_rental"  && (
+                                errorCheckIn === "NFT is already rented." ||
+                                errorCheckIn === "Too early for check-in!" ||
+                                errorCheckIn === "Check-in expired!" || 
+                                errorCheckIn === "The booking is not available for check-in."
+                        )) ? (
                         <p>{errorCheckIn}</p>) : ""}
                         <button 
                             className="try-again"

@@ -116,7 +116,6 @@ export default function ListExistingPropertyPage() {
         }, 2000);
     }
 
-
     const handleUpdate = async (apartment) => {
         const { idApartment, tokenId } = apartment;
 

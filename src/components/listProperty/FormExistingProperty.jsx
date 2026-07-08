@@ -7,7 +7,6 @@ export default function FormExistingProperty({data, completeData}) {
 
     const [panelCheckOutFrom, setPanelCheckOutFrom] = useState(false);
     const [panelCheckOutUntil, setPanelCheckOutUntil] = useState(false);
-
     
     const dropdownPanelCheckInFrom = (e) => {
         e.preventDefault();
@@ -29,10 +28,10 @@ export default function FormExistingProperty({data, completeData}) {
         setPanelCheckOutUntil(!panelCheckOutUntil);
     };
         
-        const handleChange = (e) => {
-            const {name, type, value, checked} = e.target;
-            completeData({[name]: type === "checkbox" ? checked : value});
-        }
+    const handleChange = (e) => {
+        const {name, type, value, checked} = e.target;
+        completeData({[name]: type === "checkbox" ? checked : value});
+    }
         
     return(
         <div className="form-section"> 
@@ -50,7 +49,6 @@ export default function FormExistingProperty({data, completeData}) {
                     min={0}
                 />
             </div>
-
                     <div className="form-section-options-checks"> 
                         <div className="check-in"> 
                             <div className="container-checkIn-checkOut"> 

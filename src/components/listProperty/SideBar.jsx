@@ -8,7 +8,9 @@ import { MdRateReview } from "react-icons/md";
 import { useWallet } from "../../hooks/WalletContext";
 
 export default function Sidebar() {
+
     const { disconnectWallet } = useWallet();
+    
       const logout = () => {
         disconnectWallet();
         localStorage.setItem("walletDisconnected", true);

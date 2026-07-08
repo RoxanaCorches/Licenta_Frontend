@@ -7,8 +7,8 @@ export default function Location({data, completeData, prevStep, nextStep}){
             const [loading] = useState(false);
         
             const handleChange = (e) => {
-            const { name, value } = e.target;
-                completeData({ [name]: value});
+                const { name, value } = e.target;
+                    completeData({ [name]: value});
             };
 
             const handleClick = (e) => {
@@ -45,7 +45,8 @@ export default function Location({data, completeData, prevStep, nextStep}){
                         }
 
                         if ((component.types.includes("locality"))) {
-                                    city = component.long_name;
+                                    city = (component.long_name).trim().split(/[\s-]+/)[0];
+                                    console.log(city);
                         }
 
                         if (component.types.includes("postal_code")) {
@@ -151,7 +152,7 @@ export default function Location({data, completeData, prevStep, nextStep}){
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Map location</label>
-                        <LoadScript googleMapsApiKey="AIzaSyDBQhtLmyCNqUConAuVxw2MwHjIF1ok6Iw" >
+                        <LoadScript googleMapsApiKey="AIzaSyDBQhtLmyCNqUConAuVxw2MwHjIF1ok6Iw">
                         <GoogleMap
                             mapContainerStyle={{width: "100%", height: "400px"}}
                             center={{lat: 46.7833561, lng: 23.5341118}}
@@ -162,7 +163,6 @@ export default function Location({data, completeData, prevStep, nextStep}){
                             
                         </GoogleMap>
                         </LoadScript>
-                        
                     </div>
 
                      <div className="form-buttons">

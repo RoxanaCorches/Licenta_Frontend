@@ -89,7 +89,6 @@ export default function ListNewPropertyPage() {
             setError('');
             setLoading(true);
             console.log("Form:", data);
-
             
                 const images = [];
                 if(data.mainImage)
@@ -153,7 +152,6 @@ export default function ListNewPropertyPage() {
                     image3: imageName[3],
                     image4: imageName[4],
                 };
-            
              
                     let response = await createApartment(addInfoApartment, images);
                     const metadataUrl = response.metadataUrl;

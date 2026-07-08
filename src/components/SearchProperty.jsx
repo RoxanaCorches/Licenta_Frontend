@@ -16,7 +16,6 @@ export default function SearchProperty ({onSearchProperties}){
     const [checkOut, setCheckOut] = useState(null);
     const [panelMembers, setPanelMembers] = useState(false);
     const [adults, setAdults] = useState(2);
-    const [children, setChildren] = useState(0);
     const [rooms, setRooms] = useState(1);
 
     const locationRef = useRef(null);
@@ -44,7 +43,7 @@ export default function SearchProperty ({onSearchProperties}){
         };
     }, []);
 
-    const guests = adults + children;
+    const guests = adults;
     console.log("Nr guests", guests);
 
     const handleSearchProperties = () => {
@@ -142,7 +141,7 @@ export default function SearchProperty ({onSearchProperties}){
 
                 <div className="container-wrapper" ref={membersRef}> 
                     <div className="container" onClick={() => setPanelMembers(!panelMembers)}>
-                        <p>{adults} Adults - {children} Children - {rooms} Rooms</p>
+                        <p>{adults} Adults - {rooms} Rooms</p>
                         <span > <FaChevronDown /> </span>
                     </div>
 
@@ -170,26 +169,7 @@ export default function SearchProperty ({onSearchProperties}){
                             </button> 
                         </div>
 
-                        <div className="option">
-                             <div className="info">
-                                <span>Children</span>
-                                <p>2-17 Years Old</p>
-                             </div>
-                            <button 
-                                type="button" 
-                                onClick = {() =>  (setChildren(children - 1))} 
-                                disabled = {children <= 0}
-                            > 
-                                <FaMinus className="search-icon-plus-minus"/> 
-                                </button>
-                            <span>{children}</span>
-                            <button 
-                                type="button" 
-                                onClick={() => (setChildren(children + 1))} 
-                            > 
-                                <FaPlus className="search-icon-plus-minus" /> 
-                            </button> 
-                        </div>
+                        
 
                          <div className="option">
                             <div className="info">

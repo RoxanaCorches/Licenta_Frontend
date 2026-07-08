@@ -5,7 +5,6 @@ export default function UploadImages({data, completeData}) {
 
     const handleUploadeMainImage = (e) => {
         const image = e.target.files[0];
-
         if(image){
             completeData({
                 mainImage: image
@@ -105,8 +104,6 @@ export default function UploadImages({data, completeData}) {
                                 &times;
                             </button>
                             }
-                             
-
                            
                           {!data.otherImage[containerIndex] && ( 
                                 <> 
@@ -115,7 +112,6 @@ export default function UploadImages({data, completeData}) {
                                         <input
                                             id={`otherImagesInput-${containerIndex}`}
                                             type="file"
-                                
                                             accept="image/*"
                                             onChange={(e) => handleUploadeOtherImages(e, containerIndex)}
                                         />

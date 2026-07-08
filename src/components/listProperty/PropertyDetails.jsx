@@ -4,7 +4,6 @@ export default function PropertyDetails({data, completeData, prevStep, nextStep}
                     data.bedrooms !== "" &&
                     data.bathrooms !== "";
                    
-
     return(
         <div className="form-section"> 
                     <div className="form-section-options"> 

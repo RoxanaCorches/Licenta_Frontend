@@ -152,7 +152,6 @@ export default function HouseRules({data, completeData, prevStep, nextStep}) {
                                         </ul>
                                     )}
                                  </div>
-
                             
                                 <div className="checkin-from-until"> 
                                     <label className="form-label">Until </label>

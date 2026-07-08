@@ -12,7 +12,6 @@ export default function Calendar({ tokenId }) {
     const { checkIn, checkOut, setCheckIn, setCheckOut } = useContext(RentalContext);
  
     const [open, setOpen] = useState(false);
-    
 
     return (
         <>

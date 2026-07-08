@@ -8,83 +8,81 @@ import { GiPoolTableCorner, GiGrandPiano  } from "react-icons/gi";
 
 
 export default function Facilities({data, completeData, prevStep, nextStep}) {
-
-        const handleChange = (e) => {
-            const {name, value, type, checked} = e.target;
-            completeData({ [name]: type === 'checkbox' ? checked : value});
-        };
+    const handleChange = (e) => {
+        const {name, value, type, checked} = e.target;
+        completeData({ [name]: type === 'checkbox' ? checked : value});
+    };
      
     return(
      <div> 
         <div className="form-section"> 
-                    <label className="form-section-label">What does your place offer indoors?</label>
-                    <div className="form-type-facility"> 
-                        <label className="form-type-facility-option">
-                            <input 
-                                type="checkbox" 
-                                name="tv"
-                                checked={data.tv}
-                                onChange={handleChange}
-                            />
-                            <span className="form-type-facility-content">
-                                <FaTv className="form-type-facility-icon"/>
-                                <span>TV</span>
-                            </span>
-                        </label>
+            <label className="form-section-label">What does your place offer indoors?</label>
+                <div className="form-type-facility"> 
+                    <label className="form-type-facility-option">
+                        <input 
+                            type="checkbox" 
+                            name="tv"
+                            checked={data.tv}
+                            onChange={handleChange}
+                        />
+                        <span className="form-type-facility-content">
+                            <FaTv className="form-type-facility-icon"/>
+                            <span>TV</span>
+                        </span>
+                    </label>
 
-                        <label className="form-type-facility-option">
-                            <input 
-                                type="checkbox" 
-                                name="wifi"
-                                checked={data.wifi}
-                                onChange={handleChange}
-                            />
-                            <span className="form-type-facility-content">
-                                <FaWifi  className="form-type-facility-icon"/>
-                                <span>Wifi</span>
-                            </span>
-                        </label>
+                    <label className="form-type-facility-option">
+                        <input 
+                            type="checkbox" 
+                            name="wifi"
+                            checked={data.wifi}
+                            onChange={handleChange}
+                        />
+                        <span className="form-type-facility-content">
+                            <FaWifi  className="form-type-facility-icon"/>
+                            <span>Wifi</span>
+                        </span>
+                    </label>
                         
-                        <label className="form-type-facility-option">
-                            <input 
-                                type="checkbox" 
-                                name="kitchen"
-                                checked={data.kitchen}
-                                onChange={handleChange}
-                            />
-                            <span className="form-type-facility-content">
-                                <FaKitchenSet className="form-type-facility-icon"/>
-                                <span>Kitchen</span>
-                            </span>
-                        </label>
+                    <label className="form-type-facility-option">
+                        <input 
+                            type="checkbox" 
+                            name="kitchen"
+                            checked={data.kitchen}
+                            onChange={handleChange}
+                        />
+                        <span className="form-type-facility-content">
+                            <FaKitchenSet className="form-type-facility-icon"/>
+                            <span>Kitchen</span>
+                        </span>
+                    </label>
 
-                        <label className="form-type-facility-option">
-                            <input 
-                                type="checkbox" 
-                                name="washer"
-                                checked={data.washer}
-                                onChange={handleChange}
-                            />
-                            <span className="form-type-facility-content">
-                                <BiSolidWasher className="form-type-facility-icon"/>
-                                <span>Washer</span>
-                            </span>
-                        </label>
+                    <label className="form-type-facility-option">
+                        <input 
+                            type="checkbox" 
+                            name="washer"
+                            checked={data.washer}
+                            onChange={handleChange}
+                        />
+                        <span className="form-type-facility-content">
+                            <BiSolidWasher className="form-type-facility-icon"/>
+                            <span>Washer</span>
+                        </span>
+                    </label>
 
-                        <label className="form-type-facility-option">
-                            <input 
-                                type="checkbox" 
-                                name="airConditioning"
-                                checked={data.airConditioning}
-                                onChange={handleChange}
-                            />
-                            <span className="form-type-facility-content">
-                                <TbAirConditioning className="form-type-facility-icon"/>
-                                <span>Air Conditioning</span>
-                            </span>
-                        </label>
-                    </div>
-
+                    <label className="form-type-facility-option">
+                        <input 
+                            type="checkbox" 
+                            name="airConditioning"
+                            checked={data.airConditioning}
+                            onChange={handleChange}
+                        />
+                        <span className="form-type-facility-content">
+                            <TbAirConditioning className="form-type-facility-icon"/>
+                            <span>Air Conditioning</span>
+                        </span>
+                    </label>
+                </div>
 
                     <label className="form-section-label">What makes your place special?</label>
                     <div className="form-type-facility"> 

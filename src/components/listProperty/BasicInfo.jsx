@@ -2,10 +2,10 @@ import { MdApartment } from "react-icons/md";
 import { IoHome } from "react-icons/io5";
 
 export default function BasicInfo({data, completeData, nextStep}) {
-        const handleChange = (e) => {
-            const {name, type, value, checked} = e.target;
-            completeData({[name]: type === "checkbox" ? checked : value});
-        };
+    const handleChange = (e) => {
+        const {name, type, value, checked} = e.target;
+        completeData({[name]: type === "checkbox" ? checked : value});
+    };
 
     const isValid = data.propertyType.trim() !== "" &&
                     data.listingTitle.trim() !== "" &&
@@ -77,7 +77,6 @@ export default function BasicInfo({data, completeData, nextStep}) {
                         />
                     </div>
 
-
                     <div className="group-area-price">
                     <div className="area-price">
                         <label className="form-label" htmlFor="listindescriptiongTitle">Area (sqm)</label>
@@ -111,14 +110,14 @@ export default function BasicInfo({data, completeData, nextStep}) {
                     </div>
                 </div>
                 <div className="form-buttons">
-                        <button 
-                            type="button" 
-                            className="form-next-button" 
-                            onClick={nextStep}
-                            disabled={!isValid}
-                        >
-                            Next
-                        </button>
+                     <button 
+                        type="button" 
+                        className="form-next-button" 
+                        onClick={nextStep}
+                        disabled={!isValid}
+                    >
+                        Next
+                    </button>
                 </div>
     </div>
     );

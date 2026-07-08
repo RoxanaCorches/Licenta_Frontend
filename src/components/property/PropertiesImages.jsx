@@ -35,7 +35,7 @@ export default function PropertiesImages({filterProperties}) {
 
                     console.log(firstWordLocation, checkInDate, checkOutDate, guests, rooms);
                     dataFiltered = await getFilteredApartments(firstWordLocation, checkInDate, checkOutDate, guests, rooms);
-                    console.log("cele filtrate");
+                    console.log("cele filtrate:", dataFiltered);
                  }
                     
                     const showData = dataFiltered && dataFiltered.length > 0 ? dataFiltered : (filterProperties ? [] : data);

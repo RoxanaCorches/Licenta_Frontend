@@ -6,7 +6,6 @@ export default function PropertyInfo() {
     return(
        <div className="properties-container">
                    <div className="properties-content">
-                     
                        <RelevantInfo  />
                    </div>
                </div>
